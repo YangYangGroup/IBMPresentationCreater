@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Template</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'/>
+    <link rel="stylesheet" href="css/swiper.min.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/common.css">
+    <!--<script src="js/jquery-1.10.1.min.js"></script>-->
+    <!--<script src="js/swiper.3.1.2.jquery.min.js"></script>-->
+    <script src="js/swiper.min.js"></script>
+    <script src="js/swiper.animate.min.js"></script>
+</head>
+<body>
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+
+        <section class="swiper-slide swiper-slide5"
+                 style="background: url(upload/bg.jpg) no-repeat bottom right #00c5f2; background-size: 300px 300px;">
+            <audio src=""></audio>
+            <img src="images/audio.png" style="width:20px;height:20px; top:10px; right:10px; position: absolute; z-index: 999; " class="audioCtrl">
+            <div class="ani text_element resize"
+                 style="top:200px;z-index:1;font-size: 40px; color: white; text-align: center; width: 320px;"
+                 swiper-animate-effect="slideInLeft"
+                 swiper-animate-duration="0.3s" swiper-animate-delay="0.1s">
+                Thanks!
+            </div>
+        </section>
+
+    </div>
+    <img src="images/arrow.png" style="width:20px;height:15px; top:450px; left:160px; margin-left: -10px;" id="array" class="resize">
+    <!--<div class="swiper-pagination"></div>-->
+</div>
+
+<script src="js/templateCommon.js"></script>
+<script src="js/templateUtils.js"></script>
+</body>
+</html>
