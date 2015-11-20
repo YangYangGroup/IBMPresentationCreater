@@ -143,6 +143,9 @@
 		16DE703B1BCF9897009921B9 /* PreviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16DE70391BCF9897009921B9 /* PreviewViewController.xib */; };
 		16DE71311BD535FD009921B9 /* EditNowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16DE712F1BD535FD009921B9 /* EditNowViewController.m */; };
 		16DE71321BD535FD009921B9 /* EditNowViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16DE71301BD535FD009921B9 /* EditNowViewController.xib */; };
+		BA2BEFD01BFF2D1100718E43 /* checkbox_checked.png in Resources */ = {isa = PBXBuildFile; fileRef = BA2BEFCE1BFF2D1100718E43 /* checkbox_checked.png */; };
+		BA2BEFD11BFF2D1100718E43 /* checkbox_unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = BA2BEFCF1BFF2D1100718E43 /* checkbox_unchecked.png */; };
+		BA2BEFD41BFF2D7D00718E43 /* AudioListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA2BEFD31BFF2D7D00718E43 /* AudioListCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -364,6 +367,10 @@
 		16DE712E1BD535FD009921B9 /* EditNowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditNowViewController.h; sourceTree = "<group>"; };
 		16DE712F1BD535FD009921B9 /* EditNowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditNowViewController.m; sourceTree = "<group>"; };
 		16DE71301BD535FD009921B9 /* EditNowViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditNowViewController.xib; sourceTree = "<group>"; };
+		BA2BEFCE1BFF2D1100718E43 /* checkbox_checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox_checked.png; sourceTree = "<group>"; };
+		BA2BEFCF1BFF2D1100718E43 /* checkbox_unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox_unchecked.png; sourceTree = "<group>"; };
+		BA2BEFD21BFF2D7D00718E43 /* AudioListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioListCell.h; sourceTree = "<group>"; };
+		BA2BEFD31BFF2D7D00718E43 /* AudioListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioListCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -509,6 +516,8 @@
 		162A37B71BBA856D0069D9BB /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				BA2BEFCE1BFF2D1100718E43 /* checkbox_checked.png */,
+				BA2BEFCF1BFF2D1100718E43 /* checkbox_unchecked.png */,
 				1631DED01BFDE8BB005B0116 /* RecordingSignal001.png */,
 				1631DED11BFDE8BB005B0116 /* RecordingSignal002.png */,
 				1631DED21BFDE8BB005B0116 /* RecordingSignal003.png */,
@@ -571,6 +580,8 @@
 		162A37C81BBA8CE60069D9BB /* View */ = {
 			isa = PBXGroup;
 			children = (
+				BA2BEFD21BFF2D7D00718E43 /* AudioListCell.h */,
+				BA2BEFD31BFF2D7D00718E43 /* AudioListCell.m */,
 				162A37C51BBA8CB40069D9BB /* ViewTableViewCell.h */,
 				162A37C61BBA8CB40069D9BB /* ViewTableViewCell.m */,
 				166C04641BC50E4200A9EFB3 /* CollectionViewCell.h */,
@@ -919,7 +930,6 @@
 				TargetAttributes = {
 					162A37781BBA80DA0069D9BB = {
 						CreatedOnToolsVersion = 7.0;
-						DevelopmentTeam = 84NVS8QSUW;
 					};
 					162A37911BBA80DB0069D9BB = {
 						CreatedOnToolsVersion = 7.0;
@@ -994,6 +1004,7 @@
 				163420EC1BD6777A006CBC87 /* template_1.html in Resources */,
 				16350CDB1BD7B6C0005C1291 /* SelectTemplateViewController.xib in Resources */,
 				1631DEDB1BFDE8BB005B0116 /* RecordingSignal004.png in Resources */,
+				BA2BEFD01BFF2D1100718E43 /* checkbox_checked.png in Resources */,
 				162A7AE81BFB5846008AD509 /* share@2x.png in Resources */,
 				16335CCD1BF476C300DD1DB7 /* Localizable.strings in Resources */,
 				163420E51BD6777A006CBC87 /* index.html in Resources */,
@@ -1005,6 +1016,7 @@
 				162A37B91BBA859B0069D9BB /* set@2x.png in Resources */,
 				163420E31BD6777A006CBC87 /* arrow.png in Resources */,
 				163420FC1BD6777A006CBC87 /* img4.jpg in Resources */,
+				BA2BEFD11BFF2D1100718E43 /* checkbox_unchecked.png in Resources */,
 				163130431BC7E65500EE9D86 /* IMG_7.png in Resources */,
 				1631DEDC1BFDE8BB005B0116 /* RecordingSignal005.png in Resources */,
 				162A7AF81BFB7007008AD509 /* read_me.txt in Resources */,
@@ -1093,6 +1105,7 @@
 				1628E7761BE9E1C300D6200A /* FilesModel.m in Sources */,
 				162A37C71BBA8CB40069D9BB /* ViewTableViewCell.m in Sources */,
 				1628E78E1BE9F8F200D6200A /* AFNetworkReachabilityManager.m in Sources */,
+				BA2BEFD41BFF2D7D00718E43 /* AudioListCell.m in Sources */,
 				16335CC81BF476A300DD1DB7 /* PECropRectView.m in Sources */,
 				1657BBF91BF83F61000C83C0 /* SBJsonStreamWriterState.m in Sources */,
 				163484441BCA9BDE002DB6AD /* ProjectModel.m in Sources */,
@@ -1248,7 +1261,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = PresentationCreator/PrefixHeader.pch;
 				INFOPLIST_FILE = PresentationCreator/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1269,7 +1282,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = PresentationCreator/PrefixHeader.pch;
 				INFOPLIST_FILE = PresentationCreator/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

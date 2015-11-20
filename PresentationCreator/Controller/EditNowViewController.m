@@ -10,8 +10,9 @@
 #import <AVFoundation/AVFoundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "PECropViewController.h"
+#import "AudioListCell.h"
 
-@interface EditNowViewController ()<UIWebViewDelegate,AVAudioRecorderDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UITextFieldDelegate>
+@interface EditNowViewController ()<UIWebViewDelegate,AVAudioRecorderDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UITextFieldDelegate,UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic ,strong) UIWebView *webView;
 @property (nonatomic, strong) NSString *htmlSource;
 @property (nonatomic, strong) NSString *imgIndex;
@@ -40,9 +41,14 @@
 
 @property (nonatomic, strong) UIButton *okButton;
 
+@property (nonatomic, strong) UIView *audioView;
+
+
 //图片组
 @property (nonatomic, strong) NSMutableArray *volumImages;
 @property (nonatomic, assign) double lowPassResults;
+@property (nonatomic, strong) NSMutableArray *audioArray;
+@property (nonatomic, strong) UITableView *audioTableView;
 @end
 
 @implementation EditNowViewController
@@ -450,16 +456,122 @@
 #pragma mark - addAudio
 //点击录音按钮，弹出录音画面
 -(void)addAudioButton{
-    UIButton *audioButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    audioButton.frame = CGRectMake(2, KScreenHeight - 64 + 16, KScreenWidth-4, 46);
+    UIButton *listButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    listButton.frame = CGRectMake(2, KScreenHeight - 64 + 16, KScreenWidth * 0.5 - 4, 46);
+    [listButton setTitle:@"Select from list" forState:UIControlStateNormal];
+    [listButton setBackgroundColor:[UIColor grayColor]];
+    [listButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [listButton addTarget:self action:@selector(openAudioList) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIButton *audioButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    audioButton.frame = CGRectMake( KScreenWidth * 0.5+1, KScreenHeight - 64 + 16, KScreenWidth * 0.5 - 4, 46);
     [audioButton setTitle:@"Hold to talk" forState:UIControlStateNormal];
     [audioButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [audioButton setBackgroundColor:[UIColor grayColor]];
     
     [audioButton addTarget:self action:@selector(showAudioView) forControlEvents:UIControlEventTouchDown];
     [audioButton addTarget:self action:@selector(hideAudioView) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:listButton];
     [self.view addSubview:audioButton];
 }
+
+
+-(void)openAudioList{
+     self.navigationController.navigationBar.hidden = YES;
+    
+    _audioView = [[UIView alloc]initWithFrame:CGRectMake(0, 20, KScreenWidth, KScreenHeight-20)];
+    _audioView.backgroundColor = [UIColor lightGrayColor];
+    
+    _audioTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight - 44-20)];
+    _audioTableView.dataSource = self;
+    _audioTableView.delegate = self;
+    _audioTableView.backgroundColor = [UIColor  colorWithRed:187.0f/255.0f green:187.0f/255.0f blue:187.0f/255.0f alpha:0.5];
+    [_audioView addSubview:_audioTableView];
+    
+    
+    UIButton *selectButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    selectButton.frame = CGRectMake(2, KScreenHeight - 42 -20, KScreenWidth - 4, 40);
+    [selectButton setTitle:@"SELECT" forState:UIControlStateNormal];
+    [selectButton setBackgroundColor:[UIColor darkGrayColor]];
+    [selectButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [selectButton addTarget:self action:@selector(closeAudioList) forControlEvents:UIControlEventTouchUpInside];
+    
+    [_audioView addSubview:selectButton];
+    [self.view addSubview:_audioView];
+    
+    _audioArray = [[NSMutableArray alloc]init];
+    _audioArray = [DBDaoHelper queryAllAudioFiles];
+}
+
+-(void)closeAudioList{
+    [_audioView removeFromSuperview];
+    _audioView = nil;
+    self.navigationController.navigationBar.hidden = NO;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return _audioArray.count;
+}
+
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    static NSString *identitify = @"id";
+    AudioListCell *cell = [tableView dequeueReusableCellWithIdentifier:identitify];
+    if(cell == nil){
+        cell = [[AudioListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identitify];
+    }
+    cell.backgroundColor = [UIColor  colorWithRed:187.0f/255.0f green:187.0f/255.0f blue:187.0f/255.0f alpha:0.5];
+    
+    FilesModel *fileModel = [FilesModel new];
+    fileModel = [_audioArray objectAtIndex:indexPath.row];
+    
+    NSString *audioNm = [[NSString alloc]initWithString:fileModel.filePathStr];
+    NSRange range = [audioNm rangeOfString:@"Documents/"];
+    audioNm = [audioNm substringFromIndex:NSMaxRange(range)];
+    cell.nameLabel.text = audioNm;
+    if([fileModel.isChecked isEqualToString:@"1"]){
+        cell.checkBox.image = [UIImage imageNamed:@"checkbox_checked.png"];
+    }else{
+        cell.checkBox.image = [UIImage imageNamed:@"checkbox_unchecked.png"];
+    }
+    return  cell;
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+   
+    FilesModel *fm = [[FilesModel alloc]init];
+    fm = [_audioArray objectAtIndex:indexPath.row];
+   
+//    NSURL *url=[NSURL fileURLWithPath:fm.filePathStr];
+//    NSError *error = nil;
+//    AVAudioPlayer *audioPlyr = [[AVAudioPlayer alloc]initWithContentsOfURL:url error:&error];
+//    
+//    audioPlyr.numberOfLoops=0;
+//    [audioPlyr prepareToPlay];
+////    if (![audioPlyr isPlaying]) {
+//        [audioPlyr play];
+//        
+////    }
+//
+//    if (error) {
+//        NSLog(@"创建播放器过程中发生错误，错误信息：%@",error.localizedDescription);
+//    }
+    
+   
+    NSURL *url = [NSURL fileURLWithPath:fm.filePathStr];
+    NSError *error = nil;
+    _audioPlayer = nil;
+    _audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url
+                                                                        error:&error];
+    _audioPlayer.volume = 1.0;
+    [_audioPlayer play];
+    if([_audioPlayer isPlaying]){
+        NSLog(@"sss");
+    }
+    
+}
+
 -(void)showAudioView{
     // self.navigationController.navigationBarHidden = YES;
     _aduioViewControl = [[UIControl alloc]initWithFrame:CGRectMake(75, KScreenHeight * 0.5 - 100, self.view.bounds.size.width -150, 150)];
@@ -477,10 +589,23 @@
     
     
 }
+
+
+#pragma start record
+
 -(void)startRecord{
     NSError *error = nil;
+    NSDate *date = [NSDate date];
+    
+    NSTimeInterval sec = [date timeIntervalSince1970];
+    NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:sec];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd_HH:mm:ss"];
+    NSString *na =[dateFormatter stringFromDate:epochNSDate];
+    
     _audioName = [[NSString alloc]init];
-    _audioName =  [NSString stringWithFormat:@"%d.wav",arc4random() % 1000000];
+    _audioName =  [NSString stringWithFormat:@"%@.wav",na];
     //按下录音
     _audioRecorder = [self audioRecorder];
     _soundLodingImageView.image = [UIImage imageNamed:[_volumImages objectAtIndex:0]];
@@ -693,6 +818,7 @@
  *  @param flag     是否成功
  */
 -(void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
+    _audioPlayer = nil;
     if (![self.audioPlayer isPlaying]) {
         [self.audioPlayer play];
         //将detailsid summaryid filetype filepath插入数据库

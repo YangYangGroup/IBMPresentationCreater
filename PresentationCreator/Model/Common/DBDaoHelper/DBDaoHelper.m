@@ -17,7 +17,7 @@
     //summary_name tableview创建ppt的名称 content_html最终生成的总的用于演示的html代码
     BOOL result2 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_SUMMARY'('summary_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_name'varchar,'content_html'varchar,'product_url',varchar)"];
     //details_id主键 summary_id 外键关联到PPT_PRODUCT_SUMMARY表的主键 template_id关联到PPT_PRODUCT_template表的主键
-    BOOL result3 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_DETAILS'('details_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_id'integer,'template_id'integer,'html_code'varchar,'page_number'integer)"];
+    BOOL result3 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_DETAILS'('details_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_id'integer,'template_id'integer,'html_code'varchar,'page_number'integer,'file_id'INTEGER )"];
     
     BOOL result4 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_FILES'('file_id'INTEGER PRIMARY KEY AUTOINCREMENT,'details_id'integer,'summary_id'integer,'file_path'varchar,'file_type'varchar)"];
     [db close];
@@ -129,6 +129,7 @@
         detailsModel.templateIdStr = [result stringForColumn:@"template_id"];
         detailsModel.htmlCodeStr = [result stringForColumn:@"html_code"];
         detailsModel.pageNumberStr = [result stringForColumn:@"PAGE_NUMBER"];
+        detailsModel.fileIdStr = [result stringForColumn:@"file_id"];
         [detailsArray addObject:detailsModel];
     }
     [db close];
@@ -233,8 +234,24 @@
     
     FMDatabase *db =[DBHelper openDatabase];
     BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_FILES'('details_id','summary_id','file_type','file_path') values (?,?,?,?)", detailsId, summaryId, fileType, filePath];
-    [db close];
+    if (result) {
+        if([fileType isEqualToString:@"audio"]){
+            FMResultSet *result = [db executeQuery:@"SELECT  MAX(file_id) FROM PPT_PRODUCT_FILES"];
+            NSString *str = [[NSString alloc]init];
+            while (result.next)
+            {
+                str = [result stringForColumnIndex:0];
+            }
+            
+            BOOL result1 = [db executeUpdate:@"UPDATE PPT_PRODUCT_DETAILS set file_id=? WHERE  summary_id =? and details_id =?", str, summaryId, detailsId];
+           [db close];
+            return result1;
+        }
+        [db close];
+        return result;
+    }
     return result;
+    
 }
 //查询table数组内容
 +(NSMutableArray *)selectFromFileToSummary_idWith:(NSString *)summaryId
@@ -279,12 +296,13 @@
 // 查询 PPT_PRODUCT_FILES 表中所有的声音文件
 +(NSMutableArray *)queryAllAudioFiles{
     FMDatabase *db = [DBHelper openDatabase];
-    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM PPT_PRODUCT_FILES WHERE file_type='audio' ORDER BY FILE_ID"];
+    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM PPT_PRODUCT_FILES WHERE file_type='audio' ORDER BY FILE_ID desc"];
     
     NSMutableArray *detailsArray = [[NSMutableArray alloc]init];
     FMResultSet *result = [db executeQuery:sql];
     while (result.next) {
         FilesModel *fileModel = [[FilesModel alloc]init];
+        fileModel.fileIdStr =[result stringForColumn:@"file_id"];
         fileModel.fileDetailsIdStr = [result stringForColumn:@"details_id"];
         fileModel.filesummaryIdStr = [result stringForColumn:@"summary_id"];
         fileModel.filePathStr = [result stringForColumn:@"file_path"];

@@ -330,6 +330,7 @@
     vc.editNowSummaryNameStr = self.summaryNameStr;
     vc.editNowHtmlCodeStr = model.htmlCodeStr;
     vc.editNowSummaryIdStr = model.summaryIdStr;
+    vc.editNowAudioIdStr = model.fileIdStr;
     [self.navigationController pushViewController:vc animated:YES];
 }
 -(void)deleteClick:(UIButton *)button

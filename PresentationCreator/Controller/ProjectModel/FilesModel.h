@@ -9,8 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @interface FilesModel : NSObject
-@property(nonatomic,assign) NSString *fileDetailsIdStr;
-@property(nonatomic,assign) NSString *filesummaryIdStr;
-@property(nonatomic,assign) NSString *filetypeStr;
-@property(nonatomic,assign) NSString *filePathStr;
+
+@property(nonatomic,strong) NSString *fileIdStr;
+@property(nonatomic,strong) NSString *fileDetailsIdStr;
+@property(nonatomic,strong) NSString *filesummaryIdStr;
+@property(nonatomic,strong) NSString *filetypeStr;
+@property(nonatomic,strong) NSString *filePathStr;
+@property(nonatomic,strong) NSString *isChecked;
 @end

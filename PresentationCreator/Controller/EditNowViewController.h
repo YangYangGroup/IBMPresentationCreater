@@ -16,4 +16,5 @@
 @property (nonatomic, strong) NSString *editNowSummaryNameStr;
 @property (nonatomic, strong) NSString *editNowHtmlCodeStr;
 @property (nonatomic, strong) NSString *editNowSummaryIdStr;
+@property (nonatomic, strong) NSString *editNowAudioIdStr;
 @end

@@ -15,4 +15,5 @@
 @property(nonatomic,strong) NSString *htmlCodeStr;
 @property(nonatomic,strong) NSString *pageNumberStr;
 @property(nonatomic,strong) NSString *productUrlStr;
+@property(nonatomic,strong) NSString *fileIdStr;
 @end
