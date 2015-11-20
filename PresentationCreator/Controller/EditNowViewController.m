@@ -502,6 +502,18 @@
     
     _audioArray = [[NSMutableArray alloc]init];
     _audioArray = [DBDaoHelper queryAllAudioFiles];
+    
+    for (int i = 0 ; i<_audioArray.count; i++) {
+        FilesModel *fModel = [FilesModel new];
+        fModel = [_audioArray objectAtIndex:i];
+        fModel.isChecked = @"0";
+        if ([fModel.fileIdStr isEqualToString:_editNowAudioIdStr]) {
+            fModel.isChecked = @"1";
+            
+            [_audioArray replaceObjectAtIndex:i  withObject:fModel];
+        }
+        fModel = nil;
+    }
 }
 
 -(void)closeAudioList{
@@ -543,34 +555,31 @@
     FilesModel *fm = [[FilesModel alloc]init];
     fm = [_audioArray objectAtIndex:indexPath.row];
    
-//    NSURL *url=[NSURL fileURLWithPath:fm.filePathStr];
-//    NSError *error = nil;
-//    AVAudioPlayer *audioPlyr = [[AVAudioPlayer alloc]initWithContentsOfURL:url error:&error];
-//    
-//    audioPlyr.numberOfLoops=0;
-//    [audioPlyr prepareToPlay];
-////    if (![audioPlyr isPlaying]) {
-//        [audioPlyr play];
-//        
-////    }
-//
-//    if (error) {
-//        NSLog(@"创建播放器过程中发生错误，错误信息：%@",error.localizedDescription);
-//    }
-    
-   
     NSURL *url = [NSURL fileURLWithPath:fm.filePathStr];
     NSError *error = nil;
     _audioPlayer = nil;
-    _audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url
-                                                                        error:&error];
+    _audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
     _audioPlayer.volume = 1.0;
     [_audioPlayer play];
-    if([_audioPlayer isPlaying]){
-        NSLog(@"sss");
+    
+    
+    for (int i = 0 ; i<_audioArray.count; i++) {
+        FilesModel *fModel = [FilesModel new];
+        fModel = [_audioArray objectAtIndex:i];
+        fModel.isChecked = @"0";
+        if (i == indexPath.row) {
+            fModel.isChecked = @"1";
+        }
+        
+        [_audioArray replaceObjectAtIndex:i  withObject:fModel];
+        fModel = nil;
     }
     
+    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    [_audioTableView reloadData];
 }
+
+
 
 -(void)showAudioView{
     // self.navigationController.navigationBarHidden = YES;
