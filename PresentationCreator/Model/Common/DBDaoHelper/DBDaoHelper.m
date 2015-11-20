@@ -276,4 +276,23 @@
     return result;
     
 }
+// 查询 PPT_PRODUCT_FILES 表中所有的声音文件
++(NSMutableArray *)queryAllAudioFiles{
+    FMDatabase *db = [DBHelper openDatabase];
+    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM PPT_PRODUCT_FILES WHERE file_type='audio' ORDER BY FILE_ID"];
+    
+    NSMutableArray *detailsArray = [[NSMutableArray alloc]init];
+    FMResultSet *result = [db executeQuery:sql];
+    while (result.next) {
+        FilesModel *fileModel = [[FilesModel alloc]init];
+        fileModel.fileDetailsIdStr = [result stringForColumn:@"details_id"];
+        fileModel.filesummaryIdStr = [result stringForColumn:@"summary_id"];
+        fileModel.filePathStr = [result stringForColumn:@"file_path"];
+        
+        [detailsArray addObject:fileModel];
+    }
+    [db close];
+    return  detailsArray;
+    
+}
 @end

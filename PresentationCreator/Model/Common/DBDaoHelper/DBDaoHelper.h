@@ -53,4 +53,6 @@
 +(BOOL)insertSummaryWithSummaryId:(NSString *)summaryId productUrl:(NSString *)producturl;
 //根据 summary id 更新 summary name
 +(BOOL)updateSummaryNameById:(NSString *)summaryId SummaryName:(NSString *)summaryName;
+// 查询 PPT_PRODUCT_FILES 表中所有的声音文件
++(NSMutableArray *)queryAllAudioFiles;
 @end
