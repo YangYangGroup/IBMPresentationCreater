@@ -42,6 +42,7 @@
 @property (nonatomic, strong) UIButton *okButton;
 
 @property (nonatomic, strong) UIView *audioView;
+@property (nonatomic, strong) NSString *selectedAudioName;
 
 
 //图片组
@@ -499,7 +500,6 @@
     
     [_audioView addSubview:selectButton];
     [self.view addSubview:_audioView];
-    
     _audioArray = [[NSMutableArray alloc]init];
     _audioArray = [DBDaoHelper queryAllAudioFiles];
     
@@ -514,12 +514,16 @@
         }
         fModel = nil;
     }
+    
 }
 
 -(void)closeAudioList{
     [_audioView removeFromSuperview];
     _audioView = nil;
     self.navigationController.navigationBar.hidden = NO;
+    
+    
+    [self editAudioComponent];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -545,6 +549,7 @@
     cell.nameLabel.text = audioNm;
     if([fileModel.isChecked isEqualToString:@"1"]){
         cell.checkBox.image = [UIImage imageNamed:@"checkbox_checked.png"];
+        _audioPath = fileModel.filePathStr;
     }else{
         cell.checkBox.image = [UIImage imageNamed:@"checkbox_unchecked.png"];
     }
@@ -569,6 +574,7 @@
         fModel.isChecked = @"0";
         if (i == indexPath.row) {
             fModel.isChecked = @"1";
+            _selectedAudioName = fModel.filePathStr;
         }
         
         [_audioArray replaceObjectAtIndex:i  withObject:fModel];
@@ -576,6 +582,7 @@
     }
     
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    NSLog(@"audio name:%@",_selectedAudioName);
     [_audioTableView reloadData];
 }
 
