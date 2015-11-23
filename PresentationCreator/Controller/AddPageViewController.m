@@ -8,6 +8,7 @@
 
 #import "AddPageViewController.h"
 #import "AddPageCollectionViewCell.h"
+#import "DBDaoHelper.h"
 
 @interface AddPageViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIWebViewDelegate>
 @property (nonatomic, strong) UICollectionView*collectionView;
@@ -28,20 +29,20 @@
 {
     self.navigationItem.title=@"加一页";
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    backbtn.titleLabel.font = [UIFont systemFontOfSize:16.0f];
+    //    backbtn.titleLabel.font = [UIFont systemFontOfSize:16.0f];
     
     backbtn.frame = CGRectMake(0, 0, 40, 20);
     [backbtn setTitle:@"Back" forState:UIControlStateNormal];
     [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *SearchItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
-//    [rightbtn setBackgroundImage:[UIImage imageNamed:@"set"] forState:UIControlStateNormal];
+    //    [rightbtn setBackgroundImage:[UIImage imageNamed:@"set"] forState:UIControlStateNormal];
     self.navigationItem.leftBarButtonItem = SearchItem;
 }
 -(void)backClick
 {
     [self dismissViewControllerAnimated:YES completion:^{
         
-            }];
+    }];
 }
 -(void)addCollectionView
 {
@@ -51,9 +52,13 @@
     
     UICollectionViewFlowLayout *flowLayout=[[UICollectionViewFlowLayout alloc] init];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];//横竖滚动样式
-//    flowLayout.footerReferenceSize = CGSizeMake(KScreenWidth-80, 400);//头部.尾部设置
+    //    flowLayout.footerReferenceSize = CGSizeMake(KScreenWidth-80, 400);//头部.尾部设置
     self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 64+5, KScreenWidth-10, KScreenHeight-64-10) collectionViewLayout:flowLayout];
     self.collectionView.backgroundColor = [UIColor blackColor];
+    
+    
+    
+    //    self.collectionView.pagingEnabled =  YES;
     
     //设置代理
     self.collectionView.delegate = self;
@@ -84,16 +89,16 @@
     AddPageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
     cell.imgView.image = [self.imageArray objectAtIndex:indexPath.item];
     
-//    self.webView = [[UIWebView alloc]init];
-//    self.webView.frame = CGRectMake(0, 0, (KScreenWidth-10-5)/2, (KScreenHeight-64-10)/2);
-//    self.webView.backgroundColor = [UIColor redColor];
-//    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-//    NSString *filePath = [resourcePath stringByAppendingPathComponent:[self.htmlArr objectAtIndex:indexPath.row]];
-//    NSLog(@"%@",[self.htmlArr objectAtIndex:indexPath.row]);
-//    NSString *htmlString = [[NSString alloc] initWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-//    [self.webView loadHTMLString:htmlString baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]]];
-//    [cell addSubview:self.webView];
-//    cell.backgroundColor = [UIColor redColor];
+    //    self.webView = [[UIWebView alloc]init];
+    //    self.webView.frame = CGRectMake(0, 0, (KScreenWidth-10-5)/2, (KScreenHeight-64-10)/2);
+    //    self.webView.backgroundColor = [UIColor redColor];
+    //    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    //    NSString *filePath = [resourcePath stringByAppendingPathComponent:[self.htmlArr objectAtIndex:indexPath.row]];
+    //    NSLog(@"%@",[self.htmlArr objectAtIndex:indexPath.row]);
+    //    NSString *htmlString = [[NSString alloc] initWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    //    [self.webView loadHTMLString:htmlString baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]]];
+    //    [cell addSubview:self.webView];
+    //    cell.backgroundColor = [UIColor redColor];
     return cell;
 }
 #pragma mark --UICollectionViewDelegateFlowLayout
@@ -116,11 +121,29 @@
 //UICollectionView被选中时调用的方法
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    AddPageCollectionViewCell * cell = (AddPageCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    //    AddPageCollectionViewCell * cell = (AddPageCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
     NSInteger aa = indexPath.item + 1;
     NSString *str = [NSString stringWithFormat:@"%ld",(long)aa];
-    //发送通知
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"CreationEditNotification" object:str];
+    
+    
+    
+    NSString *htmlStr = [[NSString alloc]init];
+    htmlStr = [DBDaoHelper selectCreationPageString:str];
+    
+    // 根据 summary id 查询最大的 page number
+    NSString *maxPageNumber = [DBDaoHelper getMaxPageNumber:self.showSummaryIdStr];
+    
+    // 根据summary id 修改最后一页的page number 为最大的page number
+    [DBDaoHelper updatePageNumberToMaxNumber:self.showSummaryIdStr pageNumber:maxPageNumber];
+    
+    //等待修改 插入
+    [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.showSummaryIdStr TemplateId:str HtmlCode:htmlStr PageNumber:maxPageNumber];
+    
+    
+    
+    
+    //    //发送通知
+    //    [[NSNotificationCenter defaultCenter] postNotificationName:@"CreationEditNotification" object:str];
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
@@ -131,13 +154,13 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

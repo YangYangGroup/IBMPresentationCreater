@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface AddPageViewController : UIViewController
+@property (nonatomic,strong) NSString *showSummaryIdStr;
 
 @end
+

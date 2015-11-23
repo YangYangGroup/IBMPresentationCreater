@@ -202,7 +202,7 @@
     flowLayout.footerReferenceSize = CGSizeMake(KScreenWidth, KScreenHeight-64-40);//头部.尾部设置
     self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 64, KScreenWidth, KScreenHeight-64-20) collectionViewLayout:flowLayout];
     self.collectionView.backgroundColor = [UIColor whiteColor];
-    
+    self.collectionView.pagingEnabled  =YES;//是否分页
     //设置代理
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -250,10 +250,7 @@
     //
     //    [self.navigationController pushViewController:vc animated:YES];
 }
--(void)addTableClick
-{
-    
-}
+
 //头部显示的内容
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     
@@ -298,13 +295,14 @@
     [self loadHtmlToWebView];
     
     UIView *backgroundView = [[UIView alloc]init];
-    backgroundView.frame = CGRectMake(20, 20, KScreenWidth-20, KScreenHeight-64-40);
+    backgroundView.frame = CGRectMake(20, 20, KScreenWidth-40, KScreenHeight-64-40);
+//    backgroundView.backgroundColor = [UIColor redColor];
     UITapGestureRecognizer *tapGesture1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(viewClick:)];
     backgroundView.tag=indexPath.row;
     backgroundView.userInteractionEnabled=YES;
     [backgroundView addGestureRecognizer:tapGesture1];
     [cell addSubview:backgroundView];
-//        cell.backgroundColor = [UIColor blackColor];
+//        cell.backgroundColor = [UIColor greenColor];
     
     UIButton *deleteBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     deleteBtn.titleLabel.font = [UIFont systemFontOfSize:11.0f];
@@ -315,6 +313,7 @@
 //    [deleteBtn setTitle:@"delete" forState:UIControlStateNormal];
     [deleteBtn addTarget:self action:@selector(deleteClick:) forControlEvents:UIControlEventTouchUpInside];
     [cell addSubview:deleteBtn];
+    
     return cell;
 }
 -(void)viewClick:(UITapGestureRecognizer *)recognizer
@@ -360,6 +359,10 @@
 }
 //定义每个UICollectionView 纵向的间距
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+    return 0;
+}
+//设置每个collectionview的行间距   每个cell的间距
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     return 0;
 }
 #pragma mark --UICollectionViewDelegate

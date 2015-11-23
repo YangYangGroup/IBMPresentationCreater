@@ -160,24 +160,17 @@
         
         //        [LoadingHelper showLoadingWithView:self.view];
         [LoadingHelper hiddonLoadingWithView:self.view];
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Message Alert" message:@"" preferredStyle:UIAlertControllerStyleAlert];
-        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField){
-            
-            textField.text = str;
-            
-        }];
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+        NSString *title = NSLocalizedString(@"Upload Successfully", nil);
+        //        NSString *message = NSLocalizedString(@"Upload successfully.", nil);
+        NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
         
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            // NSString *getTextMessage = textField.text;
-            UITextField *login = alertController.textFields.firstObject;
-            NSURL *url = [[NSURL alloc]initWithString:str];
-            [[UIApplication sharedApplication]openURL:url];
-            
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            NSLog(@"The \"Okay/Cancel\" alert's other action occured.");
         }];
         
-        [alertController addAction:cancelAction];
-        [alertController addAction:okAction];
+        [alertController addAction:otherAction];
         
         [self presentViewController:alertController animated:YES completion:nil];
         

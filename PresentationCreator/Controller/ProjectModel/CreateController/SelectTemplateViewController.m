@@ -42,7 +42,7 @@
     self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(10, 84, KScreenWidth, KScreenHeight-64-40-44) collectionViewLayout:flowLayout];
     self.collectionView.backgroundColor = [UIColor whiteColor];
     self.collectionView.showsHorizontalScrollIndicator = NO;
-    
+    self.collectionView.pagingEnabled = YES;
     //设置代理
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -85,6 +85,10 @@
 }
 //定义每个UICollectionView 纵向的间距
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+    return 0;
+}
+//设置每个collectionview的行间距   每个cell的间距
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     return 0;
 }
 #pragma mark --UICollectionViewDelegate
