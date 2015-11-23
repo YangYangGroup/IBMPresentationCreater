@@ -239,7 +239,7 @@
     
     //模态跳转
     AddPageViewController *loginVC = [[AddPageViewController alloc]init];
-    
+    loginVC.showSummaryIdStr = self.showSummaryIdStr;
     
     UINavigationController * navigation = [[UINavigationController alloc]initWithRootViewController:loginVC];
     
