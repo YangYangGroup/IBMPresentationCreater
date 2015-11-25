@@ -148,6 +148,8 @@
 		BA2BEFD41BFF2D7D00718E43 /* AudioListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA2BEFD31BFF2D7D00718E43 /* AudioListCell.m */; };
 		BA7BBFF01C058C050033F37A /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = BA7BBFEF1C058C050033F37A /* KxMenu.m */; };
 		BA8DC5211C032EE3005CBB73 /* SummaryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8DC5201C032EE3005CBB73 /* SummaryModel.m */; };
+		BAA006341C05C3E400D3C522 /* EditPresentationNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAA006321C05C3E400D3C522 /* EditPresentationNameViewController.m */; };
+		BAA006351C05C3E400D3C522 /* EditPresentationNameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAA006331C05C3E400D3C522 /* EditPresentationNameViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -377,6 +379,9 @@
 		BA7BBFEF1C058C050033F37A /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
 		BA8DC51F1C032EE3005CBB73 /* SummaryModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SummaryModel.h; sourceTree = "<group>"; };
 		BA8DC5201C032EE3005CBB73 /* SummaryModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SummaryModel.m; sourceTree = "<group>"; };
+		BAA006311C05C3E400D3C522 /* EditPresentationNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditPresentationNameViewController.h; sourceTree = "<group>"; };
+		BAA006321C05C3E400D3C522 /* EditPresentationNameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditPresentationNameViewController.m; sourceTree = "<group>"; };
+		BAA006331C05C3E400D3C522 /* EditPresentationNameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditPresentationNameViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -569,6 +574,9 @@
 				16DE712E1BD535FD009921B9 /* EditNowViewController.h */,
 				16DE712F1BD535FD009921B9 /* EditNowViewController.m */,
 				16DE71301BD535FD009921B9 /* EditNowViewController.xib */,
+				BAA006311C05C3E400D3C522 /* EditPresentationNameViewController.h */,
+				BAA006321C05C3E400D3C522 /* EditPresentationNameViewController.m */,
+				BAA006331C05C3E400D3C522 /* EditPresentationNameViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1015,6 +1023,7 @@
 				16350CDB1BD7B6C0005C1291 /* SelectTemplateViewController.xib in Resources */,
 				1631DEDB1BFDE8BB005B0116 /* RecordingSignal004.png in Resources */,
 				BA2BEFD01BFF2D1100718E43 /* checkbox_checked.png in Resources */,
+				BAA006351C05C3E400D3C522 /* EditPresentationNameViewController.xib in Resources */,
 				162A7AE81BFB5846008AD509 /* share@2x.png in Resources */,
 				16335CCD1BF476C300DD1DB7 /* Localizable.strings in Resources */,
 				163420E51BD6777A006CBC87 /* index.html in Resources */,
@@ -1116,6 +1125,7 @@
 				1628E7761BE9E1C300D6200A /* FilesModel.m in Sources */,
 				162A37C71BBA8CB40069D9BB /* ViewTableViewCell.m in Sources */,
 				1628E78E1BE9F8F200D6200A /* AFNetworkReachabilityManager.m in Sources */,
+				BAA006341C05C3E400D3C522 /* EditPresentationNameViewController.m in Sources */,
 				BA2BEFD41BFF2D7D00718E43 /* AudioListCell.m in Sources */,
 				16335CC81BF476A300DD1DB7 /* PECropRectView.m in Sources */,
 				1657BBF91BF83F61000C83C0 /* SBJsonStreamWriterState.m in Sources */,
