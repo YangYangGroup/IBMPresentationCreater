@@ -16,6 +16,7 @@
 #import "AFNetworking.h"
 #import "KxMenu.h"
 #import "SummaryModel.h"
+#import "EditPresentationNameViewController.h"
 
 @interface ShowViewController ()<UIWebViewDelegate>
 @property (nonatomic, retain) UIWebView *webView;
@@ -31,6 +32,8 @@
 @implementation ShowViewController
 -(void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = YES;
+    self.navigationItem.title = [DBDaoHelper querySummaryNameBySummaryId:_showSummaryIdStr];
+    
     //从summary 表中根据summary id获取html代码，并加载到webView中
     _finalHtmlCode = [DBDaoHelper queryHtmlCodeFromSummary:_showSummaryIdStr];
     _finalProductUrlStr = [DBDaoHelper queryProductUrlFromSummary:_showSummaryIdStr];
@@ -40,7 +43,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self addNavigation];
-    self.navigationItem.title= self.showSummaryNameStr;
+    
     
     [self loadDetailsDataToArray];
     [self generationFinalHtmlCode];
@@ -395,7 +398,7 @@
       [KxMenuItem menuItem:@"Rename"
                      image:nil
                     target:self
-                    action:@selector(editClick)],
+                    action:@selector(editPresentationName)],
       
       [KxMenuItem menuItem:@"Copy"
                      image:nil
@@ -420,6 +423,13 @@
     [KxMenu showMenuInView:self.view
                   fromRect:CGRectMake(KScreenWidth - 100, 0, KScreenWidth, 60)
                  menuItems:menuItems];
+}
+// edit presentation name
+-(void)editPresentationName{
+    EditPresentationNameViewController *editPName = [[EditPresentationNameViewController alloc]init];
+    editPName.summaryId = _showSummaryIdStr;
+    editPName.summaryName = _showSummaryNameStr;
+    [self.navigationController pushViewController:editPName animated:YES];
 }
 
 // copy a presentation

@@ -384,4 +384,20 @@
     [db close];
     return array;
 }
+
+// 根据summary id 查询 summary表中summary name
++(NSString *)querySummaryNameBySummaryId:(NSString *)summaryId{
+    FMDatabase *db =[DBHelper openDatabase];
+    FMResultSet *result1 = [db executeQuery:@"SELECT summary_name FROM PPT_PRODUCT_SUMMARY WHERE SUMMARY_ID =?",summaryId];
+    
+    while (result1.next)
+    {
+        NSString *str = [result1 stringForColumnIndex:0];
+        [db close];
+        return str;
+    }
+    [db close];
+    return nil;
+    
+}
 @end

@@ -64,4 +64,6 @@
 +(NSString *)copySummaryData:(NSString *)newName ContentHtml:(NSString *)contentHtml;
 //查询summary表中所有数据，放入数组中
 +(NSMutableArray *)qeuryAllSummaryData;
+// 根据summary id 查询 summary表中summary name
++(NSString *)querySummaryNameBySummaryId:(NSString *)summaryId;
 @end
