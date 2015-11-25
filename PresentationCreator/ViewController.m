@@ -39,19 +39,7 @@
 }
 -(void)addNavigation
 {
-//    [self.navigationController.navigationBar setBarTintColor:[UIColor blackColor]];//设置navigationbar的颜色
-//    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],UITextAttributeTextColor,nil]];
-    
-    
     self.navigationItem.title=@"Presentation Creator";
-//    UIButton *rightbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    rightbtn.titleLabel.font = [UIFont systemFontOfSize:16.0f];
-//    
-//    rightbtn.frame = CGRectMake(0, 0, 20, 20);
-//    [rightbtn addTarget:self action:@selector(setClick) forControlEvents:UIControlEventTouchUpInside];
-//    UIBarButtonItem *SearchItem = [[UIBarButtonItem alloc]initWithCustomView:rightbtn];
-//    [rightbtn setBackgroundImage:[UIImage imageNamed:@"set"] forState:UIControlStateNormal];
-//    self.navigationItem.rightBarButtonItem = SearchItem;
 }
 -(void)addTableView
 {
