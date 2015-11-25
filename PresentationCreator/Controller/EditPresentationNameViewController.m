@@ -26,12 +26,15 @@
 }
 
 -(void)loadDataToView{
+    UIView *uView = [[UIView alloc]initWithFrame:CGRectMake(0,80,KScreenWidth,40)];
+    uView.backgroundColor = [UIColor whiteColor];
     _txtField = [[UITextField alloc]init];
-    _txtField.frame = CGRectMake(0, 80, KScreenWidth, 40);
+    _txtField.frame = CGRectMake(15, 0, KScreenWidth -30, 40);
     _txtField.text = _summaryName;
     _txtField.backgroundColor = [UIColor whiteColor];
     _txtField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    [self.view addSubview:_txtField];
+    [uView addSubview:_txtField];
+    [self.view addSubview:uView];
 }
 
 -(void)addNavigation
