@@ -318,8 +318,13 @@
 //查询是否带 _copy 的 summary name.
 +(NSMutableArray *)queryAllSummaryNameByOldName :(NSString *)oldName{
     FMDatabase *db = [DBHelper openDatabase];
-    NSString *sql = [NSString stringWithFormat:@"select summary_id,summary_name from PPT_PRODUCT_SUMMARY where summary_name like '%%@_copy%'", oldName];
+    
+    NSString *sql = [NSString stringWithFormat:@"select summary_id,summary_name from PPT_PRODUCT_SUMMARY where summary_name like '%"];
+    sql = [sql stringByAppendingString:oldName];
+    sql = [sql stringByAppendingString:@"_copy%'"];
+   
     NSMutableArray *array = [[NSMutableArray alloc]init];
+    NSLog(@"sql:%@",sql);
     //当下边还有分类的时候执行
     FMResultSet *result = [db executeQuery:sql];
     while (result.next)

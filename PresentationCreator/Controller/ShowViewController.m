@@ -13,7 +13,9 @@
 #import "DBDaoHelper.h"
 #import "LoadingHelper.h"
 #import "SBJson.h"
-#import "AFNetworking.h"o
+#import "AFNetworking.h"
+#import "KxMenu.h"
+#import "SummaryModel.h"
 
 @interface ShowViewController ()<UIWebViewDelegate>
 @property (nonatomic, retain) UIWebView *webView;
@@ -115,17 +117,17 @@
 //    [uploadButton setTitle:@"+" forState:UIControlStateNormal];
     [uploadButton setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
     uploadButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
-    [uploadButton addTarget:self action:@selector(addClick)forControlEvents:UIControlEventTouchDown];
+    [uploadButton addTarget:self action:@selector(showMenu:)forControlEvents:UIControlEventTouchDown];
     [rightBarView addSubview:uploadButton];
     
-    UIButton *editButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [editButton setFrame:CGRectMake(0, 0, 30, 20)];
-    [editButton setTitleColor:[UIColor colorWithRed:63/255.0 green:140/255.0 blue:246/255.0 alpha:1]forState:UIControlStateNormal];
-    [editButton setTitle:@"Edit" forState:UIControlStateNormal];
-    editButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
-    [editButton addTarget:self action:@selector(editClick)forControlEvents:UIControlEventTouchDown];
-    [rightBarView addSubview:uploadButton];
-    [rightBarView addSubview:editButton];
+//    UIButton *editButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [editButton setFrame:CGRectMake(0, 0, 30, 20)];
+//    [editButton setTitleColor:[UIColor colorWithRed:63/255.0 green:140/255.0 blue:246/255.0 alpha:1]forState:UIControlStateNormal];
+//    [editButton setTitle:@"Edit" forState:UIControlStateNormal];
+//    editButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+//    [editButton addTarget:self action:@selector(editClick)forControlEvents:UIControlEventTouchDown];
+//   
+//    [rightBarView addSubview:editButton];
 //    rightBarView.backgroundColor=[UIColor greenColor];
     
     UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc]initWithCustomView:rightBarView];
@@ -379,6 +381,99 @@
     }
     
 }
+
+#pragma show menu list function
+- (void)showMenu:(UIButton *)sender
+{
+    NSArray *menuItems =
+    @[
+      [KxMenuItem menuItem:@"Edit"
+                     image:nil
+                    target:self
+                    action:@selector(editClick)],
+      
+      [KxMenuItem menuItem:@"Rename"
+                     image:nil
+                    target:self
+                    action:@selector(editClick)],
+      
+      [KxMenuItem menuItem:@"Copy"
+                     image:nil
+                    target:self
+                    action:@selector(copyCurrentPresentation)],
+      
+      [KxMenuItem menuItem:@"Submit"
+                     image:nil
+                    target:self
+                    action:@selector(pushMenuItem:)],
+      
+      [KxMenuItem menuItem:@"Share"
+                     image:nil
+                    target:self
+                    action:@selector(pushMenuItem:)],
+      ];
+    
+    //    KxMenuItem *first = menuItems[0];
+    //    first.foreColor = [UIColor colorWithRed:47/255.0f green:112/255.0f blue:225/255.0f alpha:1.0];
+    //    first.alignment = NSTextAlignmentCenter;
+    
+    [KxMenu showMenuInView:self.view
+                  fromRect:CGRectMake(KScreenWidth - 100, 0, KScreenWidth, 60)
+                 menuItems:menuItems];
+}
+
+// copy a presentation
+-(void)copyCurrentPresentation{
+    NSString *title = NSLocalizedString(@"", nil);
+    NSString *message = NSLocalizedString(@"Are you sure to copy this presentation?", nil);
+    NSString *cancelTitle = NSLocalizedString(@"Cancel", nil);
+    NSString *deleteTitle = NSLocalizedString(@"Copy", nil);
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        
+    }];
+    UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:deleteTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        NSMutableArray *summaryNameArray = [DBDaoHelper queryAllSummaryNameByOldName:_showSummaryNameStr];
+        
+        NSString *newName = [[NSString alloc]initWithString:_showSummaryNameStr];
+        newName = [newName stringByAppendingString:@"_copy"];
+        
+        if(summaryNameArray.count == 0){
+            
+        }else{
+            int tmp = 0;
+            for (int i = 0; i<summaryNameArray.count; i ++) {
+                tmp ++;
+            }
+            
+            newName = [newName stringByAppendingString:@"_"];
+            newName = [newName stringByAppendingString:[NSString stringWithFormat:@"%d", tmp]];
+        }
+        
+        //newName should be save.
+        NSString *smID = [DBDaoHelper copySummaryData:newName ContentHtml:_finalHtmlCode];
+        NSMutableArray *detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:_showSummaryIdStr];
+        for (int i = 0; i<detailsArray.count; i ++) {
+            DetailsModel *dm = [[DetailsModel alloc]init];
+            dm = [detailsArray objectAtIndex:i];
+            [DBDaoHelper copyDetailsData:smID TemplateId:dm.templateIdStr HtmlCode:dm.htmlCodeStr PageNumber:dm.pageNumberStr fileId:dm.fileIdStr];
+        }
+        
+    }];
+    [alertController addAction:cancelAction];
+    [alertController addAction:deleteAction];
+    [self presentViewController:alertController animated:YES completion:nil];
+    
+    
+}
+- (void) pushMenuItem:(id)sender
+{
+    NSLog(@"%@", sender);
+}
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

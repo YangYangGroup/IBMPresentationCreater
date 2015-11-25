@@ -24,10 +24,8 @@
 @implementation ViewController
 -(void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = NO;
-    self.mutableArray = [DBDaoHelper selectTableArray];
+   // self.mutableArray = [DBDaoHelper selectTableArray];
     self.summaryArray = [DBDaoHelper qeuryAllSummaryData];
-    
-    NSLog(@"%@",self.mutableArray);
     //tableview刷新
     [self.tabView reloadData];
 }
@@ -35,7 +33,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.DBtextField = [[UITextField alloc]init];
-    self.mutableArray = [[NSMutableArray alloc]init];
+    self.summaryArray = [[NSMutableArray alloc]init];
     [self addNavigation];
     [self addTableView];
 }
@@ -132,48 +130,33 @@
 //// delete function
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if(editingStyle == UITableViewCellEditingStyleDelete){
-        SummaryModel *model = [_summaryArray objectAtIndex:indexPath.row];
-        [DBDaoHelper deleteSummaryById:[NSString stringWithFormat:@"%ld",(long)model.summaryId]];
-        _summaryArray = [DBDaoHelper qeuryAllSummaryData];
-        [_tabView reloadData];
+        NSString *title = NSLocalizedString(@"", nil);
+        NSString *message = NSLocalizedString(@"Are you sure to delete this presentation?", nil);
+        NSString *cancelTitle = NSLocalizedString(@"Cancel", nil);
+        NSString *deleteTitle = NSLocalizedString(@"Delete", nil);
         
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            
+        }];
+        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:deleteTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            SummaryModel *model = [_summaryArray objectAtIndex:indexPath.row];
+            BOOL flag = [DBDaoHelper deleteSummaryById:model.summaryId];
+            if(flag){
+                _summaryArray = [DBDaoHelper qeuryAllSummaryData];
+                [_tabView reloadData];
+            }
+            
+        }];
+        [alertController addAction:cancelAction];
+        [alertController addAction:deleteAction];
+        [self presentViewController:alertController animated:YES completion:nil];
+       
     }
 }
 -(void)copyPPT{
-    NSString *oldName = @"sd";
-    NSMutableArray *summaryNameArray = [DBDaoHelper queryAllSummaryNameByOldName:oldName];
     
-    NSString *newName = [[NSString alloc]initWithString:oldName];
-    newName = [newName stringByAppendingString:@"_copy"];
-    if(summaryNameArray.count == 0){
-        
-    }else{
-        for (int i = 0; i<summaryNameArray.count; i ++) {
-            SummaryModel *sm = [[SummaryModel alloc]init];
-            sm = [summaryNameArray objectAtIndex:i];
-            NSString *sName = sm.summaryName;
-            NSRange range = [sName rangeOfString:newName];
-            NSString *strNum = [sName substringFromIndex:range.length];
-            if (0 == strNum.length) {
-                newName = [newName stringByAppendingString:@"_1"];
-            }else{
-                newName = [newName stringByAppendingString:@"_"];
-                int tmp = [strNum intValue];
-                tmp ++;
-                newName = [newName stringByAppendingString:[NSString stringWithFormat:@"%d", tmp]];
-
-            }
-        }
-    }
-    
-    //newName should be save.
-    
-    NSMutableArray *detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:@"1"];
-    for (int i = 0; i<detailsArray.count; i ++) {
-        DetailsModel *dm = [[DetailsModel alloc]init];
-        dm = [detailsArray objectAtIndex:i];
-        [DBDaoHelper copyDetailsData:@"1" TemplateId:dm.templateIdStr HtmlCode:dm.htmlCodeStr PageNumber:dm.pageNumberStr fileId:dm.fileIdStr];
-    }
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
