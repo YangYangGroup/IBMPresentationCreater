@@ -80,7 +80,7 @@
 //列表每行的高度
 -  (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 64;
+    return 150;
 }
 //列表每行显示的内容
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -95,9 +95,15 @@
     }
 //    ProjectModel *model = [self.mutableArray objectAtIndex:indexPath.row];
 //    cell.titleLabel.text = model.tableNameStr;
-    
+    NSString *status = @"Status: ";
     SummaryModel *model = [_summaryArray objectAtIndex:indexPath.row];
-    cell.titleLabel.text = model.summaryName;
+    cell.imgView.image = [UIImage imageNamed:@"IMG_1.png"];
+    cell.nameLabel.text = model.summaryName;
+    
+    status = [status stringByAppendingString:model.status];
+    status = [status stringByAppendingString:@" Time: "];
+    
+    cell.statusLabel.text = status;
     return cell;
 }
 // UITableView的点击事件
