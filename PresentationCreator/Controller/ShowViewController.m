@@ -101,41 +101,23 @@
 -(void)addNavigation
 {
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    //    backbtn.titleLabel.font = [UIFont systemFontOfSize:16.0f];
-    backbtn.frame = CGRectMake(0, 0, 40, 30);
-    backbtn.titleLabel.font = [UIFont systemFontOfSize:14.0f];
-    [backbtn setTitle:@"Back" forState:UIControlStateNormal];
+
+    backbtn.frame = CGRectMake(0, 0, 30, 30);
+    [backbtn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
     [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *SearchItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
-    //    [rightbtn setBackgroundImage:[UIImage imageNamed:@"set"] forState:UIControlStateNormal];
-    self.navigationItem.leftBarButtonItem = SearchItem;
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
+    self.navigationItem.leftBarButtonItem = backItem;
     
     
-    UIView *rightBarView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 60, 20)];
     
     UIButton *uploadButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    uploadButton.frame=CGRectMake(40, 0, 20, 20);
+    uploadButton.frame=CGRectMake(0, 0, 30, 30);
     [uploadButton setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
-    
-//    [uploadButton setTitle:@"+" forState:UIControlStateNormal];
     [uploadButton setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
     uploadButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
     [uploadButton addTarget:self action:@selector(showMenu:)forControlEvents:UIControlEventTouchDown];
-    [rightBarView addSubview:uploadButton];
-    
-//    UIButton *editButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [editButton setFrame:CGRectMake(0, 0, 30, 20)];
-//    [editButton setTitleColor:[UIColor colorWithRed:63/255.0 green:140/255.0 blue:246/255.0 alpha:1]forState:UIControlStateNormal];
-//    [editButton setTitle:@"Edit" forState:UIControlStateNormal];
-//    editButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
-//    [editButton addTarget:self action:@selector(editClick)forControlEvents:UIControlEventTouchDown];
-//   
-//    [rightBarView addSubview:editButton];
-//    rightBarView.backgroundColor=[UIColor greenColor];
-    
-    UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc]initWithCustomView:rightBarView];
-    self.navigationItem.rightBarButtonItem = rightBtn;
-    
+    UIBarButtonItem *uploadItem = [[UIBarButtonItem alloc]initWithCustomView:uploadButton];
+    self.navigationItem.rightBarButtonItem = uploadItem;
     
 }
 -(void)backClick
@@ -168,42 +150,6 @@
     NSURL *baseURL = [NSURL fileURLWithPath:path];
     [_webView loadHTMLString:_finalHtmlCode baseURL:baseURL];
     [self.view addSubview: _webView];
-    
-    //添加分享框
-    _shareView = [[UIView alloc]init];
-    _shareView.frame = CGRectMake(KScreenWidth - 105, 5, 100, 80);
-    _shareView.backgroundColor = [UIColor colorWithRed:248/255.0 green:248/255.0 blue:248/255.0 alpha:1];
-    _shareView.hidden = YES;
-    [_webView addSubview:_shareView];
-    
-    UIView *lineView = [[UIView alloc]init];
-    lineView.frame = CGRectMake(10, 40, 80, 1);
-    lineView.backgroundColor = [UIColor blackColor];
-    [_shareView addSubview:lineView];
-    
-    //上传按钮
-    UIButton *uploadBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    uploadBtn.frame = CGRectMake(10,5,80,30);
-    [uploadBtn setTitle:@"Upload" forState:UIControlStateNormal];
-    [uploadBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [uploadBtn addTarget:self action:@selector(uploadClick) forControlEvents:UIControlEventTouchUpInside];
-    [_shareView addSubview:uploadBtn];
-    
-    //分享给微信好友
-    UIButton *shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    shareBtn.frame = CGRectMake(10,45,80,30);
-    [shareBtn setTitle:@"Share" forState:UIControlStateNormal];
-    [shareBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [shareBtn addTarget:self action:@selector(shareClick) forControlEvents:UIControlEventTouchUpInside];
-    [_shareView addSubview:shareBtn];
-}
--(void)addClick
-{
-    if (_shareView.hidden == YES) {
-        _shareView.hidden = NO;
-    }else {
-        _shareView.hidden = YES;
-    }
     
 }
 -(void)uploadClick
@@ -278,7 +224,6 @@
                 
             }
         }
-        //        [dic setObject:postArray forKey:@"filelist"];
         
     }error:nil];
     
@@ -295,7 +240,6 @@
         //        [LoadingHelper showLoadingWithView:self.view];
         [LoadingHelper hiddonLoadingWithView:self.view];
         NSString *title = NSLocalizedString(@"Successfully", nil);
-//        NSString *message = NSLocalizedString(@"Upload successfully.", nil);
         NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
         
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -408,12 +352,12 @@
       [KxMenuItem menuItem:@"Submit"
                      image:nil
                     target:self
-                    action:@selector(pushMenuItem:)],
+                    action:@selector(uploadClick)],
       
       [KxMenuItem menuItem:@"Share"
                      image:nil
                     target:self
-                    action:@selector(pushMenuItem:)],
+                    action:@selector(shareClick)],
       ];
     
     //    KxMenuItem *first = menuItems[0];
@@ -477,10 +421,6 @@
     [self presentViewController:alertController animated:YES completion:nil];
     
     
-}
-- (void) pushMenuItem:(id)sender
-{
-    NSLog(@"%@", sender);
 }
 
 

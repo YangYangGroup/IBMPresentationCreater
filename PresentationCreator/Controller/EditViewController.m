@@ -41,33 +41,7 @@
 
 @implementation EditViewController
 
--(void)collectionCellAdd:(NSNotification*)sender
-{
-    if ([sender.name isEqual:@"CreationEditNotification"])
-    {
-        NSLog(@"%@",sender.object);
-        [self.htmeArray addObject:sender.object];
-        NSString *returnStr = [NSString stringWithFormat:@"%@",sender.object];
-        
-        //        NSInteger strInteger = indexPath.row +1;
-        //        NSString *str = [NSString stringWithFormat:@"%ld",(long)strInteger];
-        NSString *htmlStr = [[NSString alloc]init];
-        htmlStr = [DBDaoHelper selectCreationPageString:returnStr];
 
-        // 根据 summary id 查询最大的 page number
-        NSString *maxPageNumber = [DBDaoHelper getMaxPageNumber:self.showSummaryIdStr];
-        
-        // 根据summary id 修改最后一页的page number 为最大的page number
-        [DBDaoHelper updatePageNumberToMaxNumber:self.showSummaryIdStr pageNumber:maxPageNumber];
-        
-        //等待修改 插入
-        [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.showSummaryIdStr TemplateId:returnStr HtmlCode:htmlStr PageNumber:maxPageNumber];
-    }
-}
--(void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
 -(void)viewWillAppear:(BOOL)animated
 {
     self.parentViewController.tabBarController.tabBar.hidden = YES;
@@ -86,8 +60,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(collectionCellAdd:) name:@"CreationEditNotification" object:nil];
-//    self.view.backgroundColor = [UIColor blackColor];
+    //    self.view.backgroundColor = [UIColor blackColor];
     [self addNavigation];
     //    [self addFooter];
     [self addCollectionView];
@@ -100,13 +73,12 @@
 {
     self.htmlCodeArray = [[NSMutableArray alloc]init];
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    //    backbtn.titleLabel.font = [UIFont systemFontOfSize:16.0f];
-    backbtn.frame = CGRectMake(0, 0, 40, 30);
-    [backbtn setTitle:@"Back" forState:UIControlStateNormal];
+    
+    backbtn.frame = CGRectMake(0, 0, 30, 30);
+    [backbtn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
     [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *SearchItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
-    //    [rightbtn setBackgroundImage:[UIImage imageNamed:@"set"] forState:UIControlStateNormal];
-    self.navigationItem.leftBarButtonItem = SearchItem;
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
+    self.navigationItem.leftBarButtonItem = backItem;
     
     UIButton *btnRight = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     //    btnRight.titleLabel.font = [UIFont systemFontOfSize:15.0f];
@@ -334,16 +306,34 @@
 }
 -(void)deleteClick:(UIButton *)button
 {
-    UIButton *deleteBtn = [[UIButton alloc]init];
-    deleteBtn.tag = button.tag;
-    NSLog(@"%ld",(long)deleteBtn.tag);
-    DetailsModel *model = [self.detailsArray objectAtIndex:deleteBtn.tag];
     
-    [DBDaoHelper deleteDetailsWithsql:model.detailsIdStr];
+    NSString *title = NSLocalizedString(@"Do you want to delete?", nil);
+    //        NSString *message = NSLocalizedString(@"Upload successfully.", nil);
+    NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
+    NSString *cancelButtonTitle = NSLocalizedString(@"Cancel", nil);
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
     
-    //查询details表
-    self.detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:self.showSummaryIdStr];
-    [self.collectionView reloadData];
+    UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        NSLog(@"The \"Okay/Cancel\" alert's other action occured.");
+        UIButton *deleteBtn = [[UIButton alloc]init];
+        deleteBtn.tag = button.tag;
+        NSLog(@"%ld",(long)deleteBtn.tag);
+        DetailsModel *model = [self.detailsArray objectAtIndex:deleteBtn.tag];
+        
+        [DBDaoHelper deleteDetailsWithsql:model.detailsIdStr];
+        
+        //查询details表
+        self.detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:self.showSummaryIdStr];
+        [self.collectionView reloadData];
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        NSLog(@"The \"Okay/Cancel\" alert's cancel action occured.");
+    }];
+    [alertController addAction:otherAction];
+    [alertController addAction:cancelAction];
+    [self presentViewController:alertController animated:YES completion:nil];
+    
 }
 #pragma mark --UICollectionViewDelegateFlowLayout
 //定义每个UICollectionView 的大小

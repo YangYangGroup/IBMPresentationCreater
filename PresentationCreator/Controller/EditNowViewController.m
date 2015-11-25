@@ -50,22 +50,25 @@
 @property (nonatomic, assign) double lowPassResults;
 @property (nonatomic, strong) NSMutableArray *audioArray;
 @property (nonatomic, strong) UITableView *audioTableView;
+
+@property (nonatomic, strong) UITextView *myTextView;
+@property (nonatomic, strong) UIView *textBackgroundView;
 @end
 
 @implementation EditNowViewController
--(BOOL)textField:(UITextField *)textField shouldChangeCharacsdastersInRange:(NSRange)range replacementString:(NSString *)string{
-    
-    NSMutableString * changedString=[[NSMutableString alloc]initWithString:textField.text];
-    [changedString replaceCharactersInRange:range withString:string];
-    
-    if (changedString.length!=0) {
-        _okButton.enabled=YES;
-    }else{
-        _okButton.enabled=NO;
-    }
-    return YES;
-    
-}
+//-(BOOL)textField:(UITextField *)textField shouldChangeCharacsdastersInRange:(NSRange)range replacementString:(NSString *)string{
+//    
+//    NSMutableString * changedString=[[NSMutableString alloc]initWithString:textField.text];
+//    [changedString replaceCharactersInRange:range withString:string];
+//    
+//    if (changedString.length!=0) {
+//        _okButton.enabled=YES;
+//    }else{
+//        _okButton.enabled=NO;
+//    }
+//    return YES;
+//    
+//}
 -(void)viewWillAppear:(BOOL)animated
 {
     self.parentViewController.tabBarController.tabBar.hidden = YES;
@@ -85,17 +88,17 @@
     
     _buttonFlag = FALSE;
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    backbtn.frame = CGRectMake(0, 0, 40, 30);
-    [backbtn setTitle:@"Back" forState:UIControlStateNormal];
+    
+    backbtn.frame = CGRectMake(0, 0, 30, 30);
+    [backbtn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
     [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *SearchItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
-    //    [rightbtn setBackgroundImage:[UIImage imageNamed:@"set"] forState:UIControlStateNormal];
-    self.navigationItem.leftBarButtonItem = SearchItem;
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
+    self.navigationItem.leftBarButtonItem = backItem;
     
     //音量图片数组
     _volumImages = [[NSMutableArray alloc]initWithObjects:@"RecordingSignal001.png",@"RecordingSignal002.png",@"RecordingSignal003.png",
-                    @"RecordingSignal004.png", @"RecordingSignal005.png",@"RecordingSignal006.png",
-                    @"RecordingSignal007.png",@"RecordingSignal008.png",   nil];
+                    @"RecordingSignal004.png", @"RecordingSignal005.png",@"RecordingSignal006.png",@"RecordingSignal007.png",@"RecordingSignal008.png",   nil];
+    self.myTextView = [[UITextView alloc]init];
 }
 -(void)backClick
 {
@@ -149,7 +152,6 @@
         NSLog(@"editFlag:%@", editFlag);
         _oldTextHtml = htmlVal;
         [self editTextComponent:htmlVal htmlIndex:htmlIndex editFlag:editFlag];
-        
         NSLog(@"-------End Text-------");
         
     };
@@ -171,113 +173,169 @@
 }
 //修改文字的时候
 -(void)editTextComponent:(NSString *)htmlVal  htmlIndex:(NSString *)htmlIndex editFlag:(NSString *)editFlag{
-    self.navigationController.navigationBarHidden=YES;
-    _editTextViewControl = [[UIControl alloc]initWithFrame:CGRectMake(0, 20, self.view.bounds.size.width, self.view.bounds.size.height-20)];
-    _editTextViewControl.backgroundColor = [UIColor grayColor];
+//    self.navigationController.navigationBarHidden=YES;
     
-    
-    UILabel *titleLabel = [[UILabel alloc]init];
-    titleLabel.frame = CGRectMake(20, 20, KScreenWidth, 30);
-    titleLabel.text = @"Please type your word:";
-    [_editTextViewControl addSubview:titleLabel];
-    
-    _txtField = [[UITextField alloc]initWithFrame:CGRectMake(20, 60, KScreenWidth-40, KScreenHeight *0.1)];
-    _txtField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    _txtField.selected = YES;
-    //    txtView.delegate = self;
-    //  txtView.adjustsFontSizeToFitWidth = YES;
-    _txtField.backgroundColor = [UIColor whiteColor];
-    NSString *textStr = [htmlVal stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    // NSString *mytt= [[NSString alloc]initWithFormat:textStr];
-    _txtField.text = textStr;
-    _txtField.delegate = self;
-    //[txtView becomeFirstResponder];
-    [_txtField.layer setMasksToBounds:YES];
-    [_txtField.layer setCornerRadius:6.0];
-    [_editTextViewControl addSubview:_txtField];
-    
-    _okButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    _okButton.frame = CGRectMake(20 , 30 + KScreenHeight*0.1 + 40, KScreenWidth * 0.5 - 25, 35);
-    [_okButton setTitle:@"OK" forState:UIControlStateNormal];
-    [_okButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_okButton setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
-    _okButton.backgroundColor = [UIColor darkGrayColor];
-    _okButton.titleLabel.font = [UIFont systemFontOfSize:18.0];
-    [_okButton.layer setMasksToBounds:YES];
-    
-    [_okButton.layer setBorderWidth:1.0];
-    [_okButton.layer setCornerRadius:7.0];
-    _okButton.layer.borderColor = [UIColor whiteColor].CGColor;
-    
-    _textIndex = htmlIndex;
-    [_okButton addTarget:self action:@selector(saveTextData) forControlEvents:UIControlEventTouchUpInside];
-    
-    [_editTextViewControl addSubview:_okButton];
-    
-    
-    UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    cancelButton.frame = CGRectMake(KScreenWidth * 0.5 + 5, 30 + KScreenHeight * 0.1 + 40, KScreenWidth * 0.5 - 25, 35);
-    [cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
-    [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    cancelButton.backgroundColor = [UIColor darkGrayColor];
-    cancelButton.titleLabel.font = [UIFont systemFontOfSize:18.0];
-    [cancelButton.layer setMasksToBounds:YES];
-    
-    [cancelButton.layer setBorderWidth:1.0];
-    [cancelButton.layer setCornerRadius:7.0];
-    cancelButton.layer.borderColor = [UIColor whiteColor].CGColor;
-    _textIndex = htmlIndex;
-    [cancelButton addTarget:self action:@selector(cancelFunction) forControlEvents:UIControlEventTouchUpInside];
-    
-    UIButton *newLineButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    newLineButton.frame = CGRectMake(20, 30 + KScreenHeight * 0.25, KScreenWidth * 0.5 - 25, 35);
-    [newLineButton setTitle:@"New Line" forState:UIControlStateNormal];
-    [newLineButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [newLineButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateDisabled];
-    newLineButton.backgroundColor = [UIColor darkGrayColor] ;
-    
-    newLineButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
-    [newLineButton.layer setMasksToBounds:YES];
-    [newLineButton.layer setBorderWidth:1.0];
-    [newLineButton.layer setCornerRadius:7.0];
-    newLineButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    [newLineButton addTarget:self action:@selector(newLineFunction) forControlEvents:UIControlEventTouchUpInside];
-    
-    UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    deleteButton.frame = CGRectMake(KScreenWidth*0.5 +5, 30 + KScreenHeight*0.25, KScreenWidth*0.5 - 25, 35);
-    [deleteButton setTitle:@"Delete Current line" forState:UIControlStateNormal];
-    [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [deleteButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateDisabled];
-    deleteButton.backgroundColor = [UIColor darkGrayColor];
-    deleteButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
-    [deleteButton.layer setMasksToBounds:YES];
-    [deleteButton.layer setBorderWidth:1.0];
-    [deleteButton.layer setCornerRadius:7.0];
-    deleteButton.layer.borderColor = [UIColor whiteColor].CGColor;
-    [deleteButton addTarget:self action:@selector(deleteFunction) forControlEvents:UIControlEventTouchUpInside];
-    
-    [_editTextViewControl addSubview:newLineButton];
-    [_editTextViewControl addSubview:deleteButton];
-    [_editTextViewControl addSubview:_okButton];
-    [_editTextViewControl addSubview:cancelButton];
-    if([editFlag isEqualToString:@"false"]){
-        
-        newLineButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
-        deleteButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
-        deleteButton.backgroundColor = [UIColor lightGrayColor] ;
-        newLineButton.backgroundColor = [UIColor lightGrayColor] ;
-        [newLineButton setEnabled:NO];
-        [deleteButton setEnabled:NO];
-    }else{
-        newLineButton.layer.borderColor = [UIColor whiteColor].CGColor;
-        deleteButton.layer.borderColor = [UIColor whiteColor].CGColor;
-        deleteButton.backgroundColor = [UIColor darkGrayColor] ;
-        newLineButton.backgroundColor = [UIColor darkGrayColor] ;
-        [newLineButton setEnabled:YES];
-        [deleteButton setEnabled:YES];
-    }
+    _editTextViewControl = [[UIControl alloc]initWithFrame:CGRectMake(0, 20, KScreenWidth, KScreenHeight+5)];
+    _editTextViewControl.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_editTextViewControl];
+    
+    _textBackgroundView =[[UIView alloc]initWithFrame:CGRectMake(0, KScreenHeight-216-85, KScreenWidth, 30)];
+    _textBackgroundView.backgroundColor = [UIColor whiteColor];
+    [_editTextViewControl addSubview:_textBackgroundView];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.myTextView.frame=CGRectMake(2, KScreenHeight-216-80, KScreenWidth-80, 20);
+        self.myTextView.backgroundColor = [UIColor whiteColor];
+        self.myTextView.delegate = self;
+        [self.myTextView becomeFirstResponder];
+        self.myTextView.layer.borderWidth = 1;
+        self.myTextView.layer.cornerRadius = 5;
+        NSString *textStr = [htmlVal stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        // NSString *mytt= [[NSString alloc]initWithFormat:textStr];
+        self.myTextView.text = textStr;
+        self.myTextView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        [_editTextViewControl addSubview:self.myTextView];
+    });
+    
+        _okButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        _okButton.frame = CGRectMake(KScreenWidth-60 , 5, 40, 20);
+        [_okButton setTitle:@"OK" forState:UIControlStateNormal];
+        [_okButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [_okButton setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
+        _okButton.titleLabel.font = [UIFont systemFontOfSize:15.0];
+        _textIndex = htmlIndex;
+        [_okButton addTarget:self action:@selector(saveTextData) forControlEvents:UIControlEventTouchUpInside];
+        [_textBackgroundView addSubview:_okButton];
+    
+    
+    
+//    _editTextViewControl = [[UIControl alloc]initWithFrame:CGRectMake(0, 20, self.view.bounds.size.width, self.view.bounds.size.height-20)];
+//    _editTextViewControl.backgroundColor = [UIColor grayColor];
+//    
+//    
+//    UILabel *titleLabel = [[UILabel alloc]init];
+//    titleLabel.frame = CGRectMake(20, 20, KScreenWidth, 30);
+//    titleLabel.text = @"Please type your word:";
+//    [_editTextViewControl addSubview:titleLabel];
+//    
+//    _txtField = [[UITextField alloc]initWithFrame:CGRectMake(20, 60, KScreenWidth-40, KScreenHeight *0.1)];
+//    _txtField.clearButtonMode = UITextFieldViewModeWhileEditing;
+//    _txtField.selected = YES;
+//    //    txtView.delegate = self;
+//    //  txtView.adjustsFontSizeToFitWidth = YES;
+//    _txtField.backgroundColor = [UIColor whiteColor];
+//    NSString *textStr = [htmlVal stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+//    // NSString *mytt= [[NSString alloc]initWithFormat:textStr];
+//    _txtField.text = textStr;
+//    _txtField.delegate = self;
+//    //[txtView becomeFirstResponder];
+//    [_txtField.layer setMasksToBounds:YES];
+//    [_txtField.layer setCornerRadius:6.0];
+//    [_editTextViewControl addSubview:_txtField];
+//    
+//    _okButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//    _okButton.frame = CGRectMake(20 , 30 + KScreenHeight*0.1 + 40, KScreenWidth * 0.5 - 25, 35);
+//    [_okButton setTitle:@"OK" forState:UIControlStateNormal];
+//    [_okButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [_okButton setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+//    _okButton.backgroundColor = [UIColor darkGrayColor];
+//    _okButton.titleLabel.font = [UIFont systemFontOfSize:18.0];
+//    [_okButton.layer setMasksToBounds:YES];
+//    
+//    [_okButton.layer setBorderWidth:1.0];
+//    [_okButton.layer setCornerRadius:7.0];
+//    _okButton.layer.borderColor = [UIColor whiteColor].CGColor;
+//    
+//    _textIndex = htmlIndex;
+//    [_okButton addTarget:self action:@selector(saveTextData) forControlEvents:UIControlEventTouchUpInside];
+//    
+//    [_editTextViewControl addSubview:_okButton];
+//    
+//    
+//    UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//    cancelButton.frame = CGRectMake(KScreenWidth * 0.5 + 5, 30 + KScreenHeight * 0.1 + 40, KScreenWidth * 0.5 - 25, 35);
+//    [cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
+//    [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    cancelButton.backgroundColor = [UIColor darkGrayColor];
+//    cancelButton.titleLabel.font = [UIFont systemFontOfSize:18.0];
+//    [cancelButton.layer setMasksToBounds:YES];
+//    
+//    [cancelButton.layer setBorderWidth:1.0];
+//    [cancelButton.layer setCornerRadius:7.0];
+//    cancelButton.layer.borderColor = [UIColor whiteColor].CGColor;
+//    _textIndex = htmlIndex;
+//    [cancelButton addTarget:self action:@selector(cancelFunction) forControlEvents:UIControlEventTouchUpInside];
+//    
+//    UIButton *newLineButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    newLineButton.frame = CGRectMake(20, 30 + KScreenHeight * 0.25, KScreenWidth * 0.5 - 25, 35);
+//    [newLineButton setTitle:@"New Line" forState:UIControlStateNormal];
+//    [newLineButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [newLineButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateDisabled];
+//    newLineButton.backgroundColor = [UIColor darkGrayColor] ;
+//    
+//    newLineButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
+//    [newLineButton.layer setMasksToBounds:YES];
+//    [newLineButton.layer setBorderWidth:1.0];
+//    [newLineButton.layer setCornerRadius:7.0];
+//    newLineButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+//    [newLineButton addTarget:self action:@selector(newLineFunction) forControlEvents:UIControlEventTouchUpInside];
+//    
+//    UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    deleteButton.frame = CGRectMake(KScreenWidth*0.5 +5, 30 + KScreenHeight*0.25, KScreenWidth*0.5 - 25, 35);
+//    [deleteButton setTitle:@"Delete Current line" forState:UIControlStateNormal];
+//    [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [deleteButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateDisabled];
+//    deleteButton.backgroundColor = [UIColor darkGrayColor];
+//    deleteButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
+//    [deleteButton.layer setMasksToBounds:YES];
+//    [deleteButton.layer setBorderWidth:1.0];
+//    [deleteButton.layer setCornerRadius:7.0];
+//    deleteButton.layer.borderColor = [UIColor whiteColor].CGColor;
+//    [deleteButton addTarget:self action:@selector(deleteFunction) forControlEvents:UIControlEventTouchUpInside];
+//    
+//    [_editTextViewControl addSubview:newLineButton];
+//    [_editTextViewControl addSubview:deleteButton];
+//    [_editTextViewControl addSubview:_okButton];
+//    [_editTextViewControl addSubview:cancelButton];
+//    if([editFlag isEqualToString:@"false"]){
+//        
+//        newLineButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+//        deleteButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+//        deleteButton.backgroundColor = [UIColor lightGrayColor] ;
+//        newLineButton.backgroundColor = [UIColor lightGrayColor] ;
+//        [newLineButton setEnabled:NO];
+//        [deleteButton setEnabled:NO];
+//    }else{
+//        newLineButton.layer.borderColor = [UIColor whiteColor].CGColor;
+//        deleteButton.layer.borderColor = [UIColor whiteColor].CGColor;
+//        deleteButton.backgroundColor = [UIColor darkGrayColor] ;
+//        newLineButton.backgroundColor = [UIColor darkGrayColor] ;
+//        [newLineButton setEnabled:YES];
+//        [deleteButton setEnabled:YES];
+//    }
+//    [self.view addSubview:_editTextViewControl];
 }
+- (void)textViewDidChange:(UITextView *)textView
+{
+    // 获取原来的 frame
+    CGRect tmpRect = _myTextView.frame;
+    
+    CGSize size = [_myTextView.text sizeWithFont:[UIFont systemFontOfSize:18]
+                              constrainedToSize:CGSizeMake(KScreenWidth, 100)
+                                  lineBreakMode:NSLineBreakByWordWrapping];
+    
+    tmpRect.size.height = size.height; // 20 points for padding
+    tmpRect.origin.y = 216+75-tmpRect.size.height;
+    _textBackgroundView.frame = CGRectMake(0, tmpRect.origin.y-5, KScreenWidth, tmpRect.size.height +20);
+    _myTextView.frame = tmpRect;
+    _myTextView.text = _myTextView.text;
+}
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self.myTextView resignFirstResponder];
+    return YES;
+}
+
 -(void)newLineFunction{
     NSString *str = @"addListItem('";
     str = [str stringByAppendingString:_textIndex];
@@ -328,15 +386,15 @@
 -(void)saveTextData{
     self.navigationController.navigationBarHidden = NO;
     
-    NSString *temp = [_txtField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *temp = [_myTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     //看剩下的字符串的长度是否为零
     if ([temp length]!=0) {
-        _currentText = _txtField.text;
+        _currentText = _myTextView.text;
         NSString *str = @"var field = document.getElementsByClassName('text_element')[";
         str = [str stringByAppendingString:_textIndex];
         str = [str stringByAppendingString:@"];"];
         str = [str stringByAppendingString:@" field.innerHTML='"];
-        str = [str stringByAppendingString:_txtField.text];
+        str = [str stringByAppendingString:_myTextView.text];
         str = [str stringByAppendingString:@"';"];
         
         NSLog(@"final javascript:%@",str);

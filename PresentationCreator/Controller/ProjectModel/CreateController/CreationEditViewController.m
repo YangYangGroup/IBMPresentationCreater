@@ -110,21 +110,22 @@
 {
     self.navigationController.navigationBarHidden =YES;//隐藏系统自带导航栏按钮
     _titleViewControl = [[UIControl alloc]initWithFrame:CGRectMake(0, 20, KScreenWidth, KScreenHeight+5)];
-    _titleViewControl.backgroundColor = [UIColor blackColor];
+    _titleViewControl.backgroundColor = [UIColor colorWithRed:247/255.0f green:247/255.0f blue:247/255.0f alpha:1];
     
     UILabel *titleLabel = [[UILabel alloc]init];
     titleLabel.frame = CGRectMake(20, 20, KScreenWidth, 30);
-    titleLabel.textColor = [UIColor whiteColor];
+    titleLabel.textColor = [UIColor blackColor];
     titleLabel.text = @"Presentation name:";
     [_titleViewControl addSubview:titleLabel];
     
     _titleTextView = [[UITextView alloc]init];
     _titleTextView.frame = CGRectMake(20, 50, KScreenWidth-40, KScreenHeight*0.25);
     _titleTextView.delegate = self;
+    _titleTextView.layer.borderColor = [UIColor blackColor].CGColor;
+    _titleTextView.layer.borderWidth = 1;
     _titleTextView.layer.cornerRadius = 6;
     _titleTextView.layer.masksToBounds = YES;
     _titleTextView.backgroundColor = [UIColor whiteColor];
-    //    [_titleTextView setText: @"aa"];
     [_titleTextView becomeFirstResponder];
     [_titleViewControl addSubview:_titleTextView];
     
@@ -133,15 +134,15 @@
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     backBtn.frame = CGRectMake(60 , 30 + KScreenHeight*0.25 + 40, 60, 40);
     [backBtn setTitle:@"Back" forState:UIControlStateNormal];
-    [backBtn setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
-    backBtn.backgroundColor = [UIColor lightGrayColor];
+    [backBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    backBtn.backgroundColor = [UIColor grayColor];
     backBtn.titleLabel.font = [UIFont systemFontOfSize:18.0];
     [backBtn.layer setMasksToBounds:YES];
-    [backBtn setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+    [backBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
 //    [backBtn.layer setBorderWidth:1.0];
     [backBtn.layer setCornerRadius:7.0];
-    backBtn.layer.borderColor = [UIColor whiteColor].CGColor;
-    [backBtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
+    backBtn.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    [backBtn addTarget:self action:@selector(backShowViewClick) forControlEvents:UIControlEventTouchUpInside];
     [_titleViewControl addSubview:backBtn];
     
     // 点击OK按钮，保存到summary表中，并返回最大的主键。
@@ -149,10 +150,10 @@
     _okButton.frame = CGRectMake(KScreenWidth-60-60 , 30 + KScreenHeight*0.25 + 40, 60, 40);
     [_okButton setTitle:@"Save" forState:UIControlStateNormal];
     [_okButton setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
-    _okButton.backgroundColor = [UIColor lightGrayColor];
+    _okButton.backgroundColor = [UIColor grayColor];
     _okButton.titleLabel.font = [UIFont systemFontOfSize:18.0];
     [_okButton.layer setMasksToBounds:YES];
-    [_okButton setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+    [_okButton setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
 //    [_okButton.layer setBorderWidth:1.0];
     [_okButton.layer setCornerRadius:7.0];
     _okButton.layer.borderColor = [UIColor whiteColor].CGColor;
@@ -163,7 +164,7 @@
     [self.view addSubview:_titleViewControl];
     [self.view bringSubviewToFront:_titleViewControl];
 }
--(void)backClick
+-(void)backShowViewClick
 {
     self.navigationController.navigationBarHidden =NO;
     [self.navigationController popViewControllerAnimated:YES];
@@ -212,18 +213,31 @@
 }
 -(void)addNavigation
 {
+    UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    
+    backbtn.frame = CGRectMake(0, 0, 30, 30);
+    [backbtn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
+    [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
+    self.navigationItem.leftBarButtonItem = backItem;
+    
+    
     UIButton *btnRight = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 //    btnRight.titleLabel.font = [UIFont systemFontOfSize:15.0f];
     //    btnLeft.backgroundColor = [UIColor redColor];
     btnRight.frame = CGRectMake(0, 0, 60, 30);
-    [btnRight setTitle:@"Preview" forState:UIControlStateNormal];
-    [btnRight addTarget:self action:@selector(previewClick:) forControlEvents:UIControlEventTouchUpInside];
+    [btnRight setTitle:@"Save" forState:UIControlStateNormal];
+    [btnRight addTarget:self action:@selector(saveClick:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *preview = [[UIBarButtonItem alloc]initWithCustomView:btnRight];
     self.navigationItem.rightBarButtonItem = preview;
     
     self.htmlCodeArray = [[NSMutableArray alloc]init];
 }
--(void)previewClick:(UIButton*)sender
+-(void)backClick
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+-(void)saveClick:(UIButton*)sender
 {
     PreviewViewController *vc = [[PreviewViewController alloc]init];
     vc.showSummaryIdStr = self.maxSummaryIdStr;

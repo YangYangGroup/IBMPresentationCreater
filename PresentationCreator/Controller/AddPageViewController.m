@@ -29,14 +29,12 @@
 {
     self.navigationItem.title=@"加一页";
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    //    backbtn.titleLabel.font = [UIFont systemFontOfSize:16.0f];
     
-    backbtn.frame = CGRectMake(0, 0, 40, 20);
-    [backbtn setTitle:@"Back" forState:UIControlStateNormal];
+    backbtn.frame = CGRectMake(0, 0, 30, 30);
+    [backbtn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
     [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *SearchItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
-    //    [rightbtn setBackgroundImage:[UIImage imageNamed:@"set"] forState:UIControlStateNormal];
-    self.navigationItem.leftBarButtonItem = SearchItem;
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
+    self.navigationItem.leftBarButtonItem = backItem;
 }
 -(void)backClick
 {
@@ -138,12 +136,6 @@
     
     //等待修改 插入
     [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.showSummaryIdStr TemplateId:str HtmlCode:htmlStr PageNumber:maxPageNumber];
-    
-    
-    
-    
-    //    //发送通知
-    //    [[NSNotificationCenter defaultCenter] postNotificationName:@"CreationEditNotification" object:str];
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];

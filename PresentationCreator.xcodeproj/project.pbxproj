@@ -32,7 +32,6 @@
 		162A37CD1BBA8EA60069D9BB /* ShowViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 162A37CB1BBA8EA60069D9BB /* ShowViewController.xib */; };
 		162A37D11BBAB0430069D9BB /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 162A37CF1BBAB0430069D9BB /* EditViewController.m */; };
 		162A37D21BBAB0430069D9BB /* EditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 162A37D01BBAB0430069D9BB /* EditViewController.xib */; };
-		162A7AE81BFB5846008AD509 /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 162A7AE71BFB5846008AD509 /* share@2x.png */; };
 		162A7AF81BFB7007008AD509 /* read_me.txt in Resources */ = {isa = PBXBuildFile; fileRef = 162A7AF41BFB7007008AD509 /* read_me.txt */; };
 		162A7AFA1BFB7060008AD509 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 162A7AF91BFB7060008AD509 /* CoreTelephony.framework */; };
 		162A7AFC1BFB7357008AD509 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 162A7AFB1BFB7357008AD509 /* SystemConfiguration.framework */; };
@@ -65,6 +64,8 @@
 		1631DEDD1BFDE8BB005B0116 /* RecordingSignal006.png in Resources */ = {isa = PBXBuildFile; fileRef = 1631DED51BFDE8BB005B0116 /* RecordingSignal006.png */; };
 		1631DEDE1BFDE8BB005B0116 /* RecordingSignal007.png in Resources */ = {isa = PBXBuildFile; fileRef = 1631DED61BFDE8BB005B0116 /* RecordingSignal007.png */; };
 		1631DEDF1BFDE8BB005B0116 /* RecordingSignal008.png in Resources */ = {isa = PBXBuildFile; fileRef = 1631DED71BFDE8BB005B0116 /* RecordingSignal008.png */; };
+		1632FEF21C05D5DB00DBFA1A /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1632FEF11C05D5DB00DBFA1A /* back@2x.png */; };
+		1632FEF41C05D5EF00DBFA1A /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1632FEF31C05D5EF00DBFA1A /* share@2x.png */; };
 		16335CBE1BF4764600DD1DB7 /* PEPhotoCropEditor.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 16335CBD1BF4764600DD1DB7 /* PEPhotoCropEditor.bundle */; };
 		16335CC81BF476A300DD1DB7 /* PECropRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16335CC11BF476A300DD1DB7 /* PECropRectView.m */; };
 		16335CC91BF476A300DD1DB7 /* PECropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16335CC31BF476A300DD1DB7 /* PECropView.m */; };
@@ -219,7 +220,6 @@
 		162A37CE1BBAB0430069D9BB /* EditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditViewController.h; sourceTree = "<group>"; };
 		162A37CF1BBAB0430069D9BB /* EditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditViewController.m; sourceTree = "<group>"; };
 		162A37D01BBAB0430069D9BB /* EditViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditViewController.xib; sourceTree = "<group>"; };
-		162A7AE71BFB5846008AD509 /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
 		162A7AF41BFB7007008AD509 /* read_me.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = read_me.txt; sourceTree = "<group>"; };
 		162A7AF51BFB7007008AD509 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
 		162A7AF61BFB7007008AD509 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
@@ -261,6 +261,8 @@
 		1631DED51BFDE8BB005B0116 /* RecordingSignal006.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordingSignal006.png; sourceTree = "<group>"; };
 		1631DED61BFDE8BB005B0116 /* RecordingSignal007.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordingSignal007.png; sourceTree = "<group>"; };
 		1631DED71BFDE8BB005B0116 /* RecordingSignal008.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordingSignal008.png; sourceTree = "<group>"; };
+		1632FEF11C05D5DB00DBFA1A /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
+		1632FEF31C05D5EF00DBFA1A /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
 		16335CBD1BF4764600DD1DB7 /* PEPhotoCropEditor.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = PEPhotoCropEditor.bundle; sourceTree = "<group>"; };
 		16335CC01BF476A300DD1DB7 /* PECropRectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PECropRectView.h; sourceTree = "<group>"; };
 		16335CC11BF476A300DD1DB7 /* PECropRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PECropRectView.m; sourceTree = "<group>"; };
@@ -538,7 +540,8 @@
 				1631DED61BFDE8BB005B0116 /* RecordingSignal007.png */,
 				1631DED71BFDE8BB005B0116 /* RecordingSignal008.png */,
 				162A7B071BFC5DB3008AD509 /* sharewechat@2x.png */,
-				162A7AE71BFB5846008AD509 /* share@2x.png */,
+				1632FEF11C05D5DB00DBFA1A /* back@2x.png */,
+				1632FEF31C05D5EF00DBFA1A /* share@2x.png */,
 				16BAE2991BDE63AB00F32F7A /* delete@2x.png */,
 				16DE70331BCF4A00009921B9 /* my_ppt@2x.png */,
 				16DE70341BCF4A00009921B9 /* new_ppt@2x.png */,
@@ -1020,6 +1023,7 @@
 				1634210A1BD68802006CBC87 /* IMG_2.png in Resources */,
 				163420FE1BD6777A006CBC87 /* img6.jpg in Resources */,
 				163420EC1BD6777A006CBC87 /* template_1.html in Resources */,
+				1632FEF41C05D5EF00DBFA1A /* share@2x.png in Resources */,
 				16350CDB1BD7B6C0005C1291 /* SelectTemplateViewController.xib in Resources */,
 				1631DEDB1BFDE8BB005B0116 /* RecordingSignal004.png in Resources */,
 				BA2BEFD01BFF2D1100718E43 /* checkbox_checked.png in Resources */,
@@ -1028,6 +1032,7 @@
 				16335CCD1BF476C300DD1DB7 /* Localizable.strings in Resources */,
 				163420E51BD6777A006CBC87 /* index.html in Resources */,
 				163420EE1BD6777A006CBC87 /* template_3.html in Resources */,
+				1632FEF21C05D5DB00DBFA1A /* back@2x.png in Resources */,
 				163420FA1BD6777A006CBC87 /* img2.jpg in Resources */,
 				163420F01BD6777A006CBC87 /* template_5.html in Resources */,
 				16DE70351BCF4A00009921B9 /* my_ppt@2x.png in Resources */,
