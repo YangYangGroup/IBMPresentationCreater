@@ -55,4 +55,13 @@
 +(BOOL)updateSummaryNameById:(NSString *)summaryId SummaryName:(NSString *)summaryName;
 // 查询 PPT_PRODUCT_FILES 表中所有的声音文件
 +(NSMutableArray *)queryAllAudioFiles;
+//查询是否带 _copy 的 summary name.
++(NSMutableArray *)queryAllSummaryNameByOldName :(NSString *)oldName;
+
+//copy data to details table
++(BOOL)copyDetailsData:(NSString *)summaryId TemplateId:(NSString *)templateId HtmlCode:(NSString *)htmlCode PageNumber:(NSString *)pageNumber fileId:(NSString *)fileId;
+//copy summary data，返回最大的主键值
++(NSString *)copySummaryData:(NSString *)newName ContentHtml:(NSString *)contentHtml;
+//查询summary表中所有数据，放入数组中
++(NSMutableArray *)qeuryAllSummaryData;
 @end

@@ -8,6 +8,7 @@
 
 #import "DBDaoHelper.h"
 #import "Global.h"
+#import "SummaryModel.h"
 
 @implementation DBDaoHelper
 //创建所有的数据库表
@@ -312,5 +313,70 @@
     [db close];
     return  detailsArray;
     
+}
+
+//查询是否带 _copy 的 summary name.
++(NSMutableArray *)queryAllSummaryNameByOldName :(NSString *)oldName{
+    FMDatabase *db = [DBHelper openDatabase];
+    NSString *sql = [NSString stringWithFormat:@"select summary_id,summary_name from PPT_PRODUCT_SUMMARY where summary_name like '%%@_copy%'", oldName];
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    //当下边还有分类的时候执行
+    FMResultSet *result = [db executeQuery:sql];
+    while (result.next)
+    {
+        //根据列名取出分类信息存到对象中以对象返回
+        SummaryModel *model = [[SummaryModel alloc]init];
+        model.summaryName = [result stringForColumn:@"summary_name"];
+        model.summaryId = [result stringForColumn:@"summary_id"];
+        [array addObject:model];
+    }
+    [db close];
+    return array;
+}
+
+//copy data to details table
++(BOOL)copyDetailsData:(NSString *)summaryId TemplateId:(NSString *)templateId HtmlCode:(NSString *)htmlCode PageNumber:(NSString *)pageNumber fileId:(NSString *)fileId{
+    
+    FMDatabase *db =[DBHelper openDatabase];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_DETAILS'('summary_id','template_id','html_code','page_number','file_id') values (?,?,?,?,?)", summaryId, templateId, htmlCode, pageNumber, fileId];
+    [db close];
+    return result;
+}
+//copy summary data，返回最大的主键值
++(NSString *)copySummaryData:(NSString *)newName ContentHtml:(NSString *)contentHtml{
+    FMDatabase *db =[DBHelper openDatabase];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_SUMMARY'('summary_name','content_html') values(?,?)",newName, contentHtml];
+    if (result) {
+        FMResultSet *result1 = [db executeQuery:@"SELECT  MAX(SUMMARY_ID) FROM PPT_PRODUCT_SUMMARY"];
+        while (result1.next)
+        {
+            NSString *str = [result1 stringForColumnIndex:0];
+            [db close];
+            return str;
+        }
+    }
+    [db close];
+    return nil;
+}
+
+//查询summary表中所有数据，放入数组中
++(NSMutableArray *)qeuryAllSummaryData
+{
+    FMDatabase *db =[DBHelper openDatabase];
+    //执行查询语句
+    FMResultSet *result = [db executeQuery:@"select summary_id, summary_name,content_html, product_url from PPT_PRODUCT_SUMMARY "];
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    while (result.next)
+    {
+        //根据列名取出分类信息存到对象中以对象返回
+        SummaryModel *model = [[SummaryModel alloc]init];
+        model.summaryId = [result stringForColumn:@"summary_id"];
+        model.summaryName = [result stringForColumn:@"summary_name"];
+        model.contentHtml = [result stringForColumn:@"content_html"];
+        model.product_url = [result stringForColumn:@"product_url"];
+        [array addObject:model];
+    }
+    [db close];
+    return array;
 }
 @end

@@ -146,6 +146,7 @@
 		BA2BEFD01BFF2D1100718E43 /* checkbox_checked.png in Resources */ = {isa = PBXBuildFile; fileRef = BA2BEFCE1BFF2D1100718E43 /* checkbox_checked.png */; };
 		BA2BEFD11BFF2D1100718E43 /* checkbox_unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = BA2BEFCF1BFF2D1100718E43 /* checkbox_unchecked.png */; };
 		BA2BEFD41BFF2D7D00718E43 /* AudioListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA2BEFD31BFF2D7D00718E43 /* AudioListCell.m */; };
+		BA8DC5211C032EE3005CBB73 /* SummaryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8DC5201C032EE3005CBB73 /* SummaryModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -371,6 +372,8 @@
 		BA2BEFCF1BFF2D1100718E43 /* checkbox_unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox_unchecked.png; sourceTree = "<group>"; };
 		BA2BEFD21BFF2D7D00718E43 /* AudioListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioListCell.h; sourceTree = "<group>"; };
 		BA2BEFD31BFF2D7D00718E43 /* AudioListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioListCell.m; sourceTree = "<group>"; };
+		BA8DC51F1C032EE3005CBB73 /* SummaryModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SummaryModel.h; sourceTree = "<group>"; };
+		BA8DC5201C032EE3005CBB73 /* SummaryModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SummaryModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -788,6 +791,8 @@
 				16381BA51BCE315700DC4A62 /* DetailsModel.m */,
 				1628E7741BE9E1C300D6200A /* FilesModel.h */,
 				1628E7751BE9E1C300D6200A /* FilesModel.m */,
+				BA8DC51F1C032EE3005CBB73 /* SummaryModel.h */,
+				BA8DC5201C032EE3005CBB73 /* SummaryModel.m */,
 			);
 			name = ProjectModel;
 			path = ../../Controller/ProjectModel;
@@ -1111,6 +1116,7 @@
 				163484441BCA9BDE002DB6AD /* ProjectModel.m in Sources */,
 				1657BBF11BF83F61000C83C0 /* NSObject+SBJson.m in Sources */,
 				163484401BCA4D2F002DB6AD /* DBDaoHelper.m in Sources */,
+				BA8DC5211C032EE3005CBB73 /* SummaryModel.m in Sources */,
 				163130371BC7E1DD00EE9D86 /* FMResultSet.m in Sources */,
 				1646CCEF1BF0DD000051BA4A /* MBProgressHUD.m in Sources */,
 				16350CDA1BD7B6C0005C1291 /* SelectTemplateViewController.m in Sources */,
