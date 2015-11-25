@@ -11,18 +11,21 @@
 #import "ShowViewController.h"
 #import "ProjectModel.h"
 #import "DBDaoHelper.h"
+#import "SummaryModel.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) UITableView *tabView;
 @property (nonatomic, strong) UITextField *DBtextField;
 @property (nonatomic, strong) NSMutableArray *mutableArray;
+@property (nonatomic, strong) NSMutableArray *summaryArray;
+
 @end
 
 @implementation ViewController
 -(void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = NO;
-    self.mutableArray = [DBDaoHelper selectTableArray];
-    NSLog(@"%@",self.mutableArray);
+   // self.mutableArray = [DBDaoHelper selectTableArray];
+    self.summaryArray = [DBDaoHelper qeuryAllSummaryData];
     //tableview刷新
     [self.tabView reloadData];
 }
@@ -30,7 +33,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.DBtextField = [[UITextField alloc]init];
-    self.mutableArray = [[NSMutableArray alloc]init];
+    self.summaryArray = [[NSMutableArray alloc]init];
     [self addNavigation];
     [self addTableView];
 }
@@ -71,7 +74,8 @@
 //设置列表有多少行
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.mutableArray.count;
+//    return self.mutableArray.count;
+    return self.summaryArray.count;
 }
 //列表每行的高度
 -  (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -89,24 +93,34 @@
         cell = [[ViewTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         
     }
-    ProjectModel *model = [self.mutableArray objectAtIndex:indexPath.row];
-    NSLog(@"%ld",(long)indexPath.row);
-    cell.titleLabel.text = model.tableNameStr;
+//    ProjectModel *model = [self.mutableArray objectAtIndex:indexPath.row];
+//    cell.titleLabel.text = model.tableNameStr;
+    
+    SummaryModel *model = [_summaryArray objectAtIndex:indexPath.row];
+    cell.titleLabel.text = model.summaryName;
     return cell;
 }
 // UITableView的点击事件
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+//    ShowViewController *vc = [[ShowViewController alloc]init];
+//    ProjectModel *model =[self.mutableArray objectAtIndex:indexPath.row];
+//    NSLog(@"%@",model.tableNameStr);
+//    NSLog(@"%ld",model.tableId);
+//    NSString *str = [NSString stringWithFormat:@"%ld",model.tableId];
+//    NSInteger aaa = indexPath.row+1;
+//    NSString *summaryIdStr = [NSString stringWithFormat:@"%ld",(long)aaa];
+//    vc.showSummaryIdStr = summaryIdStr;
+//    vc.showSummaryNameStr = model.tableNameStr;
+//    vc.showTemplateIdStr = str;
+    
+    
     ShowViewController *vc = [[ShowViewController alloc]init];
-    ProjectModel *model =[self.mutableArray objectAtIndex:indexPath.row];
-    NSLog(@"%@",model.tableNameStr);
-    NSLog(@"%ld",model.tableId);
-    NSString *str = [NSString stringWithFormat:@"%ld",model.tableId];
-    NSInteger aaa = indexPath.row+1;
-    NSString *summaryIdStr = [NSString stringWithFormat:@"%ld",(long)aaa];
-    vc.showSummaryIdStr = summaryIdStr;
-    vc.showSummaryNameStr = model.tableNameStr;
-    vc.showTemplateIdStr = str;
+    SummaryModel *model =[_summaryArray objectAtIndex:indexPath.row];
+
+    vc.showSummaryIdStr = model.summaryId;
+    vc.showSummaryNameStr = model.summaryName;
+    vc.showTemplateIdStr = model.summaryId;
     
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -116,26 +130,33 @@
 //// delete function
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if(editingStyle == UITableViewCellEditingStyleDelete){
-//        NSString *title = NSLocalizedString(@"Please confirm", nil);
-//        NSString *message = NSLocalizedString(@"Do you want to delete?", nil);
-//        NSString *cancelTitle = NSLocalizedString(@"Cancel", nil);
-//        NSString *deleteTitle = NSLocalizedString(@"Delete", nil);
-//        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-//        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-//            
-//        }];
-//        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:deleteTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            ProjectModel *model = [_mutableArray objectAtIndex:indexPath.row];
-            
-            [DBDaoHelper deleteSummaryById:[NSString stringWithFormat:@"%ld",(long)model.tableId]];
-            self.mutableArray = [DBDaoHelper selectTableArray];
-            [self.tabView reloadData];
-//        }];
-//        [alertController addAction:cancelAction];
-//        [alertController addAction:deleteAction];
-//        [self presentViewController:alertController animated:YES completion:nil];
+        NSString *title = NSLocalizedString(@"", nil);
+        NSString *message = NSLocalizedString(@"Are you sure to delete this presentation?", nil);
+        NSString *cancelTitle = NSLocalizedString(@"Cancel", nil);
+        NSString *deleteTitle = NSLocalizedString(@"Delete", nil);
         
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            
+        }];
+        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:deleteTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            SummaryModel *model = [_summaryArray objectAtIndex:indexPath.row];
+            BOOL flag = [DBDaoHelper deleteSummaryById:model.summaryId];
+            if(flag){
+                _summaryArray = [DBDaoHelper qeuryAllSummaryData];
+                [_tabView reloadData];
+            }
+            
+        }];
+        [alertController addAction:cancelAction];
+        [alertController addAction:deleteAction];
+        [self presentViewController:alertController animated:YES completion:nil];
+       
     }
+}
+-(void)copyPPT{
+    
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

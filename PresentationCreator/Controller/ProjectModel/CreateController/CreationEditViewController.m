@@ -37,14 +37,26 @@
 
 @implementation CreationEditViewController
 //这个是判断没有输入的时候按钮为不可用状态
--(void)textViewDidChange:(UITextView *)textView
-{
-    if (_titleTextView.text.length!=0) {
+-(void)textViewDidChange:(UITextView *)textView{
+    if (_titleTextView.text.length > 0) {
         _okButton.enabled = YES;
     }else{
         _okButton.enabled = NO;
     }
 }
+//-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+//    NSMutableString * changedString=[[NSMutableString alloc]initWithString:textView.text];
+//    [changedString replaceCharactersInRange:range withString:text];
+//    
+//    if (changedString.length!=0) {
+//        _okButton.enabled = YES;
+//    }else{
+//        _okButton.enabled = NO;
+//    }
+//    
+//    return YES;
+//    
+//}
 -(void)collectionCellAdd:(NSNotification*)sender
 {
     if ([sender.name isEqual:@"EditNotification"])
