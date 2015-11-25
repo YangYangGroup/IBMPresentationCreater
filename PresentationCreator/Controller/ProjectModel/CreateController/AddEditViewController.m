@@ -44,20 +44,16 @@
 {
     self.navigationItem.title=@"Select a page";
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    //    backbtn.titleLabel.font = [UIFont systemFontOfSize:16.0f];
     
-    backbtn.frame = CGRectMake(0, 0, 40, 20);
-    [backbtn setTitle:@"Back" forState:UIControlStateNormal];
+    backbtn.frame = CGRectMake(0, 0, 20, 20);
+    [backbtn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
     [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *SearchItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
-    //    [rightbtn setBackgroundImage:[UIImage imageNamed:@"set"] forState:UIControlStateNormal];
-    self.navigationItem.leftBarButtonItem = SearchItem;
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
+    self.navigationItem.leftBarButtonItem = backItem;
 }
 -(void)backClick
 {
-    [self dismissViewControllerAnimated:YES completion:^{
-        
-    }];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 -(void)addCollectionView
 {

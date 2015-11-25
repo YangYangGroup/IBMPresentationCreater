@@ -46,11 +46,11 @@
     ViewController *viewVC = [[ViewController alloc]init];
     _firstNav = [[UINavigationController alloc]initWithRootViewController:viewVC];
     //设置第一个tabbar的文字
-    UITabBarItem *firstItem = [[UITabBarItem alloc]initWithTitle:@"MY PPT" image:[UIImage imageNamed:@"my_ppt"] selectedImage:[UIImage imageNamed:@"my_ppt"]];
+    UITabBarItem *firstItem = [[UITabBarItem alloc]initWithTitle:@"My ppt" image:[UIImage imageNamed:@"my_ppt"] selectedImage:[UIImage imageNamed:@"my_ppt"]];
     viewVC.tabBarItem = firstItem;
     
     SelectTemplateViewController *CreationVc = [[SelectTemplateViewController alloc]init];
-    UITabBarItem *secondItem = [[UITabBarItem alloc]initWithTitle:@"NEW PPT" image:[UIImage imageNamed:@"new_ppt"] selectedImage:[UIImage imageNamed:@"new_ppt"]];
+    UITabBarItem *secondItem = [[UITabBarItem alloc]initWithTitle:@"New ppt" image:[UIImage imageNamed:@"new_ppt"] selectedImage:[UIImage imageNamed:@"new_ppt"]];
     CreationVc.tabBarItem = secondItem;
     _secondNav = [[UINavigationController alloc]initWithRootViewController:CreationVc];
     _tabVc.delegate = self;

@@ -51,12 +51,11 @@
 -(void)addNavigation
 {
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    //    backbtn.titleLabel.font = [UIFont systemFontOfSize:16.0f];
-    backbtn.frame = CGRectMake(0, 0, 40, 30);
-    [backbtn setTitle:@"Back" forState:UIControlStateNormal];
+    
+    backbtn.frame = CGRectMake(0, 0, 20, 20);
+    [backbtn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
     [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
-    //    [rightbtn setBackgroundImage:[UIImage imageNamed:@"set"] forState:UIControlStateNormal];
     self.navigationItem.leftBarButtonItem = backItem;
     
     UIButton *btnRight = [UIButton buttonWithType:UIButtonTypeRoundedRect];
