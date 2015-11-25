@@ -11,6 +11,7 @@
 @interface ViewTableViewCell : UITableViewCell
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) UILabel *statusLabel;
+@property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) UIImageView *imgView;
 
 @end

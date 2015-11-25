@@ -95,15 +95,17 @@
     }
 //    ProjectModel *model = [self.mutableArray objectAtIndex:indexPath.row];
 //    cell.titleLabel.text = model.tableNameStr;
-    NSString *status = @"Status: ";
+    NSString *statusStr = @"Status: ";
+    NSString *timeStr = @"Time: ";
     SummaryModel *model = [_summaryArray objectAtIndex:indexPath.row];
     cell.imgView.image = [UIImage imageNamed:@"IMG_1.png"];
     cell.nameLabel.text = model.summaryName;
     
-    status = [status stringByAppendingString:model.status];
-    status = [status stringByAppendingString:@" Time: "];
+    statusStr = [statusStr stringByAppendingString:model.status];
+    timeStr = [timeStr stringByAppendingString:model.dateTime];
     
-    cell.statusLabel.text = status;
+    cell.statusLabel.text = statusStr;
+    cell.dateLabel.text = timeStr;
     return cell;
 }
 // UITableView的点击事件
