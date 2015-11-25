@@ -27,16 +27,17 @@
 @property (nonatomic, strong) NSMutableArray *returnFileArray;
 @property (nonatomic, strong) UIView *shareView;
 @property (nonatomic, strong) NSString *finalProductUrlStr;
+@property (nonatomic, strong) SummaryModel *sumyModel;
 @end
 
 @implementation ShowViewController
 -(void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = YES;
     self.navigationItem.title = [DBDaoHelper querySummaryNameBySummaryId:_showSummaryIdStr];
-    
+    _sumyModel = [DBDaoHelper qeuryOneSummaryDataById:_showSummaryIdStr];
     //从summary 表中根据summary id获取html代码，并加载到webView中
-    _finalHtmlCode = [DBDaoHelper queryHtmlCodeFromSummary:_showSummaryIdStr];
-    _finalProductUrlStr = [DBDaoHelper queryProductUrlFromSummary:_showSummaryIdStr];
+    _finalHtmlCode = _sumyModel.contentHtml;
+    _finalProductUrlStr = _sumyModel.product_url;
     [self addWebView];
 }
 - (void)viewDidLoad {
@@ -407,7 +408,7 @@
         }
         
         //newName should be save.
-        NSString *smID = [DBDaoHelper copySummaryData:newName ContentHtml:_finalHtmlCode];
+        NSString *smID = [DBDaoHelper copySummaryData:newName ContentHtml:_finalHtmlCode Status:_sumyModel.status];
         NSMutableArray *detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:_showSummaryIdStr];
         for (int i = 0; i<detailsArray.count; i ++) {
             DetailsModel *dm = [[DetailsModel alloc]init];

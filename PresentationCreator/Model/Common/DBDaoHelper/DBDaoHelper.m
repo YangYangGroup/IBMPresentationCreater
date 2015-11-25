@@ -348,9 +348,9 @@
     return result;
 }
 //copy summary data，返回最大的主键值
-+(NSString *)copySummaryData:(NSString *)newName ContentHtml:(NSString *)contentHtml{
++(NSString *)copySummaryData:(NSString *)newName ContentHtml:(NSString *)contentHtml Status:(NSString *)status{
     FMDatabase *db =[DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_SUMMARY'('summary_name','content_html') values(?,?)",newName, contentHtml];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_SUMMARY'('summary_name','content_html','product_status','created_ts') values(?,?,?,current_timestamp)",newName, contentHtml, status];
     if (result) {
         FMResultSet *result1 = [db executeQuery:@"SELECT  MAX(SUMMARY_ID) FROM PPT_PRODUCT_SUMMARY"];
         while (result1.next)
@@ -411,5 +411,27 @@
     
     [db close];
     return result;
+}
+
+//查询summary表中所有数据，放入数组中
++(SummaryModel *)qeuryOneSummaryDataById:(NSString *)summaryID
+{
+    FMDatabase *db =[DBHelper openDatabase];
+    //执行查询语句
+    FMResultSet *result = [db executeQuery:@"select summary_id, summary_name,content_html,  product_url, product_status, created_ts from PPT_PRODUCT_SUMMARY where summary_id = ?",summaryID];
+    SummaryModel *model = [[SummaryModel alloc]init];
+    while (result.next)
+    {
+        //根据列名取出分类信息存到对象中以对象返回
+       
+        model.summaryId     = [result stringForColumn:@"summary_id"];
+        model.summaryName   = [result stringForColumn:@"summary_name"];
+        model.contentHtml   = [result stringForColumn:@"content_html"];
+        model.product_url   = [result stringForColumn:@"product_url"];
+        model.status        = [result stringForColumn:@"product_status"];
+        model.dateTime      = [result stringForColumn:@"created_ts"];
+    }
+    [db close];
+    return model;
 }
 @end

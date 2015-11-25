@@ -11,6 +11,7 @@
 #import "ProjectModel.h"
 #import "DetailsModel.h"
 #import "FilesModel.h"
+#import "SummaryModel.h"
 
 @interface DBDaoHelper : NSObject
 //创建数据库表
@@ -61,11 +62,13 @@
 //copy data to details table
 +(BOOL)copyDetailsData:(NSString *)summaryId TemplateId:(NSString *)templateId HtmlCode:(NSString *)htmlCode PageNumber:(NSString *)pageNumber fileId:(NSString *)fileId;
 //copy summary data，返回最大的主键值
-+(NSString *)copySummaryData:(NSString *)newName ContentHtml:(NSString *)contentHtml;
++(NSString *)copySummaryData:(NSString *)newName ContentHtml:(NSString *)contentHtml Status:(NSString *)status;
 //查询summary表中所有数据，放入数组中
 +(NSMutableArray *)qeuryAllSummaryData;
 // 根据summary id 查询 summary表中summary name
 +(NSString *)querySummaryNameBySummaryId:(NSString *)summaryId;
 // 根据summary id 更新 summary status and datetime
 +(BOOL)updateSummaryStatsDateTimeBySummaryId:(NSString *)summaryId SummaryStatus:(NSString *)status;
+//查询summary表中所有数据，放入数组中
++(SummaryModel *)qeuryOneSummaryDataById:(NSString *)summaryID;
 @end
