@@ -12,6 +12,7 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "PreviewViewController.h"
 #import "EditNowViewController.h"
+#import "KxMenu.h"
 
 @interface CreationEditViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate,UIWebViewDelegate,UITextViewDelegate,UIAlertViewDelegate>
 @property (nonatomic, retain) UIView *backgorundView;
@@ -175,6 +176,7 @@
     //看剩下的字符串的长度是否为零
     if ([temp length]!=0) {
         self.summaryNameStr = _titleTextView.text;
+        self.navigationItem.title=self.summaryNameStr;
         self.maxSummaryIdStr = [DBDaoHelper insertSummaryWithName:_titleTextView.text];
         [_titleViewControl removeFromSuperview];
         _titleViewControl = nil;
@@ -222,14 +224,14 @@
     self.navigationItem.leftBarButtonItem = backItem;
     
     
-    UIButton *btnRight = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    btnRight.titleLabel.font = [UIFont systemFontOfSize:15.0f];
-    //    btnLeft.backgroundColor = [UIColor redColor];
-    btnRight.frame = CGRectMake(0, 0, 60, 30);
-    [btnRight setTitle:@"Save" forState:UIControlStateNormal];
-    [btnRight addTarget:self action:@selector(saveClick:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *preview = [[UIBarButtonItem alloc]initWithCustomView:btnRight];
-    self.navigationItem.rightBarButtonItem = preview;
+    UIButton *pushButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    pushButton.frame=CGRectMake(0, 0, 30, 30);
+    [pushButton setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
+    [pushButton setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
+    pushButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+    [pushButton addTarget:self action:@selector(showMenu:)forControlEvents:UIControlEventTouchDown];
+    UIBarButtonItem *pushItem = [[UIBarButtonItem alloc]initWithCustomView:pushButton];
+    self.navigationItem.rightBarButtonItem = pushItem;
     
     self.htmlCodeArray = [[NSMutableArray alloc]init];
 }
@@ -237,7 +239,31 @@
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
--(void)saveClick:(UIButton*)sender
+- (void)showMenu:(UIButton *)sender
+{
+    NSArray *menuItems =
+    @[
+      [KxMenuItem menuItem:@"Save"
+                     image:nil
+                    target:self
+                    action:@selector(saveClick)],
+      
+      [KxMenuItem menuItem:@"AddPage"
+                     image:nil
+                    target:self
+                    action:@selector(addPageClick)],
+      
+      ];
+    
+    //    KxMenuItem *first = menuItems[0];
+    //    first.foreColor = [UIColor colorWithRed:47/255.0f green:112/255.0f blue:225/255.0f alpha:1.0];
+    //    first.alignment = NSTextAlignmentCenter;
+    
+    [KxMenu showMenuInView:self.view
+                  fromRect:CGRectMake(KScreenWidth - 100, 0, KScreenWidth, 60)
+                 menuItems:menuItems];
+}
+-(void)saveClick
 {
     PreviewViewController *vc = [[PreviewViewController alloc]init];
     vc.showSummaryIdStr = self.maxSummaryIdStr;
@@ -256,7 +282,6 @@
     
     UICollectionViewFlowLayout *flowLayout=[[UICollectionViewFlowLayout alloc] init];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-    flowLayout.footerReferenceSize = CGSizeMake(KScreenWidth, KScreenHeight-64-40);//头部.尾部设置
     self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 64, KScreenWidth, KScreenHeight-64-20) collectionViewLayout:flowLayout];
     self.collectionView.backgroundColor = [UIColor whiteColor];
     self.collectionView.pagingEnabled = YES;//是否分页
@@ -268,21 +293,6 @@
     //注册cell和ReusableView（相当于头部）
     [self.collectionView registerClass:[CollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"ReusableView"];
-    
-    _footerView = [[UIView alloc]initWithFrame:CGRectMake(20, 30, KScreenWidth-40, KScreenHeight-64-30)];
-    _footerView.backgroundColor = [UIColor blackColor];
-    
-    //添加界面
-    UIButton *addPageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addPageBtn.frame = CGRectMake((KScreenWidth-40-120)/2, 185, 120, 60);
-    addPageBtn.tintColor = [UIColor whiteColor];
-    addPageBtn.layer.borderWidth = 1;
-    addPageBtn.layer.borderColor = [UIColor whiteColor].CGColor;
-    [addPageBtn setTitle:@"Add Page" forState:UIControlStateNormal];
-    [addPageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [addPageBtn addTarget:self action:@selector(addPageClick) forControlEvents:UIControlEventTouchUpInside];
-    [_footerView addSubview:addPageBtn];
-    
 }
 -(void)addPageClick
 {

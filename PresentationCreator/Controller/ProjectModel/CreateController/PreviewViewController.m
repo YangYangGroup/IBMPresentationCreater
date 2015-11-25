@@ -14,6 +14,7 @@
 #import "FilesModel.h"
 #import "LoadingHelper.h"
 #import "SBJson.h"
+#import "KxMenu.h"
 
 @interface PreviewViewController ()<UIWebViewDelegate>
 {
@@ -24,6 +25,7 @@
 @property (nonatomic, strong) NSString *stringSections;
 @property (nonatomic, strong) NSString *finalHtmlCode;
 @property (nonatomic, strong) NSMutableArray *returnFileArray;
+@property (nonatomic, strong) NSString *finalProductUrlStr;
 
 @end
 
@@ -58,20 +60,43 @@
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
     self.navigationItem.leftBarButtonItem = backItem;
     
-    UIButton *btnRight = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    //    btnRight.titleLabel.font = [UIFont systemFontOfSize:15.0f];
-    //    btnLeft.backgroundColor = [UIColor redColor];
-    btnRight.frame = CGRectMake(0, 0, 60, 30);
-    [btnRight setTitle:@"Upload" forState:UIControlStateNormal];
-    [btnRight addTarget:self action:@selector(uploadClick) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *doneItem = [[UIBarButtonItem alloc]initWithCustomView:btnRight];
-    self.navigationItem.rightBarButtonItem = doneItem;
+    UIButton *pushButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    pushButton.frame=CGRectMake(0, 0, 30, 30);
+    [pushButton setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
+    [pushButton setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
+    pushButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+    [pushButton addTarget:self action:@selector(showMenu:)forControlEvents:UIControlEventTouchDown];
+    UIBarButtonItem *pushItem = [[UIBarButtonItem alloc]initWithCustomView:pushButton];
+    self.navigationItem.rightBarButtonItem = pushItem;
 }
 -(void)backClick
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
-
+- (void)showMenu:(UIButton *)sender
+{
+    NSArray *menuItems =
+    @[
+      [KxMenuItem menuItem:@"Upload"
+                     image:nil
+                    target:self
+                    action:@selector(uploadClick)],
+      
+      [KxMenuItem menuItem:@"Share"
+                     image:nil
+                    target:self
+                    action:@selector(shareClick)],
+      
+      ];
+    
+    //    KxMenuItem *first = menuItems[0];
+    //    first.foreColor = [UIColor colorWithRed:47/255.0f green:112/255.0f blue:225/255.0f alpha:1.0];
+    //    first.alignment = NSTextAlignmentCenter;
+    
+    [KxMenu showMenuInView:self.view
+                  fromRect:CGRectMake(KScreenWidth - 100, 0, KScreenWidth, 60)
+                 menuItems:menuItems];
+}
 -(void)uploadClick
 {
     self.returnFileArray = [DBDaoHelper selectFromFileToSummary_idWith:self.showSummaryIdStr];
@@ -100,7 +125,7 @@
     [dic setObject:str1 forKey:@"filelist"];
     
     //    NSLog(@"%@",str1);
-    NSString *uploadUrl = @"http://9.115.26.143/PPT/service/UploadServlet";
+    NSString *uploadUrl = @"http://9.115.26.148/PPT/service/UploadServlet";
     
     
     AFHTTPRequestOperationManager *requestManager = [AFHTTPRequestOperationManager manager];
@@ -156,7 +181,7 @@
         NSString *str = [resultJsonDic objectForKey:@"productUrl"];
         //根据summaryid向summary表中插入productUrl
         returnProductUrl = [DBDaoHelper insertSummaryWithSummaryId:self.showSummaryIdStr productUrl:str];
-        
+        _finalProductUrlStr = str;
         //        [LoadingHelper showLoadingWithView:self.view];
         [LoadingHelper hiddonLoadingWithView:self.view];
         NSString *title = NSLocalizedString(@"Upload Successfully", nil);
@@ -202,6 +227,53 @@
     [requestManager.operationQueue addOperation:operation];
     
     [operation start];
+}
+-(void)shareClick
+{
+    if (_finalProductUrlStr == nil) {
+        NSLog(@"失败");
+        NSString *title = NSLocalizedString(@"message", nil);
+        NSString *message = NSLocalizedString(@"You must upload before share.", nil);
+        NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
+        
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            NSLog(@"The \"Okay/Cancel\" alert's other action occured.");
+        }];
+        
+        [alertController addAction:otherAction];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }else{
+        if ([WXApi isWXAppInstalled]) {
+            //判断是否有微信
+            //        [_delegate changeScene:WXSceneSession];
+            
+            WXMediaMessage *message = [WXMediaMessage message];
+            message.title = @"Share";
+            message.description = @"A Wonderful PPT";
+            [message setThumbImage:[UIImage imageNamed:@"sharewechat@2x.png"]];
+            
+            WXWebpageObject *ext = [WXWebpageObject object];
+            //        ext.webpageUrl = @"http://www.baidu.com";
+            ext.webpageUrl = _finalProductUrlStr;
+            message.mediaObject = ext;
+            
+            SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+            req.bText = NO;
+            req.message = message;
+            //  根据scene来判断是分享朋友圈还是聊天对话
+            req.scene = _scene;
+            
+            [WXApi sendReq:req];
+        }else{
+            
+            NSString *weiXinLink = [WXApi getWXAppInstallUrl];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:weiXinLink]];
+        }
+    }
+    
 }
 //查询summaryhtmlcode 加载到webview 进行总的预览
 -(void)loadDetailsDataToArray{
