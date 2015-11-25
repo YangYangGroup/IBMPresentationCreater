@@ -33,6 +33,7 @@
     _txtField.text = _summaryName;
     _txtField.backgroundColor = [UIColor whiteColor];
     _txtField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    [_txtField becomeFirstResponder];
     [uView addSubview:_txtField];
     [self.view addSubview:uView];
 }
