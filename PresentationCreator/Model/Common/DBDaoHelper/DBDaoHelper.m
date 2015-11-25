@@ -369,16 +369,19 @@
 {
     FMDatabase *db =[DBHelper openDatabase];
     //执行查询语句
-    FMResultSet *result = [db executeQuery:@"select summary_id, summary_name,content_html, product_url from PPT_PRODUCT_SUMMARY "];
+    FMResultSet *result = [db executeQuery:@"select summary_id, summary_name,content_html,  product_url, product_status, created_ts from PPT_PRODUCT_SUMMARY "];
     NSMutableArray *array = [[NSMutableArray alloc]init];
     while (result.next)
     {
         //根据列名取出分类信息存到对象中以对象返回
         SummaryModel *model = [[SummaryModel alloc]init];
-        model.summaryId = [result stringForColumn:@"summary_id"];
-        model.summaryName = [result stringForColumn:@"summary_name"];
-        model.contentHtml = [result stringForColumn:@"content_html"];
-        model.product_url = [result stringForColumn:@"product_url"];
+        model.summaryId     = [result stringForColumn:@"summary_id"];
+        model.summaryName   = [result stringForColumn:@"summary_name"];
+        model.contentHtml   = [result stringForColumn:@"content_html"];
+        model.product_url   = [result stringForColumn:@"product_url"];
+        model.status        = [result stringForColumn:@"product_status"];
+        model.dateTime      = [result stringForColumn:@"created_ts"];
+        
         [array addObject:model];
     }
     [db close];
@@ -399,5 +402,14 @@
     [db close];
     return nil;
     
+}
+
+// 根据summary id 更新 summary status and datetime
++(BOOL)updateSummaryStatsDateTimeBySummaryId:(NSString *)summaryId SummaryStatus:(NSString *)status{
+    FMDatabase *db =[DBHelper openDatabase];
+    BOOL result = [db executeUpdate:@"update 'PPT_PRODUCT_SUMMARY' set summary_status=?, created_ts = current_timestamp where summary_id=?",status, summaryId];
+    
+    [db close];
+    return result;
 }
 @end

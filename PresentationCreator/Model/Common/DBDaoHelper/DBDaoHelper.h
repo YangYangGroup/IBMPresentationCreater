@@ -66,4 +66,6 @@
 +(NSMutableArray *)qeuryAllSummaryData;
 // 根据summary id 查询 summary表中summary name
 +(NSString *)querySummaryNameBySummaryId:(NSString *)summaryId;
+// 根据summary id 更新 summary status and datetime
++(BOOL)updateSummaryStatsDateTimeBySummaryId:(NSString *)summaryId SummaryStatus:(NSString *)status;
 @end
