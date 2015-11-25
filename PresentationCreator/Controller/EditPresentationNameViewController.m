@@ -39,9 +39,9 @@
     self.navigationItem.title = @"Edit Name";
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     //    backbtn.titleLabel.font = [UIFont systemFontOfSize:16.0f];
-    backbtn.frame = CGRectMake(0, 0, 40, 30);
+    backbtn.frame = CGRectMake(0, 0, 30, 30);
     backbtn.titleLabel.font = [UIFont systemFontOfSize:14.0f];
-    [backbtn setBackgroundImage:[UIImage imageNamed:@"share@2x"] forState:UIControlStateNormal];
+    [backbtn setBackgroundImage:[UIImage imageNamed:@"back@2x"] forState:UIControlStateNormal];
     [backbtn addTarget:self action:@selector(doneEditName) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *SearchItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
     self.navigationItem.leftBarButtonItem = SearchItem;
@@ -56,7 +56,7 @@
         
         [alertView show ];
     }else{
-        [DBDaoHelper updateSummaryNameById:_summaryId SummaryName:_txtField.text];
+        [DBDaoHelper updateSummaryNameById:_summaryId SummaryName:temp];
         [self.navigationController setTitle:_txtField.text];
         [self.navigationController popViewControllerAnimated:YES];
     }
