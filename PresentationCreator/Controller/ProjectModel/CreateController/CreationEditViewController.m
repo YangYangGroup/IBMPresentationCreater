@@ -245,7 +245,7 @@
     flowLayout.footerReferenceSize = CGSizeMake(KScreenWidth, KScreenHeight-64-40);//头部.尾部设置
     self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 64, KScreenWidth, KScreenHeight-64-20) collectionViewLayout:flowLayout];
     self.collectionView.backgroundColor = [UIColor whiteColor];
-    
+    self.collectionView.pagingEnabled = YES;//是否分页
     //设置代理
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -405,6 +405,10 @@
 }
 //定义每个UICollectionView 纵向的间距
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+    return 0;
+}
+//设置每个collectionview的行间距
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     return 0;
 }
 #pragma mark --UICollectionViewDelegate
