@@ -74,7 +74,7 @@
     self.htmlCodeArray = [[NSMutableArray alloc]init];
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     
-    backbtn.frame = CGRectMake(0, 0, 20, 20);
+    backbtn.frame = CGRectMake(0, 0, 30, 30);
     [backbtn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
     [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];

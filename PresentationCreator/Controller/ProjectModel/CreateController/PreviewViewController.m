@@ -52,7 +52,7 @@
 {
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     
-    backbtn.frame = CGRectMake(0, 0, 20, 20);
+    backbtn.frame = CGRectMake(0, 0, 30, 30);
     [backbtn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
     [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
@@ -176,6 +176,20 @@
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"失败--%@",error);
         [LoadingHelper hiddonLoadingWithView:self.view];
+        
+        NSString *title = NSLocalizedString(@"Faild", nil);
+        //        NSString *message = NSLocalizedString(@"Upload successfully.", nil);
+        NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
+        
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            NSLog(@"The \"Okay/Cancel\" alert's other action occured.");
+        }];
+        
+        [alertController addAction:otherAction];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
     }];
     
     [operation setUploadProgressBlock: ^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
