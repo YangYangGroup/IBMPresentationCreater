@@ -54,7 +54,7 @@
 //向summary表中插入我的名字，返回最大的主键值
 +(NSString *)insertSummaryWithName:(NSString *)name{
     FMDatabase *db =[DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_SUMMARY'('summary_name','product_status','created_ts') values(?,'Draft',current_timestamp)",name];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_SUMMARY'('summary_name','product_status','created_ts') values(?,'Draft',datetime('now','localtime'))",name];
     if (result) {
         FMResultSet *result1 = [db executeQuery:@"SELECT  MAX(SUMMARY_ID) FROM PPT_PRODUCT_SUMMARY"];
         
@@ -350,7 +350,7 @@
 //copy summary data，返回最大的主键值
 +(NSString *)copySummaryData:(NSString *)newName ContentHtml:(NSString *)contentHtml Status:(NSString *)status{
     FMDatabase *db =[DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_SUMMARY'('summary_name','content_html','product_status','created_ts') values(?,?,?,current_timestamp)",newName, contentHtml, status];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_SUMMARY'('summary_name','content_html','product_status','created_ts') values(?,?,?,datetime('now','localtime'))",newName, contentHtml, status];
     if (result) {
         FMResultSet *result1 = [db executeQuery:@"SELECT  MAX(SUMMARY_ID) FROM PPT_PRODUCT_SUMMARY"];
         while (result1.next)
@@ -369,7 +369,7 @@
 {
     FMDatabase *db =[DBHelper openDatabase];
     //执行查询语句
-    FMResultSet *result = [db executeQuery:@"select summary_id, summary_name,content_html,  product_url, product_status, created_ts from PPT_PRODUCT_SUMMARY "];
+    FMResultSet *result = [db executeQuery:@"select summary_id, summary_name,content_html,  product_url, product_status, created_ts from PPT_PRODUCT_SUMMARY order by created_ts desc"];
     NSMutableArray *array = [[NSMutableArray alloc]init];
     while (result.next)
     {
@@ -407,7 +407,7 @@
 // 根据summary id 更新 summary status and datetime
 +(BOOL)updateSummaryStatsDateTimeBySummaryId:(NSString *)summaryId SummaryStatus:(NSString *)status{
     FMDatabase *db =[DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"update 'PPT_PRODUCT_SUMMARY' set summary_status=?, created_ts = current_timestamp where summary_id=?",status, summaryId];
+    BOOL result = [db executeUpdate:@"update 'PPT_PRODUCT_SUMMARY' set summary_status=? where summary_id=?",status, summaryId];
     
     [db close];
     return result;
