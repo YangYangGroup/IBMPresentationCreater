@@ -410,12 +410,13 @@
         //newName should be save.
         NSString *smID = [DBDaoHelper copySummaryData:newName ContentHtml:_finalHtmlCode Status:_sumyModel.status];
         NSMutableArray *detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:_showSummaryIdStr];
+        BOOL copyStatus = false;
         for (int i = 0; i<detailsArray.count; i ++) {
             DetailsModel *dm = [[DetailsModel alloc]init];
             dm = [detailsArray objectAtIndex:i];
-            [DBDaoHelper copyDetailsData:smID TemplateId:dm.templateIdStr HtmlCode:dm.htmlCodeStr PageNumber:dm.pageNumberStr fileId:dm.fileIdStr];
+            copyStatus =[DBDaoHelper copyDetailsData:smID TemplateId:dm.templateIdStr HtmlCode:dm.htmlCodeStr PageNumber:dm.pageNumberStr fileId:dm.fileIdStr];
         }
-        
+        [self copySuccessfullyOrNot:copyStatus];
     }];
     [alertController addAction:cancelAction];
     [alertController addAction:deleteAction];
@@ -424,6 +425,50 @@
     
 }
 
+-(void)copySuccessfullyOrNot : (BOOL)flag{
+    if (flag) {
+        NSString *title = NSLocalizedString(@"", nil);
+        NSString *successMessage = NSLocalizedString(@"Copied successfully. Do you want to back home page or stay here?", nil);
+        NSString *cancelTitle = NSLocalizedString(@"Cancel", nil);
+        NSString *deleteTitle = NSLocalizedString(@"Back", nil);
+        
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:successMessage preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            
+        }];
+        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:deleteTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self.navigationController popViewControllerAnimated:YES];
+            
+        }];
+        [alertController addAction:cancelAction];
+        [alertController addAction:deleteAction];
+        [self presentViewController:alertController animated:YES completion:nil];
+        
+    }else{
+        NSString *title = NSLocalizedString(@"", nil);
+        NSString *unsuccessMessage = NSLocalizedString(@"Copied successfully. Do you want to back home page or stay here?", nil);
+        NSString *cancelTitle = NSLocalizedString(@"Cancel", nil);
+        NSString *deleteTitle = NSLocalizedString(@"Back", nil);
+        
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:unsuccessMessage preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            
+        }];
+        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:deleteTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self.navigationController popViewControllerAnimated:YES];
+            
+        }];
+        [alertController addAction:cancelAction];
+        [alertController addAction:deleteAction];
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    
+    
+   
+    
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

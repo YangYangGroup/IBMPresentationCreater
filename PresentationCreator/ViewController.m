@@ -134,7 +134,7 @@
         NSString *title = NSLocalizedString(@"", nil);
         NSString *message = NSLocalizedString(@"Are you sure to delete this presentation?", nil);
         NSString *cancelTitle = NSLocalizedString(@"Cancel", nil);
-        NSString *deleteTitle = NSLocalizedString(@"Delete", nil);
+        NSString *deleteTitle = NSLocalizedString(@"Remove", nil);
         
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
         
