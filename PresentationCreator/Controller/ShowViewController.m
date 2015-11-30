@@ -29,6 +29,7 @@
 @property (nonatomic, strong) NSString *finalProductUrlStr;
 @property (nonatomic, strong) UIView *shareAllView;
 @property (nonatomic, strong) UIButton *cancelBtn;
+@property (nonatomic, strong) SummaryModel *sumyModel;
 @end
 
 @implementation ShowViewController
