@@ -16,7 +16,7 @@
     FMDatabase *db =[DBHelper openDatabase];
     BOOL result1 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_TEMPLATE'('template_id'INTEGER PRIMARY KEY AUTOINCREMENT,'template_html'varchar)"];
     //summary_name tableview创建ppt的名称 content_html最终生成的总的用于演示的html代码
-    BOOL result2 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_SUMMARY'('summary_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_name'varchar,'content_html'varchar,'product_url',varchar)"];
+    BOOL result2 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_SUMMARY'('summary_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_name'varchar,'content_html'varchar,'product_url'varchar,'product_status'varchar,'created_ts'datetime)"];
     //details_id主键 summary_id 外键关联到PPT_PRODUCT_SUMMARY表的主键 template_id关联到PPT_PRODUCT_template表的主键
     BOOL result3 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_DETAILS'('details_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_id'integer,'template_id'integer,'html_code'varchar,'page_number'integer,'file_id'INTEGER )"];
     
@@ -54,7 +54,7 @@
 //向summary表中插入我的名字，返回最大的主键值
 +(NSString *)insertSummaryWithName:(NSString *)name{
     FMDatabase *db =[DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_SUMMARY'('summary_name') values(?)",name];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_SUMMARY'('summary_name','product_status','created_ts') values(?,'Draft',datetime('now','localtime'))",name];
     if (result) {
         FMResultSet *result1 = [db executeQuery:@"SELECT  MAX(SUMMARY_ID) FROM PPT_PRODUCT_SUMMARY"];
         
@@ -348,9 +348,9 @@
     return result;
 }
 //copy summary data，返回最大的主键值
-+(NSString *)copySummaryData:(NSString *)newName ContentHtml:(NSString *)contentHtml{
++(NSString *)copySummaryData:(NSString *)newName ContentHtml:(NSString *)contentHtml Status:(NSString *)status{
     FMDatabase *db =[DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_SUMMARY'('summary_name','content_html') values(?,?)",newName, contentHtml];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_SUMMARY'('summary_name','content_html','product_status','created_ts') values(?,?,?,datetime('now','localtime'))",newName, contentHtml, status];
     if (result) {
         FMResultSet *result1 = [db executeQuery:@"SELECT  MAX(SUMMARY_ID) FROM PPT_PRODUCT_SUMMARY"];
         while (result1.next)
@@ -369,19 +369,69 @@
 {
     FMDatabase *db =[DBHelper openDatabase];
     //执行查询语句
-    FMResultSet *result = [db executeQuery:@"select summary_id, summary_name,content_html, product_url from PPT_PRODUCT_SUMMARY "];
+    FMResultSet *result = [db executeQuery:@"select summary_id, summary_name,content_html,  product_url, product_status, created_ts from PPT_PRODUCT_SUMMARY order by created_ts desc"];
     NSMutableArray *array = [[NSMutableArray alloc]init];
     while (result.next)
     {
         //根据列名取出分类信息存到对象中以对象返回
         SummaryModel *model = [[SummaryModel alloc]init];
-        model.summaryId = [result stringForColumn:@"summary_id"];
-        model.summaryName = [result stringForColumn:@"summary_name"];
-        model.contentHtml = [result stringForColumn:@"content_html"];
-        model.product_url = [result stringForColumn:@"product_url"];
+        model.summaryId     = [result stringForColumn:@"summary_id"];
+        model.summaryName   = [result stringForColumn:@"summary_name"];
+        model.contentHtml   = [result stringForColumn:@"content_html"];
+        model.product_url   = [result stringForColumn:@"product_url"];
+        model.status        = [result stringForColumn:@"product_status"];
+        model.dateTime      = [result stringForColumn:@"created_ts"];
+        
         [array addObject:model];
     }
     [db close];
     return array;
+}
+
+// 根据summary id 查询 summary表中summary name
++(NSString *)querySummaryNameBySummaryId:(NSString *)summaryId{
+    FMDatabase *db =[DBHelper openDatabase];
+    FMResultSet *result1 = [db executeQuery:@"SELECT summary_name FROM PPT_PRODUCT_SUMMARY WHERE SUMMARY_ID =?",summaryId];
+    
+    while (result1.next)
+    {
+        NSString *str = [result1 stringForColumnIndex:0];
+        [db close];
+        return str;
+    }
+    [db close];
+    return nil;
+    
+}
+
+// 根据summary id 更新 summary status and datetime
++(BOOL)updateSummaryStatsDateTimeBySummaryId:(NSString *)summaryId SummaryStatus:(NSString *)status{
+    FMDatabase *db =[DBHelper openDatabase];
+    BOOL result = [db executeUpdate:@"update 'PPT_PRODUCT_SUMMARY' set summary_status=? where summary_id=?",status, summaryId];
+    
+    [db close];
+    return result;
+}
+
+//查询summary表中所有数据，放入数组中
++(SummaryModel *)qeuryOneSummaryDataById:(NSString *)summaryID
+{
+    FMDatabase *db =[DBHelper openDatabase];
+    //执行查询语句
+    FMResultSet *result = [db executeQuery:@"select summary_id, summary_name,content_html,  product_url, product_status, created_ts from PPT_PRODUCT_SUMMARY where summary_id = ?",summaryID];
+    SummaryModel *model = [[SummaryModel alloc]init];
+    while (result.next)
+    {
+        //根据列名取出分类信息存到对象中以对象返回
+       
+        model.summaryId     = [result stringForColumn:@"summary_id"];
+        model.summaryName   = [result stringForColumn:@"summary_name"];
+        model.contentHtml   = [result stringForColumn:@"content_html"];
+        model.product_url   = [result stringForColumn:@"product_url"];
+        model.status        = [result stringForColumn:@"product_status"];
+        model.dateTime      = [result stringForColumn:@"created_ts"];
+    }
+    [db close];
+    return model;
 }
 @end

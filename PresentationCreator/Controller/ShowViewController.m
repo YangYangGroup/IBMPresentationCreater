@@ -16,6 +16,7 @@
 #import "AFNetworking.h"
 #import "KxMenu.h"
 #import "SummaryModel.h"
+#import "EditPresentationNameViewController.h"
 
 @interface ShowViewController ()<UIWebViewDelegate>
 @property (nonatomic, retain) UIWebView *webView;
@@ -33,9 +34,11 @@
 @implementation ShowViewController
 -(void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = YES;
+    self.navigationItem.title = [DBDaoHelper querySummaryNameBySummaryId:_showSummaryIdStr];
+    _sumyModel = [DBDaoHelper qeuryOneSummaryDataById:_showSummaryIdStr];
     //从summary 表中根据summary id获取html代码，并加载到webView中
-    _finalHtmlCode = [DBDaoHelper queryHtmlCodeFromSummary:_showSummaryIdStr];
-    _finalProductUrlStr = [DBDaoHelper queryProductUrlFromSummary:_showSummaryIdStr];
+    _finalHtmlCode = _sumyModel.contentHtml;
+    _finalProductUrlStr = _sumyModel.product_url;
     [self addWebView];
     [self addShare];
 }
@@ -43,7 +46,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self addNavigation];
-    self.navigationItem.title= self.showSummaryNameStr;
+    
     
     [self loadDetailsDataToArray];
     [self generationFinalHtmlCode];
@@ -236,7 +239,7 @@
         //根据summaryid向summary表中插入productUrl
         [DBDaoHelper insertSummaryWithSummaryId:self.showSummaryIdStr productUrl:str];
         _finalProductUrlStr = [DBDaoHelper queryProductUrlFromSummary:_showSummaryIdStr];
-        
+        [DBDaoHelper updateSummaryStatsDateTimeBySummaryId:self.showSummaryIdStr SummaryStatus:@"Shareable"];
         //        [LoadingHelper showLoadingWithView:self.view];
         [LoadingHelper hiddonLoadingWithView:self.view];
         NSString *title = NSLocalizedString(@"Successfully", nil);
@@ -306,7 +309,7 @@
       [KxMenuItem menuItem:@"Rename"
                      image:nil
                     target:self
-                    action:@selector(editClick)],
+                    action:@selector(editPresentationName)],
       
       [KxMenuItem menuItem:@"Copy"
                      image:nil
@@ -331,6 +334,13 @@
     [KxMenu showMenuInView:self.view
                   fromRect:CGRectMake(KScreenWidth - 100, 0, KScreenWidth, 60)
                  menuItems:menuItems];
+}
+// edit presentation name
+-(void)editPresentationName{
+    EditPresentationNameViewController *editPName = [[EditPresentationNameViewController alloc]init];
+    editPName.summaryId = _showSummaryIdStr;
+    editPName.summaryName = _showSummaryNameStr;
+    [self.navigationController pushViewController:editPName animated:YES];
 }
 
 // copy a presentation
@@ -364,7 +374,7 @@
         }
         
         //newName should be save.
-        NSString *smID = [DBDaoHelper copySummaryData:newName ContentHtml:_finalHtmlCode];
+        NSString *smID = [DBDaoHelper copySummaryData:newName ContentHtml:_finalHtmlCode Status:_sumyModel.status];
         NSMutableArray *detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:_showSummaryIdStr];
         for (int i = 0; i<detailsArray.count; i ++) {
             DetailsModel *dm = [[DetailsModel alloc]init];

@@ -13,4 +13,6 @@
 @property (nonatomic, strong) NSString *summaryName;
 @property (nonatomic, strong) NSString *contentHtml;
 @property (nonatomic, strong) NSString *product_url;
+@property (nonatomic, strong) NSString *dateTime;
+@property (nonatomic, strong) NSString *status;
 @end

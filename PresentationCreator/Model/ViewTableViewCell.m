@@ -14,10 +14,31 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        UIFont *font = [UIFont fontWithName:@"Arial" size:13.0f];
+        UIFont *fontName = [UIFont fontWithName:@"Arial" size:16.0f];
         
-        self.titleLabel = [[UILabel alloc]init];
-        self.titleLabel.frame = CGRectMake(40, 10, 200, 30);
-        [self addSubview:self.titleLabel];
+        _imgView = [[UIImageView alloc]init];
+        _imgView.frame = CGRectMake(15, 5, 100, 140);
+        [self addSubview:_imgView];
+        
+        _nameLabel = [[UILabel alloc]init];
+        _nameLabel.frame = CGRectMake(100 + 15 +5, 2, KScreenWidth-100-15-20, 100);
+        _nameLabel.font = fontName;
+        _nameLabel.lineBreakMode = UILineBreakModeWordWrap;
+        _nameLabel.numberOfLines = 0;
+        [self addSubview:_nameLabel];
+        
+        _statusLabel = [[UILabel alloc]init];
+        _statusLabel.frame = CGRectMake(100 + 15 + 5, 100, KScreenWidth-100-15-20, 20);
+        
+        _statusLabel.font = font;
+        [self addSubview:_statusLabel];
+        
+        _dateLabel = [[UILabel alloc]init];
+        _dateLabel.frame = CGRectMake(100 + 15 + 5, 120, KScreenWidth-100-15-20, 20);
+        _dateLabel.font = font;
+        [self addSubview:_dateLabel];
+        
     }
     return self;
 }

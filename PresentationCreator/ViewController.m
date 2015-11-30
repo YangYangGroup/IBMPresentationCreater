@@ -11,6 +11,7 @@
 #import "ShowViewController.h"
 #import "ProjectModel.h"
 #import "DBDaoHelper.h"
+#import "Global.h"
 #import "SummaryModel.h"
 
 @interface ViewController ()
@@ -18,6 +19,7 @@
 @property (nonatomic, strong) UITextField *DBtextField;
 @property (nonatomic, strong) NSMutableArray *mutableArray;
 @property (nonatomic, strong) NSMutableArray *summaryArray;
+@property (nonatomic, strong) UILabel *noDataLabel;
 
 @end
 
@@ -28,6 +30,7 @@
     self.summaryArray = [DBDaoHelper qeuryAllSummaryData];
     //tableview刷新
     [self.tabView reloadData];
+    [self showNoDataLabel];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -45,14 +48,16 @@
 {
     UIView *aView = [[UIView alloc]init];
     [self.view addSubview:aView];
-    _tabView = [[UITableView alloc] init];
+    
+       _tabView = [[UITableView alloc] init];
     _tabView = [[UITableView alloc]initWithFrame:CGRectMake(0,64 , KScreenWidth, KScreenHeight-64-44) style:UITableViewStylePlain];
     _tabView.dataSource = self;
     _tabView.delegate = self;
     //    _tabView.scrollEnabled =NO; //设置tableview 不能滚动
     //隐藏系统的分割线
-//    [_tabView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    //[_tabView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     //    _tabView.separatorColor = [UIColor blackColor];
+    
     [self.view addSubview:_tabView];
 }
 -(void)setClick
@@ -68,7 +73,7 @@
 //列表每行的高度
 -  (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 64;
+    return 150;
 }
 //列表每行显示的内容
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -83,9 +88,17 @@
     }
 //    ProjectModel *model = [self.mutableArray objectAtIndex:indexPath.row];
 //    cell.titleLabel.text = model.tableNameStr;
-    
+    NSString *statusStr = @"Status: ";
+    NSString *timeStr = @"Time: ";
     SummaryModel *model = [_summaryArray objectAtIndex:indexPath.row];
-    cell.titleLabel.text = model.summaryName;
+    cell.imgView.image = [UIImage imageNamed:@"IMG_1.png"];
+    cell.nameLabel.text = model.summaryName;
+    
+    statusStr = [statusStr stringByAppendingString:model.status];
+    timeStr = [timeStr stringByAppendingString:model.dateTime];
+    
+    cell.statusLabel.text = statusStr;
+    cell.dateLabel.text = timeStr;
     return cell;
 }
 // UITableView的点击事件
@@ -134,6 +147,7 @@
             if(flag){
                 _summaryArray = [DBDaoHelper qeuryAllSummaryData];
                 [_tabView reloadData];
+                [self showNoDataLabel];
             }
             
         }];
@@ -143,8 +157,25 @@
        
     }
 }
--(void)copyPPT{
-    
+// 显示无数据提示
+- (void)showNoDataLabel
+{
+    if (!_noDataLabel) {
+        _noDataLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, KScreenHeight*0.5, KScreenWidth, 50)];
+        _noDataLabel.text = @"There has no ppt, please click new ppt button to create it.";
+        _noDataLabel.textAlignment = NSTextAlignmentCenter;
+        _noDataLabel.lineBreakMode = UILineBreakModeWordWrap;
+        _noDataLabel.numberOfLines = 0;
+        [self.view addSubview:_noDataLabel];
+    }
+    if ([_summaryArray count] == 0) {
+        _noDataLabel.hidden = NO;
+        [_tabView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    }
+    else{
+        [_tabView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+        _noDataLabel.hidden = YES;
+    }
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
