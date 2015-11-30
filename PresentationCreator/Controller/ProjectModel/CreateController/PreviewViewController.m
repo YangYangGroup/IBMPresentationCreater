@@ -49,7 +49,6 @@
     [self loadDetailsDataToArray];
     [self generationFinalHtmlCode];
     [self addWebView];
-    [self addShare];
     self.navigationItem.title= self.showSummaryNameStr;
 //    self.tabBarController.delegate = self;
 }
@@ -233,6 +232,7 @@
 }
 -(void)shareClick
 {
+    [self addShare];
     [UIView animateWithDuration:.25 animations:^{
         
         _shareAllView.frame = CGRectMake(0, KScreenHeight-150, KScreenWidth, 150);
