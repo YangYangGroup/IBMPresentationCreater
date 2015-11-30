@@ -14,7 +14,7 @@
 {
     
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];
-    hud.labelText = @"加载中……";
+    hud.labelText = @"Loading……";
     //    hud.color = [UIColor redColor];
     hud.labelFont = [UIFont systemFontOfSize:16.0f];
 }

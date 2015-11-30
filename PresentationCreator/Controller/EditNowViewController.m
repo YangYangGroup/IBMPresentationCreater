@@ -11,6 +11,7 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "PECropViewController.h"
 #import "AudioListCell.h"
+#import "KxMenu.h"
 
 @interface EditNowViewController ()<UIWebViewDelegate,AVAudioRecorderDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UITextFieldDelegate,UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic ,strong) UIWebView *webView;
@@ -33,6 +34,7 @@
 
 @property (nonatomic, strong) NSString *currentText;
 @property (nonatomic, strong) NSString *imageNameStr;
+@property (nonatomic, strong) UIButton *audioButton;
 
 @property (nonatomic, strong) NSString *textIndex;
 @property (nonatomic, strong) UITextField *txtField;
@@ -53,22 +55,14 @@
 
 @property (nonatomic, strong) UITextView *myTextView;
 @property (nonatomic, strong) UIView *textBackgroundView;
+@property (nonatomic, strong) UIButton *addLineBtn;
+@property (nonatomic, strong) UIButton *deleteLineBtn;
+
+@property (nonatomic, strong) UIView *backgroundView;
 @end
 
 @implementation EditNowViewController
-//-(BOOL)textField:(UITextField *)textField shouldChangeCharacsdastersInRange:(NSRange)range replacementString:(NSString *)string{
-//    
-//    NSMutableString * changedString=[[NSMutableString alloc]initWithString:textField.text];
-//    [changedString replaceCharactersInRange:range withString:string];
-//    
-//    if (changedString.length!=0) {
-//        _okButton.enabled=YES;
-//    }else{
-//        _okButton.enabled=NO;
-//    }
-//    return YES;
-//    
-//}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     self.parentViewController.tabBarController.tabBar.hidden = YES;
@@ -84,7 +78,7 @@
     _fullPath = [[NSString alloc]init];
     _audioPath = [[NSString alloc]init];
     [self addNewWebView];
-    [self addAudioButton];
+//    [self addAudioBtn];
     
     _buttonFlag = FALSE;
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -95,6 +89,15 @@
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
     self.navigationItem.leftBarButtonItem = backItem;
     
+    UIButton *uploadButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    uploadButton.frame=CGRectMake(0, 0, 30, 30);
+    [uploadButton setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
+    [uploadButton setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
+    uploadButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+    [uploadButton addTarget:self action:@selector(showMenu:)forControlEvents:UIControlEventTouchDown];
+    UIBarButtonItem *uploadItem = [[UIBarButtonItem alloc]initWithCustomView:uploadButton];
+    self.navigationItem.rightBarButtonItem = uploadItem;
+    
     //音量图片数组
     _volumImages = [[NSMutableArray alloc]initWithObjects:@"RecordingSignal001.png",@"RecordingSignal002.png",@"RecordingSignal003.png",
                     @"RecordingSignal004.png", @"RecordingSignal005.png",@"RecordingSignal006.png",@"RecordingSignal007.png",@"RecordingSignal008.png",   nil];
@@ -104,12 +107,41 @@
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
+- (void)showMenu:(UIButton *)sender
+{
+    NSArray *menuItems =
+    @[
+      [KxMenuItem menuItem:@"Audiolist"
+                     image:nil
+                    target:self
+                    action:@selector(openAudioList)],
+      
+      [KxMenuItem menuItem:@"Recording"
+                     image:nil
+                    target:self
+                    action:@selector(talkClick)],
+      
+      ];
+    
+    [KxMenu showMenuInView:self.view
+                  fromRect:CGRectMake(KScreenWidth - 100, 0, KScreenWidth, 60)
+                 menuItems:menuItems];
+}
+-(void)talkClick
+{
+//    if (_audioButton.hidden == YES) {
+//        _audioButton.hidden = NO;
+//    }else{
+//        _audioButton.hidden = YES;
+//    }
+    [self addAudioBtn];
+}
 -(void)addNewWebView
 {
     UIView *aView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 0, 0)];
     [self.view addSubview:aView];
     self.webView = [[UIWebView alloc]init];
-    self.webView.frame = CGRectMake(0, 64, KScreenWidth, KScreenHeight-64-50);
+    self.webView.frame = CGRectMake(0, 64, KScreenWidth, KScreenHeight-64);
     self.webView.backgroundColor = [UIColor blackColor];
     NSString *path = [[NSBundle mainBundle]bundlePath];
     NSURL *baseUrl = [NSURL fileURLWithPath:path];
@@ -171,6 +203,11 @@
     };
     
 }
+-(void)editTextClick
+{
+    [_editTextViewControl removeFromSuperview];
+    _editTextViewControl = nil;
+}
 //修改文字的时候
 -(void)editTextComponent:(NSString *)htmlVal  htmlIndex:(NSString *)htmlIndex editFlag:(NSString *)editFlag{
 //    self.navigationController.navigationBarHidden=YES;
@@ -179,12 +216,22 @@
     _editTextViewControl.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_editTextViewControl];
     
-    _textBackgroundView =[[UIView alloc]initWithFrame:CGRectMake(0, KScreenHeight-216-85, KScreenWidth, 30)];
+    
+    UIView *backgroundView = [[UIView alloc]init];
+    //    backgroundView.hidden = YES;
+    backgroundView.frame = CGRectMake(0, 0, KScreenWidth, KScreenHeight);
+    //        backgroundView.backgroundColor = [UIColor redColor];
+    UITapGestureRecognizer *tapGesture1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(editTextClick)];
+    backgroundView.userInteractionEnabled=YES;
+    [backgroundView addGestureRecognizer:tapGesture1];
+    [_editTextViewControl addSubview:backgroundView];
+    
+    _textBackgroundView =[[UIView alloc]initWithFrame:CGRectMake(0, KScreenHeight-216-120, KScreenWidth, 65)];
     _textBackgroundView.backgroundColor = [UIColor whiteColor];
-    [_editTextViewControl addSubview:_textBackgroundView];
+    [backgroundView addSubview:_textBackgroundView];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.myTextView.frame=CGRectMake(2, KScreenHeight-216-80, KScreenWidth-80, 20);
+        self.myTextView.frame=CGRectMake(2, KScreenHeight-216-110, KScreenWidth-80, 30);
         self.myTextView.backgroundColor = [UIColor whiteColor];
         self.myTextView.delegate = self;
         [self.myTextView becomeFirstResponder];
@@ -194,18 +241,60 @@
         // NSString *mytt= [[NSString alloc]initWithFormat:textStr];
         self.myTextView.text = textStr;
         self.myTextView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-        [_editTextViewControl addSubview:self.myTextView];
+        [backgroundView addSubview:self.myTextView];
     });
     
         _okButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        _okButton.frame = CGRectMake(KScreenWidth-60 , 5, 40, 20);
+        _okButton.frame = CGRectMake(KScreenWidth-60 , 10, 40, 20);
         [_okButton setTitle:@"OK" forState:UIControlStateNormal];
         [_okButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [_okButton setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
-        _okButton.titleLabel.font = [UIFont systemFontOfSize:15.0];
+        _okButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
         _textIndex = htmlIndex;
         [_okButton addTarget:self action:@selector(saveTextData) forControlEvents:UIControlEventTouchUpInside];
         [_textBackgroundView addSubview:_okButton];
+    
+    _addLineBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    _addLineBtn.frame = CGRectMake(20, KScreenHeight-216-75, 100, 20);
+    [_addLineBtn setTitle:@"New line" forState:UIControlStateNormal];
+    [_addLineBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_addLineBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateDisabled];
+    _addLineBtn.titleLabel.font = [UIFont systemFontOfSize:14.0];
+    [_addLineBtn addTarget:self action:@selector(newLineFunction) forControlEvents:UIControlEventTouchUpInside];
+    _addLineBtn.backgroundColor = [UIColor darkGrayColor];
+    [backgroundView addSubview:_addLineBtn];
+    
+    
+    _deleteLineBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    _deleteLineBtn.frame = CGRectMake(130, KScreenHeight-216-75, 100, 20);
+    [_deleteLineBtn setTitle:@"Delete line" forState:UIControlStateNormal];
+    [_deleteLineBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_deleteLineBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
+    _deleteLineBtn.titleLabel.font = [UIFont systemFontOfSize:14.0];
+    [_deleteLineBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_deleteLineBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateDisabled];
+    _deleteLineBtn.backgroundColor = [UIColor darkGrayColor];
+    [_deleteLineBtn addTarget:self action:@selector(deleteFunction) forControlEvents:UIControlEventTouchUpInside];
+    [backgroundView addSubview:_deleteLineBtn];
+    
+    if([editFlag isEqualToString:@"false"]){
+        
+        _addLineBtn.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        _deleteLineBtn.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        _deleteLineBtn.backgroundColor = [UIColor lightGrayColor] ;
+        _addLineBtn.backgroundColor = [UIColor lightGrayColor] ;
+        [_addLineBtn setEnabled:NO];
+        [_deleteLineBtn setEnabled:NO];
+    }else{
+        _addLineBtn.layer.borderColor = [UIColor whiteColor].CGColor;
+        _deleteLineBtn.layer.borderColor = [UIColor whiteColor].CGColor;
+        _deleteLineBtn.backgroundColor = [UIColor darkGrayColor] ;
+        _addLineBtn.backgroundColor = [UIColor darkGrayColor] ;
+        [_addLineBtn setEnabled:YES];
+        [_deleteLineBtn setEnabled:YES];
+    }
+    
+    
     
     
     
@@ -325,10 +414,9 @@
                                   lineBreakMode:NSLineBreakByWordWrapping];
     
     tmpRect.size.height = size.height; // 20 points for padding
-    tmpRect.origin.y = 216+75-tmpRect.size.height;
-    _textBackgroundView.frame = CGRectMake(0, tmpRect.origin.y-5, KScreenWidth, tmpRect.size.height +20);
+    tmpRect.origin.y = 216+55-tmpRect.size.height;
+    _textBackgroundView.frame = CGRectMake(0, tmpRect.origin.y-5, KScreenWidth, tmpRect.size.height +35);
     _myTextView.frame = tmpRect;
-    _myTextView.text = _myTextView.text;
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
@@ -514,27 +602,42 @@
 
 #pragma mark - addAudio
 //点击录音按钮，弹出录音画面
--(void)addAudioButton{
-    UIButton *listButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    listButton.frame = CGRectMake(2, KScreenHeight - 64 + 16, KScreenWidth * 0.5 - 4, 46);
-    [listButton setTitle:@"Select from list" forState:UIControlStateNormal];
-    [listButton setBackgroundColor:[UIColor grayColor]];
-    [listButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [listButton addTarget:self action:@selector(openAudioList) forControlEvents:UIControlEventTouchUpInside];
+-(void)addAudioBtn{
     
-    UIButton *audioButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    audioButton.frame = CGRectMake( KScreenWidth * 0.5+1, KScreenHeight - 64 + 16, KScreenWidth * 0.5 - 4, 46);
-    [audioButton setTitle:@"Hold to talk" forState:UIControlStateNormal];
-    [audioButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [audioButton setBackgroundColor:[UIColor grayColor]];
+    _editTextViewControl = [[UIControl alloc]initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight)];
+    _editTextViewControl.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_editTextViewControl];
     
-    [audioButton addTarget:self action:@selector(showAudioView) forControlEvents:UIControlEventTouchDown];
-    [audioButton addTarget:self action:@selector(hideAudioView) forControlEvents:UIControlEventTouchUpInside];
+    UIView *backgroundView = [[UIView alloc]init];
+//    backgroundView.hidden = YES;
+    backgroundView.frame = CGRectMake(0, 0, KScreenWidth, KScreenHeight);
+//        backgroundView.backgroundColor = [UIColor redColor];
+    UITapGestureRecognizer *tapGesture1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(recordClick)];
+    backgroundView.userInteractionEnabled=YES;
+    [backgroundView addGestureRecognizer:tapGesture1];
+    [_editTextViewControl addSubview:backgroundView];
     
-    [self.view addSubview:listButton];
-    [self.view addSubview:audioButton];
+    
+    _audioButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//    _audioButton.hidden = YES;
+    _audioButton.frame = CGRectMake( KScreenWidth/2-50, KScreenHeight -150, 100, 100);
+//    [_audioButton setTitle:@"Hold to talk" forState:UIControlStateNormal];
+    [_audioButton setImage:[UIImage imageNamed:@"audio"] forState:UIControlStateNormal];
+//    _audioButton.layer.borderWidth = 0;
+//    _audioButton.layer.cornerRadius = 45;
+    [_audioButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [_audioButton setBackgroundColor:[UIColor lightGrayColor]];
+    
+    [_audioButton addTarget:self action:@selector(showAudioView) forControlEvents:UIControlEventTouchDown];
+    [_audioButton addTarget:self action:@selector(hideAudioView) forControlEvents:UIControlEventTouchUpInside];
+    
+    [backgroundView addSubview:_audioButton];
 }
-
+-(void)recordClick
+{
+    [_editTextViewControl removeFromSuperview];
+    _editTextViewControl = nil;
+}
 
 -(void)openAudioList{
      self.navigationController.navigationBar.hidden = YES;

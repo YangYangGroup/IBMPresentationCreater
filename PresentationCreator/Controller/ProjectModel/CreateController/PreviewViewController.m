@@ -128,7 +128,7 @@
     [dic setObject:str1 forKey:@"filelist"];
     
     //    NSLog(@"%@",str1);
-    NSString *uploadUrl = @"http://9.115.26.148/PPT/service/UploadServlet";
+    NSString *uploadUrl = @"http://9.115.24.148/PPT/service/UploadServlet";
     
     
     AFHTTPRequestOperationManager *requestManager = [AFHTTPRequestOperationManager manager];

@@ -69,7 +69,6 @@
 		1632FEF91C0AF8CB00DBFA1A /* SMS@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1632FEF51C0AF8CB00DBFA1A /* SMS@2x.png */; };
 		1632FEFA1C0AF8CB00DBFA1A /* safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1632FEF61C0AF8CB00DBFA1A /* safari@2x.png */; };
 		1632FEFB1C0AF8CB00DBFA1A /* friend@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1632FEF71C0AF8CB00DBFA1A /* friend@2x.png */; };
-		1632FEFE1C0AFAB200DBFA1A /* moments@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1632FEFD1C0AFAB200DBFA1A /* moments@2x.png */; };
 		16335CBE1BF4764600DD1DB7 /* PEPhotoCropEditor.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 16335CBD1BF4764600DD1DB7 /* PEPhotoCropEditor.bundle */; };
 		16335CC81BF476A300DD1DB7 /* PECropRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16335CC11BF476A300DD1DB7 /* PECropRectView.m */; };
 		16335CC91BF476A300DD1DB7 /* PECropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16335CC31BF476A300DD1DB7 /* PECropView.m */; };
@@ -148,6 +147,8 @@
 		16DE703B1BCF9897009921B9 /* PreviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16DE70391BCF9897009921B9 /* PreviewViewController.xib */; };
 		16DE71311BD535FD009921B9 /* EditNowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 16DE712F1BD535FD009921B9 /* EditNowViewController.m */; };
 		16DE71321BD535FD009921B9 /* EditNowViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16DE71301BD535FD009921B9 /* EditNowViewController.xib */; };
+		16E538BB1C0C4F360069B5C6 /* moments@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16E538BA1C0C4F360069B5C6 /* moments@2x.png */; };
+		16E538BD1C0C6C070069B5C6 /* audio@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16E538BC1C0C6C070069B5C6 /* audio@2x.png */; };
 		BA2BEFD01BFF2D1100718E43 /* checkbox_checked.png in Resources */ = {isa = PBXBuildFile; fileRef = BA2BEFCE1BFF2D1100718E43 /* checkbox_checked.png */; };
 		BA2BEFD11BFF2D1100718E43 /* checkbox_unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = BA2BEFCF1BFF2D1100718E43 /* checkbox_unchecked.png */; };
 		BA2BEFD41BFF2D7D00718E43 /* AudioListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA2BEFD31BFF2D7D00718E43 /* AudioListCell.m */; };
@@ -270,7 +271,6 @@
 		1632FEF51C0AF8CB00DBFA1A /* SMS@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SMS@2x.png"; sourceTree = "<group>"; };
 		1632FEF61C0AF8CB00DBFA1A /* safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "safari@2x.png"; sourceTree = "<group>"; };
 		1632FEF71C0AF8CB00DBFA1A /* friend@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "friend@2x.png"; sourceTree = "<group>"; };
-		1632FEFD1C0AFAB200DBFA1A /* moments@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "moments@2x.png"; sourceTree = "<group>"; };
 		16335CBD1BF4764600DD1DB7 /* PEPhotoCropEditor.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = PEPhotoCropEditor.bundle; sourceTree = "<group>"; };
 		16335CC01BF476A300DD1DB7 /* PECropRectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PECropRectView.h; sourceTree = "<group>"; };
 		16335CC11BF476A300DD1DB7 /* PECropRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PECropRectView.m; sourceTree = "<group>"; };
@@ -381,6 +381,8 @@
 		16DE712E1BD535FD009921B9 /* EditNowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditNowViewController.h; sourceTree = "<group>"; };
 		16DE712F1BD535FD009921B9 /* EditNowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditNowViewController.m; sourceTree = "<group>"; };
 		16DE71301BD535FD009921B9 /* EditNowViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditNowViewController.xib; sourceTree = "<group>"; };
+		16E538BA1C0C4F360069B5C6 /* moments@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "moments@2x.png"; sourceTree = "<group>"; };
+		16E538BC1C0C6C070069B5C6 /* audio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "audio@2x.png"; sourceTree = "<group>"; };
 		BA2BEFCE1BFF2D1100718E43 /* checkbox_checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox_checked.png; sourceTree = "<group>"; };
 		BA2BEFCF1BFF2D1100718E43 /* checkbox_unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox_unchecked.png; sourceTree = "<group>"; };
 		BA2BEFD21BFF2D7D00718E43 /* AudioListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioListCell.h; sourceTree = "<group>"; };
@@ -537,7 +539,8 @@
 		162A37B71BBA856D0069D9BB /* Image */ = {
 			isa = PBXGroup;
 			children = (
-				1632FEFD1C0AFAB200DBFA1A /* moments@2x.png */,
+				16E538BC1C0C6C070069B5C6 /* audio@2x.png */,
+				16E538BA1C0C4F360069B5C6 /* moments@2x.png */,
 				1632FEF51C0AF8CB00DBFA1A /* SMS@2x.png */,
 				1632FEF61C0AF8CB00DBFA1A /* safari@2x.png */,
 				1632FEF71C0AF8CB00DBFA1A /* friend@2x.png */,
@@ -963,6 +966,7 @@
 				TargetAttributes = {
 					162A37781BBA80DA0069D9BB = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 84NVS8QSUW;
 					};
 					162A37911BBA80DB0069D9BB = {
 						CreatedOnToolsVersion = 7.0;
@@ -1027,6 +1031,7 @@
 				163421041BD6866D006CBC87 /* IMG_5.png in Resources */,
 				1631DED81BFDE8BB005B0116 /* RecordingSignal001.png in Resources */,
 				163420FF1BD6777A006CBC87 /* Picture1.png in Resources */,
+				16E538BB1C0C4F360069B5C6 /* moments@2x.png in Resources */,
 				162A37B31BBA81BA0069D9BB /* ViewController.xib in Resources */,
 				1632FEFB1C0AF8CB00DBFA1A /* friend@2x.png in Resources */,
 				166C04971BC5782100A9EFB3 /* AddPageViewController.xib in Resources */,
@@ -1042,7 +1047,6 @@
 				1631DEDB1BFDE8BB005B0116 /* RecordingSignal004.png in Resources */,
 				BA2BEFD01BFF2D1100718E43 /* checkbox_checked.png in Resources */,
 				BAA006351C05C3E400D3C522 /* EditPresentationNameViewController.xib in Resources */,
-				162A7AE81BFB5846008AD509 /* share@2x.png in Resources */,
 				16335CCD1BF476C300DD1DB7 /* Localizable.strings in Resources */,
 				163420E51BD6777A006CBC87 /* index.html in Resources */,
 				163420EE1BD6777A006CBC87 /* template_3.html in Resources */,
@@ -1059,8 +1063,8 @@
 				1631DEDC1BFDE8BB005B0116 /* RecordingSignal005.png in Resources */,
 				162A7AF81BFB7007008AD509 /* read_me.txt in Resources */,
 				1631DED91BFDE8BB005B0116 /* RecordingSignal002.png in Resources */,
-				1632FEFE1C0AFAB200DBFA1A /* moments@2x.png in Resources */,
 				1634210C1BD68837006CBC87 /* IMG_1.png in Resources */,
+				16E538BD1C0C6C070069B5C6 /* audio@2x.png in Resources */,
 				162A7B081BFC5DB3008AD509 /* sharewechat@2x.png in Resources */,
 				163421001BD6777A006CBC87 /* Picture2.png in Resources */,
 				163420FB1BD6777A006CBC87 /* img3.jpg in Resources */,
