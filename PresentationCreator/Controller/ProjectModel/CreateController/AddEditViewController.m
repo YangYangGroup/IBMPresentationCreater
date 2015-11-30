@@ -53,7 +53,9 @@
 }
 -(void)backClick
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
 }
 -(void)addCollectionView
 {

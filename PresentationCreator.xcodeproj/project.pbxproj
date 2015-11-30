@@ -66,6 +66,10 @@
 		1631DEDF1BFDE8BB005B0116 /* RecordingSignal008.png in Resources */ = {isa = PBXBuildFile; fileRef = 1631DED71BFDE8BB005B0116 /* RecordingSignal008.png */; };
 		1632FEF21C05D5DB00DBFA1A /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1632FEF11C05D5DB00DBFA1A /* back@2x.png */; };
 		1632FEF41C05D5EF00DBFA1A /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1632FEF31C05D5EF00DBFA1A /* share@2x.png */; };
+		1632FEF91C0AF8CB00DBFA1A /* SMS@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1632FEF51C0AF8CB00DBFA1A /* SMS@2x.png */; };
+		1632FEFA1C0AF8CB00DBFA1A /* safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1632FEF61C0AF8CB00DBFA1A /* safari@2x.png */; };
+		1632FEFB1C0AF8CB00DBFA1A /* friend@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1632FEF71C0AF8CB00DBFA1A /* friend@2x.png */; };
+		1632FEFE1C0AFAB200DBFA1A /* moments@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1632FEFD1C0AFAB200DBFA1A /* moments@2x.png */; };
 		16335CBE1BF4764600DD1DB7 /* PEPhotoCropEditor.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 16335CBD1BF4764600DD1DB7 /* PEPhotoCropEditor.bundle */; };
 		16335CC81BF476A300DD1DB7 /* PECropRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16335CC11BF476A300DD1DB7 /* PECropRectView.m */; };
 		16335CC91BF476A300DD1DB7 /* PECropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 16335CC31BF476A300DD1DB7 /* PECropView.m */; };
@@ -261,6 +265,10 @@
 		1631DED71BFDE8BB005B0116 /* RecordingSignal008.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordingSignal008.png; sourceTree = "<group>"; };
 		1632FEF11C05D5DB00DBFA1A /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
 		1632FEF31C05D5EF00DBFA1A /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
+		1632FEF51C0AF8CB00DBFA1A /* SMS@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SMS@2x.png"; sourceTree = "<group>"; };
+		1632FEF61C0AF8CB00DBFA1A /* safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "safari@2x.png"; sourceTree = "<group>"; };
+		1632FEF71C0AF8CB00DBFA1A /* friend@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "friend@2x.png"; sourceTree = "<group>"; };
+		1632FEFD1C0AFAB200DBFA1A /* moments@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "moments@2x.png"; sourceTree = "<group>"; };
 		16335CBD1BF4764600DD1DB7 /* PEPhotoCropEditor.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = PEPhotoCropEditor.bundle; sourceTree = "<group>"; };
 		16335CC01BF476A300DD1DB7 /* PECropRectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PECropRectView.h; sourceTree = "<group>"; };
 		16335CC11BF476A300DD1DB7 /* PECropRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PECropRectView.m; sourceTree = "<group>"; };
@@ -524,6 +532,10 @@
 		162A37B71BBA856D0069D9BB /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				1632FEFD1C0AFAB200DBFA1A /* moments@2x.png */,
+				1632FEF51C0AF8CB00DBFA1A /* SMS@2x.png */,
+				1632FEF61C0AF8CB00DBFA1A /* safari@2x.png */,
+				1632FEF71C0AF8CB00DBFA1A /* friend@2x.png */,
 				BA2BEFCE1BFF2D1100718E43 /* checkbox_checked.png */,
 				BA2BEFCF1BFF2D1100718E43 /* checkbox_unchecked.png */,
 				1631DED01BFDE8BB005B0116 /* RecordingSignal001.png */,
@@ -1008,7 +1020,9 @@
 				1631DED81BFDE8BB005B0116 /* RecordingSignal001.png in Resources */,
 				163420FF1BD6777A006CBC87 /* Picture1.png in Resources */,
 				162A37B31BBA81BA0069D9BB /* ViewController.xib in Resources */,
+				1632FEFB1C0AF8CB00DBFA1A /* friend@2x.png in Resources */,
 				166C04971BC5782100A9EFB3 /* AddPageViewController.xib in Resources */,
+				1632FEFA1C0AF8CB00DBFA1A /* safari@2x.png in Resources */,
 				163420F81BD6777A006CBC87 /* bg_2.jpg in Resources */,
 				163420E11BD6777A006CBC87 /* common.css in Resources */,
 				1631DEDE1BFDE8BB005B0116 /* RecordingSignal007.png in Resources */,
@@ -1035,6 +1049,7 @@
 				1631DEDC1BFDE8BB005B0116 /* RecordingSignal005.png in Resources */,
 				162A7AF81BFB7007008AD509 /* read_me.txt in Resources */,
 				1631DED91BFDE8BB005B0116 /* RecordingSignal002.png in Resources */,
+				1632FEFE1C0AFAB200DBFA1A /* moments@2x.png in Resources */,
 				1634210C1BD68837006CBC87 /* IMG_1.png in Resources */,
 				162A7B081BFC5DB3008AD509 /* sharewechat@2x.png in Resources */,
 				163421001BD6777A006CBC87 /* Picture2.png in Resources */,
@@ -1053,6 +1068,7 @@
 				163421061BD68798006CBC87 /* IMG_4.png in Resources */,
 				163420EB1BD6777A006CBC87 /* templateUtils.js in Resources */,
 				163130421BC7E65500EE9D86 /* IMG_6.png in Resources */,
+				1632FEF91C0AF8CB00DBFA1A /* SMS@2x.png in Resources */,
 				16DE71321BD535FD009921B9 /* EditNowViewController.xib in Resources */,
 				163420E71BD6777A006CBC87 /* swiper.3.1.2.jquery.min.js in Resources */,
 			);

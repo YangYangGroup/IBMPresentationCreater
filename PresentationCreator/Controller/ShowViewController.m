@@ -26,6 +26,8 @@
 @property (nonatomic, strong) NSMutableArray *returnFileArray;
 @property (nonatomic, strong) UIView *shareView;
 @property (nonatomic, strong) NSString *finalProductUrlStr;
+@property (nonatomic, strong) UIView *shareAllView;
+@property (nonatomic, strong) UIButton *cancelBtn;
 @end
 
 @implementation ShowViewController
@@ -35,6 +37,7 @@
     _finalHtmlCode = [DBDaoHelper queryHtmlCodeFromSummary:_showSummaryIdStr];
     _finalProductUrlStr = [DBDaoHelper queryProductUrlFromSummary:_showSummaryIdStr];
     [self addWebView];
+    [self addShare];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -280,49 +283,13 @@
 }
 -(void)shareClick
 {
-    if (_finalProductUrlStr == nil) {
-        NSLog(@"失败");
-        NSString *title = NSLocalizedString(@"message", nil);
-        NSString *message = NSLocalizedString(@"You must upload before share.", nil);
-        NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
+    [UIView animateWithDuration:.25 animations:^{
         
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        _shareAllView.frame = CGRectMake(0, KScreenHeight-150, KScreenWidth, 150);
         
-        UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            NSLog(@"The \"Okay/Cancel\" alert's other action occured.");
-        }];
-        
-        [alertController addAction:otherAction];
-        
-        [self presentViewController:alertController animated:YES completion:nil];
-    }else{
-        if ([WXApi isWXAppInstalled]) {
-            //判断是否有微信
-            //        [_delegate changeScene:WXSceneSession];
-            
-            WXMediaMessage *message = [WXMediaMessage message];
-            message.title = @"Share";
-            message.description = @"A Wonderful PPT";
-            [message setThumbImage:[UIImage imageNamed:@"sharewechat@2x.png"]];
-            
-            WXWebpageObject *ext = [WXWebpageObject object];
-            //        ext.webpageUrl = @"http://www.baidu.com";
-            ext.webpageUrl = _finalProductUrlStr;
-            message.mediaObject = ext;
-            
-            SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
-            req.bText = NO;
-            req.message = message;
-            //  根据scene来判断是分享朋友圈还是聊天对话
-            req.scene = _scene;
-            
-            [WXApi sendReq:req];
-        }else{
-            
-            NSString *weiXinLink = [WXApi getWXAppInstallUrl];
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:weiXinLink]];
-        }
-    }
+    } completion:^(BOOL finished) {
+        NSLog(@"动画完事调用的BLOCK");
+    }];
     
 }
 
@@ -412,8 +379,172 @@
     
     
 }
+-(void)addShare
+{
+    _shareAllView = [[UIView alloc]init];
+    _shareAllView.backgroundColor = [UIColor colorWithRed:247/255.0f green:247/255.0f blue:247/255.0f alpha:1];
+    _shareAllView.frame = CGRectMake(0, KScreenHeight, KScreenWidth, 150);
+    [self.view addSubview:_shareAllView];
+    
+    _cancelBtn =[UIButton buttonWithType:UIButtonTypeCustom];
+    _cancelBtn.frame=CGRectMake(0, 110, KScreenWidth, 40);
+    _cancelBtn.backgroundColor = [UIColor whiteColor];
+    [_cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
+    [_cancelBtn setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
+    _cancelBtn.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+    [_cancelBtn addTarget:self action:@selector(cancelClick)forControlEvents:UIControlEventTouchUpInside];
+    [_shareAllView addSubview:_cancelBtn];
+    
+    UIButton *friendBtn = [[UIButton alloc]init];
+    friendBtn.frame = CGRectMake(KScreenWidth/4-60, 10, 60, 80);
+    [friendBtn setImage:[UIImage imageNamed:@"friend"] forState:UIControlStateNormal];
+    friendBtn.titleLabel.textAlignment = NSTextAlignmentCenter;//设置title的字体居中
+    friendBtn.titleLabel.font = [UIFont systemFontOfSize:14];//title字体大小
+    [friendBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];//设置title在一般情况下为白色字体
+    [friendBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];//设置title在button被选中情况下为灰色字体
+    friendBtn.titleEdgeInsets = UIEdgeInsetsMake(71, friendBtn.titleLabel.bounds.size.width-60, 0, 0);//设置title在button上的位置（上top，左left，下bottom，右right）
+    [friendBtn setTitle:@"friend" forState:UIControlStateNormal];
+    [friendBtn addTarget:self action:@selector(friendClick) forControlEvents:UIControlEventTouchUpInside];
+    [_shareAllView addSubview:friendBtn];
+    
+    UIButton *momentsBtn = [[UIButton alloc]init];
+    momentsBtn.frame = CGRectMake(KScreenWidth/2-60, 10, 60, 80);
+    [momentsBtn setImage:[UIImage imageNamed:@"moments"] forState:UIControlStateNormal];
+    momentsBtn.titleLabel.textAlignment = NSTextAlignmentCenter;//设置title的字体居中
+    momentsBtn.titleLabel.font = [UIFont systemFontOfSize:14];//title字体大小
+    [momentsBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];//设置title在一般情况下为白色字体
+    [momentsBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];//设置title在button被选中情况下为灰色字体
+    momentsBtn.titleEdgeInsets = UIEdgeInsetsMake(71, momentsBtn.titleLabel.bounds.size.width-60, 0, 0);//设置title在button上的位置（上top，左left，下bottom，右right）
+    [momentsBtn setTitle:@"moments" forState:UIControlStateNormal];
+    [momentsBtn addTarget:self action:@selector(momentsClick) forControlEvents:UIControlEventTouchUpInside];
+    [_shareAllView addSubview:momentsBtn];
+    
+    UIButton *smsBtn = [[UIButton alloc]init];
+    smsBtn.frame = CGRectMake(KScreenWidth/2+KScreenWidth/4-60, 10, 60, 80);
+    [smsBtn setImage:[UIImage imageNamed:@"SMS"] forState:UIControlStateNormal];
+    smsBtn.titleLabel.textAlignment = NSTextAlignmentCenter;//设置title的字体居中
+    smsBtn.titleLabel.font = [UIFont systemFontOfSize:14];//title字体大小
+    [smsBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];//设置title在一般情况下为白色字体
+    [smsBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];//设置title在button被选中情况下为灰色字体
+    smsBtn.titleEdgeInsets = UIEdgeInsetsMake(71, smsBtn.titleLabel.bounds.size.width-60, 0, 0);//设置title在button上的位置（上top，左left，下bottom，右right）
+    [smsBtn setTitle:@"sms" forState:UIControlStateNormal];
+    [smsBtn addTarget:self action:@selector(smsClick) forControlEvents:UIControlEventTouchUpInside];
+    [_shareAllView addSubview:smsBtn];
+    
+    UIButton *safariBtn = [[UIButton alloc]init];
+    safariBtn.frame = CGRectMake(KScreenWidth-60, 10, 60, 80);
+    [safariBtn setImage:[UIImage imageNamed:@"safari"] forState:UIControlStateNormal];
+    safariBtn.titleLabel.textAlignment = NSTextAlignmentCenter;//设置title的字体居中
+    safariBtn.titleLabel.font = [UIFont systemFontOfSize:14];//title字体大小
+    [safariBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];//设置title在一般情况下为白色字体
+    [safariBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];//设置title在button被选中情况下为灰色字体
+    safariBtn.titleEdgeInsets = UIEdgeInsetsMake(71, safariBtn.titleLabel.bounds.size.width-60, 0, 0);//设置title在button上的位置（上top，左left，下bottom，右right）
+    [safariBtn setTitle:@"safari" forState:UIControlStateNormal];
+    [safariBtn addTarget:self action:@selector(safariClick) forControlEvents:UIControlEventTouchUpInside];
+    [_shareAllView addSubview:safariBtn];
+}
+-(void)cancelClick
+{
+    [UIView animateWithDuration:.25 animations:^{
+        
+        _shareAllView.frame = CGRectMake(0, KScreenHeight, KScreenWidth, 150);
+        
+    } completion:^(BOOL finished) {
+        NSLog(@"动画完事调用的BLOCK");
+    }];
+}
+-(void)friendClick
+{
+        if (_finalProductUrlStr == nil) {
+            NSLog(@"失败");
+            NSString *title = NSLocalizedString(@"message", nil);
+            NSString *message = NSLocalizedString(@"You must upload before share.", nil);
+            NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
+    
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    
+            UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                NSLog(@"The \"Okay/Cancel\" alert's other action occured.");
+            }];
+    
+            [alertController addAction:otherAction];
+    
+            [self presentViewController:alertController animated:YES completion:nil];
+        }else{
+            if ([WXApi isWXAppInstalled]) {
+                //判断是否有微信
+                //        [_delegate changeScene:WXSceneSession];
+    
+                WXMediaMessage *message = [WXMediaMessage message];
+                message.title = @"Share";
+                message.description = @"A Wonderful PPT";
+                [message setThumbImage:[UIImage imageNamed:@"sharewechat@2x.png"]];
+    
+                WXWebpageObject *ext = [WXWebpageObject object];
+                //        ext.webpageUrl = @"http://www.baidu.com";
+                ext.webpageUrl = _finalProductUrlStr;
+                message.mediaObject = ext;
+    
+                SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+                req.bText = NO;
+                req.message = message;
+                //  根据scene来判断是分享朋友圈还是聊天对话
+                req.scene = _scene;
+    
+                [WXApi sendReq:req];
+            }else{
+    
+                NSString *weiXinLink = [WXApi getWXAppInstallUrl];
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:weiXinLink]];
+            }
+        }
+        
 
-
+    [UIView animateWithDuration:.25 animations:^{
+        
+        _shareAllView.frame = CGRectMake(0, KScreenHeight, KScreenWidth, 150);
+        
+    } completion:^(BOOL finished) {
+        NSLog(@"动画完事调用的BLOCK");
+    }];
+}
+-(void)momentsClick
+{
+    if ([WXApi isWXAppInstalled]) {
+        //分享文本到朋友圈
+        WXMediaMessage *message = [WXMediaMessage message];
+        message.title = @"Share";
+        message.description = @"A Wonderful PPT";
+        [message setThumbImage:[UIImage imageNamed:@"sharewechat@2x.png"]];
+        
+        WXWebpageObject *ext = [WXWebpageObject object];
+        ext.webpageUrl = _finalProductUrlStr;
+        
+        message.mediaObject = ext;
+        
+        SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+        req.bText = NO;
+        req.message = message;
+        //  根据scene来判断是分享朋友圈还是聊天对话
+        req.scene = 1;
+        
+        [WXApi sendReq:req];
+    }else{
+        
+        NSString *weiXinLink = [WXApi getWXAppInstallUrl];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:weiXinLink]];
+        
+    }
+}
+-(void)smsClick
+{
+    
+}
+-(void)safariClick
+{
+    NSURL *url = [[NSURL alloc]initWithString:_finalProductUrlStr];
+    [[UIApplication sharedApplication]openURL:url];
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
