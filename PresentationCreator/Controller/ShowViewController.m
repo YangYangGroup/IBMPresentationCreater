@@ -30,6 +30,7 @@
 @property (nonatomic, strong) UIView *shareAllView;
 @property (nonatomic, strong) UIButton *cancelBtn;
 @property (nonatomic, strong) SummaryModel *sumyModel;
+@property (nonatomic, strong) UIControl *backgroundViewControl;
 @end
 
 @implementation ShowViewController
@@ -41,7 +42,7 @@
     _finalHtmlCode = _sumyModel.contentHtml;
     _finalProductUrlStr = _sumyModel.product_url;
     [self addWebView];
-    [self addShare];
+    
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -287,9 +288,11 @@
 }
 -(void)shareClick
 {
+    [self addShare];
     [UIView animateWithDuration:.25 animations:^{
         
-        _shareAllView.frame = CGRectMake(0, KScreenHeight-150, KScreenWidth, 150);
+        _shareAllView.frame = CGRectMake(0, KScreenHeight-170, KScreenWidth, 150);
+        
         
     } completion:^(BOOL finished) {
         NSLog(@"动画完事调用的BLOCK");
@@ -392,10 +395,24 @@
 }
 -(void)addShare
 {
+    _backgroundViewControl = [[UIControl alloc]initWithFrame:CGRectMake(0, 20, KScreenWidth, KScreenHeight)];
+    _backgroundViewControl.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_backgroundViewControl];
+    
+    
+    UIView *backgroundView = [[UIView alloc]init];
+    //    backgroundView.hidden = YES;
+    backgroundView.frame = CGRectMake(0, 0, KScreenWidth, KScreenHeight);
+    //        backgroundView.backgroundColor = [UIColor redColor];
+    UITapGestureRecognizer *tapGesture1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(editShareClick)];
+    backgroundView.userInteractionEnabled=YES;
+    [backgroundView addGestureRecognizer:tapGesture1];
+    [_backgroundViewControl addSubview:backgroundView];
+    
     _shareAllView = [[UIView alloc]init];
     _shareAllView.backgroundColor = [UIColor colorWithRed:247/255.0f green:247/255.0f blue:247/255.0f alpha:1];
     _shareAllView.frame = CGRectMake(0, KScreenHeight, KScreenWidth, 150);
-    [self.view addSubview:_shareAllView];
+    [_backgroundViewControl addSubview:_shareAllView];
     
     _cancelBtn =[UIButton buttonWithType:UIButtonTypeCustom];
     _cancelBtn.frame=CGRectMake(0, 110, KScreenWidth, 40);
@@ -453,6 +470,11 @@
     [safariBtn setTitle:@"safari" forState:UIControlStateNormal];
     [safariBtn addTarget:self action:@selector(safariClick) forControlEvents:UIControlEventTouchUpInside];
     [_shareAllView addSubview:safariBtn];
+}
+-(void)editShareClick
+{
+    [_backgroundViewControl removeFromSuperview];
+    _backgroundViewControl = nil;
 }
 -(void)cancelClick
 {
