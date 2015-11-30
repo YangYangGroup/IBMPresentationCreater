@@ -252,7 +252,10 @@
                      image:nil
                     target:self
                     action:@selector(addPageClick)],
-      
+      [KxMenuItem menuItem:@"Home"
+                     image:nil
+                    target:self
+                    action:@selector(backHome)],
       ];
     
     //    KxMenuItem *first = menuItems[0];
@@ -262,6 +265,12 @@
     [KxMenu showMenuInView:self.view
                   fromRect:CGRectMake(KScreenWidth - 100, 0, KScreenWidth, 60)
                  menuItems:menuItems];
+}
+-(void)backHome{
+    
+    self.tabBarController.selectedIndex = 0;//点击按钮回到第一个tabbar
+    [self.navigationController popToRootViewControllerAnimated:YES];
+
 }
 -(void)saveClick
 {

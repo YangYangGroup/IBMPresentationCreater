@@ -380,12 +380,14 @@
         //newName should be save.
         NSString *smID = [DBDaoHelper copySummaryData:newName ContentHtml:_finalHtmlCode Status:_sumyModel.status];
         NSMutableArray *detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:_showSummaryIdStr];
+        BOOL copyStatus = false;
         for (int i = 0; i<detailsArray.count; i ++) {
             DetailsModel *dm = [[DetailsModel alloc]init];
             dm = [detailsArray objectAtIndex:i];
-            [DBDaoHelper copyDetailsData:smID TemplateId:dm.templateIdStr HtmlCode:dm.htmlCodeStr PageNumber:dm.pageNumberStr fileId:dm.fileIdStr];
+            copyStatus =[DBDaoHelper copyDetailsData:smID TemplateId:dm.templateIdStr HtmlCode:dm.htmlCodeStr PageNumber:dm.pageNumberStr fileId:dm.fileIdStr];
         }
-        
+        [self copyStatus:copyStatus];
+      
     }];
     [alertController addAction:cancelAction];
     [alertController addAction:deleteAction];
@@ -532,52 +534,50 @@
             }
         }
         
+   
+        
+}
+ -(void)copyStatus:(BOOL)flag{
+     if (flag) {
+         NSString *title = NSLocalizedString(@"", nil);
+         NSString *successMessage = NSLocalizedString(@"Copied successfully. Do you want to back home page or stay here?", nil);
+         NSString *cancelTitle = NSLocalizedString(@"Cancel", nil);
+         NSString *deleteTitle = NSLocalizedString(@"Back", nil);
+         
+         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:successMessage preferredStyle:UIAlertControllerStyleAlert];
+         
+         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+             
+         }];
+         UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:deleteTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+             [self.navigationController popViewControllerAnimated:YES];
+             
+         }];
+         [alertController addAction:cancelAction];
+         [alertController addAction:deleteAction];
+         [self presentViewController:alertController animated:YES completion:nil];
+         
+     }else{
+         NSString *title = NSLocalizedString(@"", nil);
+         NSString *unsuccessMessage = NSLocalizedString(@"Copied successfully. Do you want to back home page or stay here?", nil);
+         NSString *cancelTitle = NSLocalizedString(@"Cancel", nil);
+         NSString *deleteTitle = NSLocalizedString(@"Back", nil);
+         
+         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:unsuccessMessage preferredStyle:UIAlertControllerStyleAlert];
+         
+         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+             
+         }];
+         UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:deleteTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+             [self.navigationController popViewControllerAnimated:YES];
+             
+         }];
+         [alertController addAction:cancelAction];
+         [alertController addAction:deleteAction];
+         [self presentViewController:alertController animated:YES completion:nil];
+     }
+ }
 
-    [UIView animateWithDuration:.25 animations:^{
-        
-        _shareAllView.frame = CGRectMake(0, KScreenHeight, KScreenWidth, 150);
-        
-    } completion:^(BOOL finished) {
-        NSLog(@"动画完事调用的BLOCK");
-    }];
-}
--(void)momentsClick
-{
-    if ([WXApi isWXAppInstalled]) {
-        //分享文本到朋友圈
-        WXMediaMessage *message = [WXMediaMessage message];
-        message.title = @"Share";
-        message.description = @"A Wonderful PPT";
-        [message setThumbImage:[UIImage imageNamed:@"sharewechat@2x.png"]];
-        
-        WXWebpageObject *ext = [WXWebpageObject object];
-        ext.webpageUrl = _finalProductUrlStr;
-        
-        message.mediaObject = ext;
-        
-        SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
-        req.bText = NO;
-        req.message = message;
-        //  根据scene来判断是分享朋友圈还是聊天对话
-        req.scene = 1;
-        
-        [WXApi sendReq:req];
-    }else{
-        
-        NSString *weiXinLink = [WXApi getWXAppInstallUrl];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:weiXinLink]];
-        
-    }
-}
--(void)smsClick
-{
-    
-}
--(void)safariClick
-{
-    NSURL *url = [[NSURL alloc]initWithString:_finalProductUrlStr];
-    [[UIApplication sharedApplication]openURL:url];
-}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
