@@ -28,7 +28,7 @@
 @property (nonatomic, strong) NSString *finalProductUrlStr;
 @property (nonatomic, strong) UIView *shareAllView;
 @property (nonatomic, strong) UIButton *cancelBtn;
-
+@property (nonatomic, strong) UIControl *backgroundViewControl;
 @end
 
 @implementation PreviewViewController
@@ -49,7 +49,6 @@
     [self loadDetailsDataToArray];
     [self generationFinalHtmlCode];
     [self addWebView];
-    [self addShare];
     self.navigationItem.title= self.showSummaryNameStr;
 //    self.tabBarController.delegate = self;
 }
@@ -80,7 +79,7 @@
 {
     NSArray *menuItems =
     @[
-      [KxMenuItem menuItem:@"Upload"
+      [KxMenuItem menuItem:@"Submit"
                      image:nil
                     target:self
                     action:@selector(uploadClick)],
@@ -128,7 +127,7 @@
     [dic setObject:str1 forKey:@"filelist"];
     
     //    NSLog(@"%@",str1);
-    NSString *uploadUrl = @"http://9.115.26.148/PPT/service/UploadServlet";
+    NSString *uploadUrl = @"http://9.115.24.148/PPT/service/UploadServlet";
     
     
     AFHTTPRequestOperationManager *requestManager = [AFHTTPRequestOperationManager manager];
@@ -187,7 +186,7 @@
         _finalProductUrlStr = str;
         //        [LoadingHelper showLoadingWithView:self.view];
         [LoadingHelper hiddonLoadingWithView:self.view];
-        NSString *title = NSLocalizedString(@"Upload Successfully", nil);
+        NSString *title = NSLocalizedString(@"Submit Successfully", nil);
         //        NSString *message = NSLocalizedString(@"Upload successfully.", nil);
         NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
         
@@ -233,6 +232,7 @@
 }
 -(void)shareClick
 {
+    [self addShare];
     [UIView animateWithDuration:.25 animations:^{
         
         _shareAllView.frame = CGRectMake(0, KScreenHeight-150, KScreenWidth, 150);
@@ -355,10 +355,24 @@
 }
 -(void)addShare
 {
+    _backgroundViewControl = [[UIControl alloc]initWithFrame:CGRectMake(0, 20, KScreenWidth, KScreenHeight)];
+    _backgroundViewControl.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_backgroundViewControl];
+    
+    
+    UIView *backgroundView = [[UIView alloc]init];
+    //    backgroundView.hidden = YES;
+    backgroundView.frame = CGRectMake(0, 0, KScreenWidth, KScreenHeight);
+    //        backgroundView.backgroundColor = [UIColor redColor];
+    UITapGestureRecognizer *tapGesture1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(editShareClick)];
+    backgroundView.userInteractionEnabled=YES;
+    [backgroundView addGestureRecognizer:tapGesture1];
+    [_backgroundViewControl addSubview:backgroundView];
+    
     _shareAllView = [[UIView alloc]init];
     _shareAllView.backgroundColor = [UIColor colorWithRed:247/255.0f green:247/255.0f blue:247/255.0f alpha:1];
     _shareAllView.frame = CGRectMake(0, KScreenHeight, KScreenWidth, 150);
-    [self.view addSubview:_shareAllView];
+    [_backgroundViewControl addSubview:_shareAllView];
     
     _cancelBtn =[UIButton buttonWithType:UIButtonTypeCustom];
     _cancelBtn.frame=CGRectMake(0, 110, KScreenWidth, 40);
@@ -377,7 +391,7 @@
     [friendBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];//设置title在一般情况下为白色字体
     [friendBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];//设置title在button被选中情况下为灰色字体
     friendBtn.titleEdgeInsets = UIEdgeInsetsMake(71, friendBtn.titleLabel.bounds.size.width-60, 0, 0);//设置title在button上的位置（上top，左left，下bottom，右right）
-    [friendBtn setTitle:@"friend" forState:UIControlStateNormal];
+    [friendBtn setTitle:@"we chat" forState:UIControlStateNormal];
     [friendBtn addTarget:self action:@selector(friendClick) forControlEvents:UIControlEventTouchUpInside];
     [_shareAllView addSubview:friendBtn];
     
@@ -416,6 +430,12 @@
     [safariBtn setTitle:@"safari" forState:UIControlStateNormal];
     [safariBtn addTarget:self action:@selector(safariClick) forControlEvents:UIControlEventTouchUpInside];
     [_shareAllView addSubview:safariBtn];
+
+}
+-(void)editShareClick
+{
+    [_backgroundViewControl removeFromSuperview];
+    _backgroundViewControl = nil;
 }
 -(void)cancelClick
 {
@@ -432,7 +452,7 @@
     if (_finalProductUrlStr == nil) {
         NSLog(@"失败");
         NSString *title = NSLocalizedString(@"message", nil);
-        NSString *message = NSLocalizedString(@"You must upload before share.", nil);
+        NSString *message = NSLocalizedString(@"You must submit before share.", nil);
         NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
         
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
@@ -471,9 +491,95 @@
             NSString *weiXinLink = [WXApi getWXAppInstallUrl];
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:weiXinLink]];
         }
+        [self editShareClick];
+        [UIView animateWithDuration:.25 animations:^{
+            
+            _shareAllView.frame = CGRectMake(0, KScreenHeight, KScreenWidth, 150);
+            
+        } completion:^(BOOL finished) {
+            NSLog(@"动画完事调用的BLOCK");
+        }];
     }
-    
-    
+}
+-(void)momentsClick
+{
+    if (_finalProductUrlStr == nil) {
+        NSString *title = NSLocalizedString(@"message", nil);
+        NSString *message = NSLocalizedString(@"You must submit before share.", nil);
+        NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
+        
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            NSLog(@"The \"Okay/Cancel\" alert's other action occured.");
+        }];
+        
+        [alertController addAction:otherAction];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }else{
+        if ([WXApi isWXAppInstalled]) {
+            //分享文本到朋友圈
+            WXMediaMessage *message = [WXMediaMessage message];
+            message.title = @"Share";
+            message.description = @"A Wonderful PPT";
+            [message setThumbImage:[UIImage imageNamed:@"sharewechat@2x.png"]];
+            
+            WXWebpageObject *ext = [WXWebpageObject object];
+            ext.webpageUrl = _finalProductUrlStr;
+            
+            message.mediaObject = ext;
+            
+            SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+            req.bText = NO;
+            req.message = message;
+            //  根据scene来判断是分享朋友圈还是聊天对话
+            req.scene = 1;
+            
+            [WXApi sendReq:req];
+        }else{
+            
+            NSString *weiXinLink = [WXApi getWXAppInstallUrl];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:weiXinLink]];
+            
+        }
+        [self editShareClick];
+        [UIView animateWithDuration:.25 animations:^{
+            
+            _shareAllView.frame = CGRectMake(0, KScreenHeight, KScreenWidth, 150);
+            
+        } completion:^(BOOL finished) {
+            NSLog(@"动画完事调用的BLOCK");
+        }];
+    }
+}
+-(void)smsClick
+{
+    if (_finalProductUrlStr == nil) {
+        
+    }
+}
+-(void)safariClick
+{
+    if (_finalProductUrlStr == nil) {
+        NSString *title = NSLocalizedString(@"message", nil);
+        NSString *message = NSLocalizedString(@"You must submit before share.", nil);
+        NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
+        
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            NSLog(@"The \"Okay/Cancel\" alert's other action occured.");
+        }];
+        
+        [alertController addAction:otherAction];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }else{
+        NSURL *url = [[NSURL alloc]initWithString:_finalProductUrlStr];
+        [[UIApplication sharedApplication]openURL:url];
+    }
+    [self editShareClick];
     [UIView animateWithDuration:.25 animations:^{
         
         _shareAllView.frame = CGRectMake(0, KScreenHeight, KScreenWidth, 150);
@@ -481,43 +587,6 @@
     } completion:^(BOOL finished) {
         NSLog(@"动画完事调用的BLOCK");
     }];
-}
--(void)momentsClick
-{
-    if ([WXApi isWXAppInstalled]) {
-        //分享文本到朋友圈
-        WXMediaMessage *message = [WXMediaMessage message];
-        message.title = @"Share";
-        message.description = @"A Wonderful PPT";
-        [message setThumbImage:[UIImage imageNamed:@"sharewechat@2x.png"]];
-        
-        WXWebpageObject *ext = [WXWebpageObject object];
-        ext.webpageUrl = _finalProductUrlStr;
-        
-        message.mediaObject = ext;
-        
-        SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
-        req.bText = NO;
-        req.message = message;
-        //  根据scene来判断是分享朋友圈还是聊天对话
-        req.scene = 1;
-        
-        [WXApi sendReq:req];
-    }else{
-        
-        NSString *weiXinLink = [WXApi getWXAppInstallUrl];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:weiXinLink]];
-        
-    }
-}
--(void)smsClick
-{
-    
-}
--(void)safariClick
-{
-    NSURL *url = [[NSURL alloc]initWithString:_finalProductUrlStr];
-    [[UIApplication sharedApplication]openURL:url];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -63,7 +63,7 @@
     [self.window makeKeyAndVisible];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(newNotification:) name:@"newJianting" object:nil];
     //向微信注册（wxd930ea5d5a258f4f）
-    [WXApi registerApp:@"wxad7b4500b79419dc" withDescription:nil];
+    [WXApi registerApp:@"wx401b1d91dc36e9ef" withDescription:nil];
     return YES;
 }
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
