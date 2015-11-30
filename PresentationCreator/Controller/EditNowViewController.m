@@ -623,10 +623,11 @@
     _audioButton.frame = CGRectMake( KScreenWidth/2-50, KScreenHeight -150, 100, 100);
 //    [_audioButton setTitle:@"Hold to talk" forState:UIControlStateNormal];
     [_audioButton setImage:[UIImage imageNamed:@"audio"] forState:UIControlStateNormal];
-//    _audioButton.layer.borderWidth = 0;
-//    _audioButton.layer.cornerRadius = 45;
+    _audioButton.layer.masksToBounds = YES;
+    _audioButton.layer.borderWidth = 0;
+    _audioButton.layer.cornerRadius = 50;
     [_audioButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [_audioButton setBackgroundColor:[UIColor lightGrayColor]];
+    [_audioButton setBackgroundColor:[UIColor lightGrayColor]];
     
     [_audioButton addTarget:self action:@selector(showAudioView) forControlEvents:UIControlEventTouchDown];
     [_audioButton addTarget:self action:@selector(hideAudioView) forControlEvents:UIControlEventTouchUpInside];
