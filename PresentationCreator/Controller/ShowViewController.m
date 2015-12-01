@@ -128,7 +128,9 @@
 }
 -(void)backClick
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    self.tabBarController.selectedIndex = 0;//点击按钮回到第一个tabbar
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    
 }
 
 -(void)editClick

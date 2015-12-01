@@ -13,6 +13,7 @@
 #import "PreviewViewController.h"
 #import "EditNowViewController.h"
 #import "KxMenu.h"
+#import "ShowViewController.h"
 
 @interface CreationEditViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate,UIWebViewDelegate,UITextViewDelegate,UIAlertViewDelegate>
 @property (nonatomic, retain) UIView *backgorundView;
@@ -34,6 +35,7 @@
 @property (nonatomic, strong) UIControl *titleViewControl;
 @property (nonatomic, strong) UITextView *titleTextView;
 @property (nonatomic, strong) UIButton *okButton;
+
 @end
 
 @implementation CreationEditViewController
@@ -199,6 +201,14 @@
 //            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"5" HtmlCode:template_5 PageNumber:@"6"];
             //        [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"5" HtmlCode:template_5 PageNumber:@"7"];
         }
+        
+        
+        ShowViewController *vc = [[ShowViewController alloc]init];
+        
+        vc.showSummaryIdStr = _maxSummaryIdStr;
+        vc.showSummaryNameStr =  _summaryNameStr;
+        vc.showTemplateIdStr = _maxSummaryIdStr;
+        [self.navigationController pushViewController:vc animated:YES];
         
         //    //像details表添加2条数据 首页 尾页
         //    [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"1" HtmlCode:template_1 PageNumber:@"1"];
