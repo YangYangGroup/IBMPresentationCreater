@@ -118,8 +118,8 @@
         NSLog(@"%@",sender.object);
         if(sender.object != nil){
             NSLog(@"details id:%@ audio is:%@",_editNowDetailsIdStr,sender.object);
-            [DBDaoHelper updateDetailByFileId:sender.object DetailsId:_editNowDetailsIdStr];
-            _audioPath = [DBDaoHelper queryAudioPathByFileId:sender.object];
+            
+            _audioPath = sender.object;
             [self editAudioComponent];
            
         }
@@ -672,6 +672,7 @@
     
     UINavigationController *navigation = [[UINavigationController alloc]initWithRootViewController:audioListVC];
     audioListVC.audName = _audioPath;
+    audioListVC.detailsId = _editNowDetailsIdStr;
     
     [self presentViewController:navigation animated:YES completion:nil];
 //     self.navigationController.navigationBar.hidden = YES;

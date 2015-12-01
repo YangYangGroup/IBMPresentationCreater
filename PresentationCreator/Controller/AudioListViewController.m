@@ -58,10 +58,11 @@
 -(void)backClick{
     // 发送通知
     NSLog(@"audio id: %@",_audioId);
-  
+    
     if(_audioId.length != 0){
-         [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedAudioName" object:_audioId];
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        [DBDaoHelper updateDetailByFileId:_audioId DetailsId:_detailsId];
+         [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedAudioName" object:_selectedAudioName];
+        
     }
     [self dismissViewControllerAnimated:YES completion:^{}];
 }

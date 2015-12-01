@@ -10,5 +10,5 @@
 
 @interface AudioListViewController : UIViewController
 @property (nonatomic, strong) NSString *audName;
-
+@property (nonatomic, strong) NSString *detailsId;
 @end
