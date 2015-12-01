@@ -101,7 +101,7 @@
                     target:self
                     action:@selector(saveClick)],
       
-      [KxMenuItem menuItem:@"AddPage"
+      [KxMenuItem menuItem:@"Add Page"
                      image:nil
                     target:self
                     action:@selector(addPageClick)],

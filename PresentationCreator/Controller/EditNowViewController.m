@@ -10,10 +10,11 @@
 #import <AVFoundation/AVFoundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "PECropViewController.h"
-#import "AudioListCell.h"
-#import "KxMenu.h"
 
-@interface EditNowViewController ()<UIWebViewDelegate,AVAudioRecorderDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UITextFieldDelegate,UITableViewDataSource, UITableViewDelegate>
+#import "KxMenu.h"
+#import "AudioListViewController.h"
+
+@interface EditNowViewController ()<UIWebViewDelegate,AVAudioRecorderDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UITextFieldDelegate>
 @property (nonatomic ,strong) UIWebView *webView;
 @property (nonatomic, strong) NSString *htmlSource;
 @property (nonatomic, strong) NSString *imgIndex;
@@ -50,8 +51,7 @@
 //图片组
 @property (nonatomic, strong) NSMutableArray *volumImages;
 @property (nonatomic, assign) double lowPassResults;
-@property (nonatomic, strong) NSMutableArray *audioArray;
-@property (nonatomic, strong) UITableView *audioTableView;
+
 
 @property (nonatomic, strong) UITextView *myTextView;
 @property (nonatomic, strong) UIView *textBackgroundView;
@@ -66,6 +66,11 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     self.parentViewController.tabBarController.tabBar.hidden = YES;
+    _audioPath = [DBDaoHelper queryAudioPathByDetailsId:_editNowDetailsIdStr];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAudioNameFromList:) name:@"SelectedAudioName" object:nil];
+   
+
 }
 - (void)viewWillDisappear:(BOOL)animated {
     self.parentViewController.tabBarController.tabBar.hidden = NO;
@@ -77,9 +82,10 @@
     self.navigationItem.title= @"Edit Your Style";
     _fullPath = [[NSString alloc]init];
     _audioPath = [[NSString alloc]init];
+    
     [self addNewWebView];
 //    [self addAudioBtn];
-    
+   
     _buttonFlag = FALSE;
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     
@@ -102,7 +108,27 @@
     _volumImages = [[NSMutableArray alloc]initWithObjects:@"RecordingSignal001.png",@"RecordingSignal002.png",@"RecordingSignal003.png",
                     @"RecordingSignal004.png", @"RecordingSignal005.png",@"RecordingSignal006.png",@"RecordingSignal007.png",@"RecordingSignal008.png",   nil];
     self.myTextView = [[UITextView alloc]init];
+    
+    
+    
 }
+-(void)getAudioNameFromList : (NSNotification*)sender{
+    if ([sender.name isEqual:@"SelectedAudioName"])
+    {
+        NSLog(@"%@",sender.object);
+        if(sender.object != nil){
+            NSLog(@"details id:%@ audio is:%@",_editNowDetailsIdStr,sender.object);
+            [DBDaoHelper updateDetailByFileId:sender.object DetailsId:_editNowDetailsIdStr];
+            _audioPath = [DBDaoHelper queryAudioPathByFileId:sender.object];
+            [self editAudioComponent];
+           
+        }
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+
+    }
+    
+}
+
 -(void)backClick
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -111,7 +137,7 @@
 {
     NSArray *menuItems =
     @[
-      [KxMenuItem menuItem:@"Audiolist"
+      [KxMenuItem menuItem:@"Audio list"
                      image:nil
                     target:self
                     action:@selector(openAudioList)],
@@ -164,14 +190,13 @@
     
     [DBDaoHelper updateDetailsIdWith:self.editNowDetailsIdStr htmlCode:_htmlSource];
     
-    NSLog(@"you got html is:::%@", _htmlSource);
 }
 -(void)loadHtmlToWebView{
     
     JSContext *context = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     
     context[@"clickedText"] = ^() {
-        NSLog(@"%ld",(long)self.webView.tag);
+       
         NSLog(@"Begin text");
         NSArray *args = [JSContext currentArguments];
         
@@ -641,41 +666,49 @@
 }
 
 -(void)openAudioList{
-     self.navigationController.navigationBar.hidden = YES;
+    //模态跳转
+    AudioListViewController *audioListVC = [[AudioListViewController alloc]init];
+    //loginVC.showSummaryIdStr = self.showSummaryIdStr;
     
-    _audioView = [[UIView alloc]initWithFrame:CGRectMake(0, 20, KScreenWidth, KScreenHeight-20)];
-    _audioView.backgroundColor = [UIColor lightGrayColor];
+    UINavigationController *navigation = [[UINavigationController alloc]initWithRootViewController:audioListVC];
+    audioListVC.audName = _audioPath;
     
-    _audioTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight - 44-20)];
-    _audioTableView.dataSource = self;
-    _audioTableView.delegate = self;
-    _audioTableView.backgroundColor = [UIColor  colorWithRed:187.0f/255.0f green:187.0f/255.0f blue:187.0f/255.0f alpha:0.5];
-    [_audioView addSubview:_audioTableView];
-    
-    
-    UIButton *selectButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    selectButton.frame = CGRectMake(2, KScreenHeight - 42 -20, KScreenWidth - 4, 40);
-    [selectButton setTitle:@"SELECT" forState:UIControlStateNormal];
-    [selectButton setBackgroundColor:[UIColor darkGrayColor]];
-    [selectButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [selectButton addTarget:self action:@selector(closeAudioList) forControlEvents:UIControlEventTouchUpInside];
-    
-    [_audioView addSubview:selectButton];
-    [self.view addSubview:_audioView];
-    _audioArray = [[NSMutableArray alloc]init];
-    _audioArray = [DBDaoHelper queryAllAudioFiles];
-    
-    for (int i = 0 ; i<_audioArray.count; i++) {
-        FilesModel *fModel = [FilesModel new];
-        fModel = [_audioArray objectAtIndex:i];
-        fModel.isChecked = @"0";
-        if ([fModel.fileIdStr isEqualToString:_editNowAudioIdStr]) {
-            fModel.isChecked = @"1";
-            
-            [_audioArray replaceObjectAtIndex:i  withObject:fModel];
-        }
-        fModel = nil;
-    }
+    [self presentViewController:navigation animated:YES completion:nil];
+//     self.navigationController.navigationBar.hidden = YES;
+//    
+//    _audioView = [[UIView alloc]initWithFrame:CGRectMake(0, 20, KScreenWidth, KScreenHeight-20)];
+//    _audioView.backgroundColor = [UIColor lightGrayColor];
+//    
+//    _audioTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight - 44-20)];
+//    _audioTableView.dataSource = self;
+//    _audioTableView.delegate = self;
+//    _audioTableView.backgroundColor = [UIColor  colorWithRed:187.0f/255.0f green:187.0f/255.0f blue:187.0f/255.0f alpha:0.5];
+//    [_audioView addSubview:_audioTableView];
+//    
+//    
+//    UIButton *selectButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//    selectButton.frame = CGRectMake(2, KScreenHeight - 42 -20, KScreenWidth - 4, 40);
+//    [selectButton setTitle:@"SELECT" forState:UIControlStateNormal];
+//    [selectButton setBackgroundColor:[UIColor darkGrayColor]];
+//    [selectButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [selectButton addTarget:self action:@selector(closeAudioList) forControlEvents:UIControlEventTouchUpInside];
+//    
+//    [_audioView addSubview:selectButton];
+//    [self.view addSubview:_audioView];
+//    _audioArray = [[NSMutableArray alloc]init];
+//    _audioArray = [DBDaoHelper queryAllAudioFiles];
+//    
+//    for (int i = 0 ; i<_audioArray.count; i++) {
+//        FilesModel *fModel = [FilesModel new];
+//        fModel = [_audioArray objectAtIndex:i];
+//        fModel.isChecked = @"0";
+//        if ([fModel.fileIdStr isEqualToString:_editNowAudioIdStr]) {
+//            fModel.isChecked = @"1";
+//            
+//            [_audioArray replaceObjectAtIndex:i  withObject:fModel];
+//        }
+//        fModel = nil;
+//    }
     
 }
 
@@ -688,65 +721,6 @@
     [self editAudioComponent];
 }
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return _audioArray.count;
-}
-
-
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    static NSString *identitify = @"id";
-    AudioListCell *cell = [tableView dequeueReusableCellWithIdentifier:identitify];
-    if(cell == nil){
-        cell = [[AudioListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identitify];
-    }
-    cell.backgroundColor = [UIColor  colorWithRed:187.0f/255.0f green:187.0f/255.0f blue:187.0f/255.0f alpha:0.5];
-    
-    FilesModel *fileModel = [FilesModel new];
-    fileModel = [_audioArray objectAtIndex:indexPath.row];
-    
-    NSString *audioNm = [[NSString alloc]initWithString:fileModel.filePathStr];
-    NSRange range = [audioNm rangeOfString:@"Documents/"];
-    audioNm = [audioNm substringFromIndex:NSMaxRange(range)];
-    cell.nameLabel.text = audioNm;
-    if([fileModel.isChecked isEqualToString:@"1"]){
-        cell.checkBox.image = [UIImage imageNamed:@"checkbox_checked.png"];
-        _audioPath = fileModel.filePathStr;
-    }else{
-        cell.checkBox.image = [UIImage imageNamed:@"checkbox_unchecked.png"];
-    }
-    return  cell;
-}
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-   
-    FilesModel *fm = [[FilesModel alloc]init];
-    fm = [_audioArray objectAtIndex:indexPath.row];
-   
-    NSURL *url = [NSURL fileURLWithPath:fm.filePathStr];
-    NSError *error = nil;
-    _audioPlayer = nil;
-    _audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
-    _audioPlayer.volume = 1.0;
-    [_audioPlayer play];
-    
-    
-    for (int i = 0 ; i<_audioArray.count; i++) {
-        FilesModel *fModel = [FilesModel new];
-        fModel = [_audioArray objectAtIndex:i];
-        fModel.isChecked = @"0";
-        if (i == indexPath.row) {
-            fModel.isChecked = @"1";
-            _selectedAudioName = fModel.filePathStr;
-        }
-        
-        [_audioArray replaceObjectAtIndex:i  withObject:fModel];
-        fModel = nil;
-    }
-    
-    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    NSLog(@"audio name:%@",_selectedAudioName);
-    [_audioTableView reloadData];
-}
 
 
 
@@ -859,7 +833,6 @@
     urlStr=[urlStr stringByAppendingPathComponent:_audioName];
     
     _audioPath = urlStr;
-    NSLog(@"111111file path:%@",urlStr);
     NSURL *url=[NSURL fileURLWithPath:urlStr];
     return url;
 }

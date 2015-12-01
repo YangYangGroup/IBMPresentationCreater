@@ -71,4 +71,11 @@
 +(BOOL)updateSummaryStatsDateTimeBySummaryId:(NSString *)summaryId SummaryStatus:(NSString *)status;
 //查询summary表中所有数据，放入数组中
 +(SummaryModel *)qeuryOneSummaryDataById:(NSString *)summaryID;
+
+//查询file id 查询声音路径
++(NSString *)queryAudioPathByFileId:(NSString *)fileId;
+//根据details id 查询声音路径
++(NSString *)queryAudioPathByDetailsId:(NSString *)detailsId;
+// 更新 details 表中的数据file_id
++(BOOL)updateDetailByFileId:(NSString *)fileId DetailsId : (NSString *)detailsID;
 @end

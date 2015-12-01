@@ -434,4 +434,42 @@
     [db close];
     return model;
 }
+
+//查询file id 查询声音路径
++(NSString *)queryAudioPathByFileId:(NSString *)fileId{
+    FMDatabase *db =[DBHelper openDatabase];
+    FMResultSet *result1 = [db executeQuery:@"SELECT file_path FROM PPT_PRODUCT_FILES WHERE file_id = ?",fileId];
+    
+    while (result1.next)
+    {
+        NSString *str = [result1 stringForColumnIndex:0];
+        [db close];
+        return str;
+    }
+    [db close];
+    return nil;
+}
+
+//根据details id 查询声音路径
++(NSString *)queryAudioPathByDetailsId:(NSString *)detailsId{
+    FMDatabase *db =[DBHelper openDatabase];
+    FMResultSet *result1 = [db executeQuery:@"SELECT file_path FROM PPT_PRODUCT_FILES WHERE file_id =(SELECT file_id FROM PPT_PRODUCT_DETAILS WHERE details_id = ?)",detailsId];
+    
+    while (result1.next)
+    {
+        NSString *str = [result1 stringForColumnIndex:0];
+        [db close];
+        return str;
+    }
+    [db close];
+    return nil;
+}
+// 更新 details 表中的数据file_id
++(BOOL)updateDetailByFileId:(NSString *)fileId DetailsId : (NSString *)detailsID{
+    FMDatabase *db =[DBHelper openDatabase];
+    BOOL result = [db executeUpdate:@"update 'PPT_PRODUCT_DETAILS' set file_id=? where details_id=?",fileId,detailsID];
+    
+    [db close];
+    return result;
+}
 @end
