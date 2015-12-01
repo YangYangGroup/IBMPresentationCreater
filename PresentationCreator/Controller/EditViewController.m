@@ -306,7 +306,7 @@
     
     EditNowViewController *vc = [[EditNowViewController alloc]init];
     vc.editNowDetailsIdStr = model.detailsIdStr;
-    vc.editNowSummaryNameStr = self.summaryNameStr;
+    vc.editNowSummaryNameStr = self.showSummaryNameStr;
     vc.editNowHtmlCodeStr = model.htmlCodeStr;
     vc.editNowSummaryIdStr = model.summaryIdStr;
     vc.editNowAudioIdStr = model.fileIdStr;
