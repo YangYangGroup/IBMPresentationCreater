@@ -78,4 +78,8 @@
 +(NSString *)queryAudioPathByDetailsId:(NSString *)detailsId;
 // 更新 details 表中的数据file_id
 +(BOOL)updateDetailByFileId:(NSString *)fileId DetailsId : (NSString *)detailsID;
+// check 文件是否被使用
++(BOOL)checkFileIsUseByFileId:(NSString *)fileId;
+// 删除文件根据文件id
++(BOOL)deleteFileByFileId:(NSString *)filedId;
 @end

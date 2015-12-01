@@ -30,7 +30,6 @@
     //创建所有的类型表
     [DBDaoHelper createAllTable];
     NSString *firstStr = [DBDaoHelper selectTable];
-    NSLog(@"%@",firstStr);
     if (firstStr == NULL) {
         [DBDaoHelper insetIntoTemplateHtml:template_1];
         [DBDaoHelper insetIntoTemplateHtml:template_2];
@@ -74,7 +73,6 @@
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     BOOL isSuc = [WXApi handleOpenURL:url delegate:self];
-    NSLog(@"url %@ isSuc %d",url,isSuc == YES ? 1 : 0);
     return  isSuc;
 }
 -(void)newNotification:(NSNotification *)sender

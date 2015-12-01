@@ -138,10 +138,7 @@
         
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
         
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-            
-        }];
-        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:deleteTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:deleteTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
             SummaryModel *model = [_summaryArray objectAtIndex:indexPath.row];
             BOOL flag = [DBDaoHelper deleteSummaryById:model.summaryId];
             if(flag){
@@ -149,10 +146,12 @@
                 [_tabView reloadData];
                 [self showNoDataLabel];
             }
+        }];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             
         }];
-        [alertController addAction:cancelAction];
         [alertController addAction:deleteAction];
+        [alertController addAction:cancelAction];
         [self presentViewController:alertController animated:YES completion:nil];
        
     }

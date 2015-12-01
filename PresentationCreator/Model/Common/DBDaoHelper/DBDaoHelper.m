@@ -472,4 +472,26 @@
     [db close];
     return result;
 }
+// check 文件是否被使用
++(BOOL)checkFileIsUseByFileId:(NSString *)fileId{
+    FMDatabase *db =[DBHelper openDatabase];
+    FMResultSet *result = [db executeQuery:@"SELECT count(file_id) FROM PPT_PRODUCT_DETAILS WHERE file_id = ?",fileId];
+    BOOL flag = NO;
+    while (result.next)
+    {
+        int cun = [result intForColumnIndex:0];
+        if (cun==0) {
+            flag = YES;
+        }
+    }
+    [db close];
+    return flag;
+}
+// 删除文件根据文件id
++(BOOL)deleteFileByFileId:(NSString *)filedId{
+    FMDatabase *db = [DBHelper openDatabase];
+    BOOL result = [db executeUpdate:@"DELETE FROM PPT_PRODUCT_FILES WHERE file_id= ?",filedId];
+    [db close];
+    return result;
+}
 @end
