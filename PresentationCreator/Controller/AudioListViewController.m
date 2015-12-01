@@ -57,16 +57,26 @@
     [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
     self.navigationItem.leftBarButtonItem = backItem;
+    
+    UIButton *finishButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    finishButton.frame=CGRectMake(0, 0, 50, 30);
+    [finishButton setTitle:@"Done" forState:UIControlStateNormal];
+    finishButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+    [finishButton addTarget:self action:@selector(finishEdit)forControlEvents:UIControlEventTouchDown];
+    UIBarButtonItem *finishItem = [[UIBarButtonItem alloc]initWithCustomView:finishButton];
+    self.navigationItem.rightBarButtonItem = finishItem;
 }
 
 -(void)backClick{
+    [self dismissViewControllerAnimated:YES completion:^{}];
+}
+-(void)finishEdit{
     // 发送通知
     if(_audioId.length != 0){
         [DBDaoHelper updateDetailByFileId:_audioId DetailsId:_detailsId];
-         [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedAudioName" object:_selectedAudioName];
-        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedAudioName" object:_selectedAudioName];
+        [self dismissViewControllerAnimated:YES completion:^{}];
     }
-    [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
 -(void)loadAudioTableView{
@@ -144,10 +154,7 @@
         
         UIAlertController *delAlertController = [UIAlertController alertControllerWithTitle:@"" message:@"Are you sure to delete this audio?" preferredStyle:UIAlertControllerStyleAlert];
         
-        UIAlertAction *celAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-            
-        }];
-        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        UIAlertAction *celAction = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
             
             FilesModel *fm = [[FilesModel alloc]init];
             fm = [_audioArray objectAtIndex:indexPath.row];
@@ -169,6 +176,11 @@
                 [alertController addAction:cancelAction];
                 [self presentViewController:alertController animated:YES completion:nil];
             }
+            
+        }];
+        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            
+           
 
         }];
         [delAlertController addAction:celAction];
