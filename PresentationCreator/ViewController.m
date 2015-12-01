@@ -42,7 +42,7 @@
 }
 -(void)addNavigation
 {
-    self.navigationItem.title=@"Presentation Creator";
+    self.navigationItem.title=@"Blue Star";
 }
 -(void)addTableView
 {

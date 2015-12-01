@@ -235,7 +235,7 @@
     [self addShare];
     [UIView animateWithDuration:.25 animations:^{
         
-        _shareAllView.frame = CGRectMake(0, KScreenHeight-150, KScreenWidth, 150);
+        _shareAllView.frame = CGRectMake(0, KScreenHeight-170, KScreenWidth, 150);
         
     } completion:^(BOOL finished) {
         NSLog(@"动画完事调用的BLOCK");
