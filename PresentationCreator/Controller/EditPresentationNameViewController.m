@@ -10,7 +10,7 @@
 #import "DBDaoHelper.h"
 #import "ShowViewController.h"
 
-@interface EditPresentationNameViewController ()
+@interface EditPresentationNameViewController ()<UITextFieldDelegate>
 @property (nonatomic, strong) UITextField *txtField;
 @end
 
@@ -31,9 +31,12 @@
     _txtField = [[UITextField alloc]init];
     _txtField.frame = CGRectMake(15, 0, KScreenWidth -30, 40);
     _txtField.text = _summaryName;
+    _txtField.delegate = self;
     _txtField.backgroundColor = [UIColor whiteColor];
     _txtField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    [_txtField addTarget:self action:@selector(textFieldDidChange) forControlEvents:UIControlEventEditingChanged];
     [_txtField becomeFirstResponder];
+    
     [uView addSubview:_txtField];
     [self.view addSubview:uView];
 }
@@ -46,15 +49,21 @@
     backbtn.frame = CGRectMake(0, 0, 30, 30);
     backbtn.titleLabel.font = [UIFont systemFontOfSize:14.0f];
     [backbtn setBackgroundImage:[UIImage imageNamed:@"back@2x"] forState:UIControlStateNormal];
-    [backbtn addTarget:self action:@selector(doneEditName) forControlEvents:UIControlEventTouchUpInside];
+    [backbtn addTarget:self action:@selector(backEditName) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *SearchItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
     self.navigationItem.leftBarButtonItem = SearchItem;
     
- 
+    UIButton *finishButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    finishButton.frame=CGRectMake(0, 0, 50, 30);
+    [finishButton setTitle:@"Done" forState:UIControlStateNormal];
+    finishButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+    [finishButton addTarget:self action:@selector(finishEdit)forControlEvents:UIControlEventTouchDown];
+    UIBarButtonItem *finishItem = [[UIBarButtonItem alloc]initWithCustomView:finishButton];
+    self.navigationItem.rightBarButtonItem = finishItem;
     
 }
--(void)doneEditName{
-     NSString *temp = [_txtField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+-(void)finishEdit{
+    NSString *temp = [_txtField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (temp.length == 0) {
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"Please type your presentation name." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         
@@ -64,7 +73,18 @@
         [self.navigationController setTitle:_txtField.text];
         [self.navigationController popViewControllerAnimated:YES];
     }
+}
+-(void)backEditName{
+    [self.navigationController popViewControllerAnimated:YES];
     
+}
+
+-(void)textFieldDidChange{
+    if (_txtField.text.length == 0) {
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+    }else{
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning {

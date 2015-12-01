@@ -41,6 +41,7 @@
     //从summary 表中根据summary id获取html代码，并加载到webView中
     _finalHtmlCode = _sumyModel.contentHtml;
     _finalProductUrlStr = _sumyModel.product_url;
+    _showSummaryNameStr = _sumyModel.summaryName;
     [self addWebView];
     
 }

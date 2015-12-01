@@ -23,14 +23,9 @@
 
 @implementation AudioListViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    [self addNavigation];
-    _audioArray = [[NSMutableArray alloc]init];
+-(void)loadAudioData{
     _audioArray = [DBDaoHelper queryAllAudioFiles];
     
-    NSLog(@"_aud path:%@",_audName);
     if([_audName length]>0){
         for (int i=0; i<_audioArray.count; i++) {
             FilesModel *fm = [[FilesModel alloc]init];
@@ -41,6 +36,15 @@
             }
         }
     }
+
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    [self addNavigation];
+    _audioArray = [[NSMutableArray alloc]init];
+    
+    [self loadAudioData];
     [self loadAudioTableView];
 }
 -(void)addNavigation
@@ -57,8 +61,6 @@
 
 -(void)backClick{
     // 发送通知
-    NSLog(@"audio id: %@",_audioId);
-    
     if(_audioId.length != 0){
         [DBDaoHelper updateDetailByFileId:_audioId DetailsId:_detailsId];
          [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedAudioName" object:_selectedAudioName];
@@ -134,10 +136,49 @@
     }
     
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    NSLog(@"audio name:%@",_selectedAudioName);
     [_audioTableView reloadData];
 }
 
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        UIAlertController *delAlertController = [UIAlertController alertControllerWithTitle:@"" message:@"Are you sure to delete this audio?" preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *celAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            
+        }];
+        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            
+            FilesModel *fm = [[FilesModel alloc]init];
+            fm = [_audioArray objectAtIndex:indexPath.row];
+            if([DBDaoHelper checkFileIsUseByFileId:fm.fileIdStr]){
+                if ([DBDaoHelper deleteFileByFileId:fm.fileIdStr]) {
+                    [self loadAudioData];
+                    [_audioTableView reloadData];
+                    NSFileManager *fileManager = [NSFileManager defaultManager];
+                    [fileManager removeItemAtPath:fm.filePathStr error:nil];
+                }
+                
+            }else{
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@""    message:@"Audio can not delete due to using." preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+                    
+                }];
+                
+                [alertController addAction:cancelAction];
+                [self presentViewController:alertController animated:YES completion:nil];
+            }
+
+        }];
+        [delAlertController addAction:celAction];
+        [delAlertController addAction:deleteAction];
+        [self presentViewController:delAlertController animated:YES completion:nil];
+        
+        
+        
+    }
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
