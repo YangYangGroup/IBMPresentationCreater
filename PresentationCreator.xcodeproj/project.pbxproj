@@ -199,7 +199,7 @@
 		1628E7881BE9F8F200D6200A /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLResponseSerialization.m; sourceTree = "<group>"; };
 		1628E7891BE9F8F200D6200A /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
 		1628E78A1BE9F8F200D6200A /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
-		162A37791BBA80DA0069D9BB /* PresentationCreator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PresentationCreator.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		162A37791BBA80DA0069D9BB /* BlueStar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlueStar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		162A377D1BBA80DA0069D9BB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		162A377F1BBA80DA0069D9BB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		162A37801BBA80DA0069D9BB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -478,7 +478,7 @@
 		162A377A1BBA80DA0069D9BB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				162A37791BBA80DA0069D9BB /* PresentationCreator.app */,
+				162A37791BBA80DA0069D9BB /* BlueStar.app */,
 				162A37921BBA80DB0069D9BB /* PresentationCreatorTests.xctest */,
 				162A379D1BBA80DB0069D9BB /* PresentationCreatorUITests.xctest */,
 			);
@@ -924,7 +924,7 @@
 			);
 			name = PresentationCreator;
 			productName = PresentationCreator;
-			productReference = 162A37791BBA80DA0069D9BB /* PresentationCreator.app */;
+			productReference = 162A37791BBA80DA0069D9BB /* BlueStar.app */;
 			productType = "com.apple.product-type.application";
 		};
 		162A37911BBA80DB0069D9BB /* PresentationCreatorTests */ = {
@@ -1324,7 +1324,7 @@
 					"$(PROJECT_DIR)/PresentationCreator/Lib/SDKExport",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ibm.com.songyang.PresentationCreator;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = BlueStar;
 				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
@@ -1345,7 +1345,7 @@
 					"$(PROJECT_DIR)/PresentationCreator/Lib/SDKExport",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ibm.com.songyang.PresentationCreator;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = BlueStar;
 				PROVISIONING_PROFILE = "";
 			};
 			name = Release;

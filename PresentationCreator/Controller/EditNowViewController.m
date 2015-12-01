@@ -754,7 +754,7 @@
     NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:sec];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd_HH:mm:ss"];
+    [dateFormatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *na =[dateFormatter stringFromDate:epochNSDate];
     
     _audioName = [[NSString alloc]init];
