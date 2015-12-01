@@ -27,7 +27,7 @@
 }
 -(void)addNavigation
 {
-    self.navigationItem.title=@"加一页";
+    self.navigationItem.title=@"Select page";
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     
     backbtn.frame = CGRectMake(0, 0, 30, 30);

@@ -153,6 +153,8 @@
 		BA2BEFD11BFF2D1100718E43 /* checkbox_unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = BA2BEFCF1BFF2D1100718E43 /* checkbox_unchecked.png */; };
 		BA2BEFD41BFF2D7D00718E43 /* AudioListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA2BEFD31BFF2D7D00718E43 /* AudioListCell.m */; };
 		BA7BBFF01C058C050033F37A /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = BA7BBFEF1C058C050033F37A /* KxMenu.m */; };
+		BA8A27E91C0D14F200187DA9 /* AudioListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8A27E71C0D14F200187DA9 /* AudioListViewController.m */; };
+		BA8A27EA1C0D14F200187DA9 /* AudioListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA8A27E81C0D14F200187DA9 /* AudioListViewController.xib */; };
 		BA8DC5211C032EE3005CBB73 /* SummaryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8DC5201C032EE3005CBB73 /* SummaryModel.m */; };
 		BAA006341C05C3E400D3C522 /* EditPresentationNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAA006321C05C3E400D3C522 /* EditPresentationNameViewController.m */; };
 		BAA006351C05C3E400D3C522 /* EditPresentationNameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAA006331C05C3E400D3C522 /* EditPresentationNameViewController.xib */; };
@@ -389,6 +391,9 @@
 		BA2BEFD31BFF2D7D00718E43 /* AudioListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioListCell.m; sourceTree = "<group>"; };
 		BA7BBFEE1C058C050033F37A /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
 		BA7BBFEF1C058C050033F37A /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
+		BA8A27E61C0D14F200187DA9 /* AudioListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioListViewController.h; sourceTree = "<group>"; };
+		BA8A27E71C0D14F200187DA9 /* AudioListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioListViewController.m; sourceTree = "<group>"; };
+		BA8A27E81C0D14F200187DA9 /* AudioListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioListViewController.xib; sourceTree = "<group>"; };
 		BA8DC51F1C032EE3005CBB73 /* SummaryModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SummaryModel.h; sourceTree = "<group>"; };
 		BA8DC5201C032EE3005CBB73 /* SummaryModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SummaryModel.m; sourceTree = "<group>"; };
 		BAA006311C05C3E400D3C522 /* EditPresentationNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditPresentationNameViewController.h; sourceTree = "<group>"; };
@@ -595,6 +600,9 @@
 				BAA006311C05C3E400D3C522 /* EditPresentationNameViewController.h */,
 				BAA006321C05C3E400D3C522 /* EditPresentationNameViewController.m */,
 				BAA006331C05C3E400D3C522 /* EditPresentationNameViewController.xib */,
+				BA8A27E61C0D14F200187DA9 /* AudioListViewController.h */,
+				BA8A27E71C0D14F200187DA9 /* AudioListViewController.m */,
+				BA8A27E81C0D14F200187DA9 /* AudioListViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -966,7 +974,6 @@
 				TargetAttributes = {
 					162A37781BBA80DA0069D9BB = {
 						CreatedOnToolsVersion = 7.0;
-						DevelopmentTeam = 84NVS8QSUW;
 					};
 					162A37911BBA80DB0069D9BB = {
 						CreatedOnToolsVersion = 7.0;
@@ -1061,6 +1068,7 @@
 				BA2BEFD11BFF2D1100718E43 /* checkbox_unchecked.png in Resources */,
 				163130431BC7E65500EE9D86 /* IMG_7.png in Resources */,
 				1631DEDC1BFDE8BB005B0116 /* RecordingSignal005.png in Resources */,
+				BA8A27EA1C0D14F200187DA9 /* AudioListViewController.xib in Resources */,
 				162A7AF81BFB7007008AD509 /* read_me.txt in Resources */,
 				1631DED91BFDE8BB005B0116 /* RecordingSignal002.png in Resources */,
 				1634210C1BD68837006CBC87 /* IMG_1.png in Resources */,
@@ -1110,6 +1118,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1628E78B1BE9F8F200D6200A /* AFHTTPRequestOperation.m in Sources */,
+				BA8A27E91C0D14F200187DA9 /* AudioListViewController.m in Sources */,
 				16335CCA1BF476A300DD1DB7 /* PECropViewController.m in Sources */,
 				1646CCF31BF0DDD80051BA4A /* LoadingHelper.m in Sources */,
 				1657BBF81BF83F61000C83C0 /* SBJsonStreamWriterAccumulator.m in Sources */,
@@ -1255,7 +1264,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1292,7 +1301,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

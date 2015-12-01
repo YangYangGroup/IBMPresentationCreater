@@ -87,8 +87,7 @@
     self.parentViewController.tabBarController.tabBar.hidden = YES;
 //    self.navigationItem.hidesBackButton =YES;//隐藏系统自带导航栏按钮
     self.navigationItem.title=self.summaryNameStr;
-    NSLog(@"133%@",self.navigationController.viewControllers);
-
+   
     self.detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:self.maxSummaryIdStr];
     
     [self.collectionView reloadData];
