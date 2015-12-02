@@ -181,6 +181,7 @@
 }
 -(void)backShowViewClick
 {
+    self.navigationController.navigationBarHidden = NO;
     [_titleViewControl removeFromSuperview];
     _titleViewControl = nil;
 }
