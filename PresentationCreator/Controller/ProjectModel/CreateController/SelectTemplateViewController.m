@@ -110,6 +110,7 @@
 //    
 //    creationVC.selectTemplateIndex = indexPath.item;
 //    [self.navigationController pushViewController:creationVC animated:YES];
+    _selectTemplateIndex = indexPath.row;
     [self addClick];
     
 }
