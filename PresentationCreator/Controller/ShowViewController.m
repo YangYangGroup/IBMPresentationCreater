@@ -322,7 +322,7 @@
                     target:self
                     action:@selector(copyCurrentPresentation)],
       
-      [KxMenuItem menuItem:@"Submit"
+      [KxMenuItem menuItem:@"Publish"
                      image:nil
                     target:self
                     action:@selector(uploadClick)],

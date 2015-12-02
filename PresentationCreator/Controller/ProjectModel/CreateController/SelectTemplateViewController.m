@@ -11,7 +11,7 @@
 #import "CreationEditViewController.h"
 #import "ShowViewController.h"
 
-@interface SelectTemplateViewController ()<UICollectionViewDataSource,UICollectionViewDelegate>
+@interface SelectTemplateViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITextViewDelegate>
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSArray *imageArray;
 @property (nonatomic, strong) NSArray *titleArray;
@@ -106,6 +106,7 @@
 //    
 //    creationVC.selectTemplateIndex = indexPath.item;
 //    [self.navigationController pushViewController:creationVC animated:YES];
+    _selectTemplateIndex = indexPath.row;
     [self addClick];
     
 }
