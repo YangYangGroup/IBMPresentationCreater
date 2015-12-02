@@ -318,11 +318,15 @@
     
     NSString *title = NSLocalizedString(@"Do you want to delete?", nil);
     //        NSString *message = NSLocalizedString(@"Upload successfully.", nil);
-    NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
-    NSString *cancelButtonTitle = NSLocalizedString(@"Cancel", nil);
+    NSString *otherButtonTitle = NSLocalizedString(@"Cancel", nil);
+    NSString *cancelButtonTitle = NSLocalizedString(@"Delete", nil);
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+       
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
         NSLog(@"The \"Okay/Cancel\" alert's other action occured.");
         UIButton *deleteBtn = [[UIButton alloc]init];
         deleteBtn.tag = button.tag;
@@ -334,10 +338,6 @@
         //查询details表
         self.detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:self.showSummaryIdStr];
         [self.collectionView reloadData];
-    }];
-    
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        NSLog(@"The \"Okay/Cancel\" alert's cancel action occured.");
     }];
     [alertController addAction:otherAction];
     [alertController addAction:cancelAction];
