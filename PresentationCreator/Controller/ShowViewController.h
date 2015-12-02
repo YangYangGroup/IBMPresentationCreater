@@ -17,4 +17,5 @@
 @property (nonatomic, strong) NSString *showSummaryNameStr;//接收上一页传过来的summaryname就是title显示的名字
 @property (nonatomic, strong) NSString *showTemplateIdStr;//接收上一页传过来的templateid
 @property (nonatomic, strong) NSString *showSummaryIdStr;
+@property (nonatomic, strong) NSString *productStatus;
 @end

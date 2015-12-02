@@ -243,7 +243,11 @@
         //根据summaryid向summary表中插入productUrl
         [DBDaoHelper insertSummaryWithSummaryId:self.showSummaryIdStr productUrl:str];
         _finalProductUrlStr = [DBDaoHelper queryProductUrlFromSummary:_showSummaryIdStr];
-        [DBDaoHelper updateSummaryStatsDateTimeBySummaryId:self.showSummaryIdStr SummaryStatus:@"Publish"];
+        BOOL publishStatus = [DBDaoHelper updateSummaryStatsDateTimeBySummaryId:self.showSummaryIdStr SummaryStatus:@"Publish"];
+        if (publishStatus) {
+            _productStatus = @"Publish";
+        }
+        _productStatus = @"Publish";
         //        [LoadingHelper showLoadingWithView:self.view];
         [LoadingHelper hiddonLoadingWithView:self.view];
         NSString *title = NSLocalizedString(@"Successfully", nil);
@@ -305,33 +309,64 @@
 #pragma show menu list function
 - (void)showMenu:(UIButton *)sender
 {
-    NSArray *menuItems =
-    @[
-      [KxMenuItem menuItem:@"Edit"
-                     image:nil
-                    target:self
-                    action:@selector(editClick)],
-      
-      [KxMenuItem menuItem:@"Rename"
-                     image:nil
-                    target:self
-                    action:@selector(editPresentationName)],
-      
-      [KxMenuItem menuItem:@"Copy"
-                     image:nil
-                    target:self
-                    action:@selector(copyCurrentPresentation)],
-      
-      [KxMenuItem menuItem:@"Publish"
-                     image:nil
-                    target:self
-                    action:@selector(uploadClick)],
-      
-      [KxMenuItem menuItem:@"Share"
-                     image:nil
-                    target:self
-                    action:@selector(shareClick)],
-      ];
+  
+    NSArray *menuItems = [[NSArray alloc]init];
+   
+    if ([_productStatus isEqualToString:@"Publish"]) {
+        menuItems = @[
+                      [KxMenuItem menuItem:@"Edit"
+                                     image:nil
+                                    target:self
+                                    action:@selector(editClick)],
+                      
+                      [KxMenuItem menuItem:@"Rename"
+                                     image:nil
+                                    target:self
+                                    action:@selector(editPresentationName)],
+                      
+                      [KxMenuItem menuItem:@"Copy"
+                                     image:nil
+                                    target:self
+                                    action:@selector(copyCurrentPresentation)],
+                      
+                      [KxMenuItem menuItem:@"Publish"
+                                     image:nil
+                                    target:self
+                                    action:@selector(uploadClick)],
+                      [KxMenuItem menuItem:@"Share"
+                                     image:nil
+                                    target:self
+                                    action:@selector(shareClick)],
+                      
+                      ];
+        
+       
+    }else{
+        menuItems = @[
+                      [KxMenuItem menuItem:@"Edit"
+                                     image:nil
+                                    target:self
+                                    action:@selector(editClick)],
+                      
+                      [KxMenuItem menuItem:@"Rename"
+                                     image:nil
+                                    target:self
+                                    action:@selector(editPresentationName)],
+                      
+                      [KxMenuItem menuItem:@"Copy"
+                                     image:nil
+                                    target:self
+                                    action:@selector(copyCurrentPresentation)],
+                      
+                      [KxMenuItem menuItem:@"Publish"
+                                     image:nil
+                                    target:self
+                                    action:@selector(uploadClick)],
+                      
+                      
+                      ];
+    }
+    
     
     //    KxMenuItem *first = menuItems[0];
     //    first.foreColor = [UIColor colorWithRed:47/255.0f green:112/255.0f blue:225/255.0f alpha:1.0];
