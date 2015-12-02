@@ -11,7 +11,7 @@
 #import "CreationEditViewController.h"
 #import "ShowViewController.h"
 
-@interface SelectTemplateViewController ()<UICollectionViewDataSource,UICollectionViewDelegate>
+@interface SelectTemplateViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITextViewDelegate>
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSArray *imageArray;
 @property (nonatomic, strong) NSArray *titleArray;
@@ -33,9 +33,6 @@
     // Do any additional setup after loading the view from its nib.
     self.navigationItem.title = @"Select A Template";
     [self addCollectionView];
-//    self.imageArray = [NSArray arrayWithObjects:[UIImage imageNamed:@"IMG_1"],[UIImage imageNamed:@"IMG_2"],[UIImage imageNamed:@"IMG_3"],[UIImage imageNamed:@"IMG_4"],[UIImage imageNamed:@"IMG_5"],[UIImage imageNamed:@"IMG_6"],[UIImage imageNamed:@"IMG_7"],[UIImage imageNamed:@"IMG_8"],[UIImage imageNamed:@"IMG_9"],[UIImage imageNamed:@"IMG_10"],nil];
-//    
-//    self.titleArray = [NSArray arrayWithObjects:@"ppt1",@"ppt2",@"ppt3",@"ppt4",@"ppt5",@"ppt6",@"ppt7",@"ppt8",@"ppt9",@"ppt10", nil];
     self.imageArray = [NSArray arrayWithObjects:[UIImage imageNamed:@"IMG_1"],[UIImage imageNamed:@"IMG_6"],nil];
     
     self.titleArray = [NSArray arrayWithObjects:@"First Template",@"Second Template", nil];
@@ -47,12 +44,11 @@
     [self.view addSubview:aView];
     
     UICollectionViewFlowLayout *flowLayout=[[UICollectionViewFlowLayout alloc] init];
-    [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-//    flowLayout.footerReferenceSize = CGSizeMake(KScreenWidth, KScreenHeight-64);//头部.尾部设置
-    self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(10, 84, KScreenWidth, KScreenHeight-64-40-44) collectionViewLayout:flowLayout];
+    [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];//横竖滚动样式
+    //    flowLayout.footerReferenceSize = CGSizeMake(KScreenWidth-80, 400);//头部.尾部设置
+    self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 64+5, KScreenWidth-10, KScreenHeight-64-10-50) collectionViewLayout:flowLayout];
     self.collectionView.backgroundColor = [UIColor whiteColor];
-    self.collectionView.showsHorizontalScrollIndicator = NO;
-    self.collectionView.pagingEnabled = YES;
+    
     //设置代理
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -60,7 +56,7 @@
     
     //注册cell和ReusableView（相当于头部）
     [self.collectionView registerClass:[SelectTemplateCollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
-//    [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"ReusableView"];
+    [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"ReusableView"];
 }
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
@@ -86,7 +82,7 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    return CGSizeMake(KScreenWidth, KScreenHeight-64-40-44);
+    return CGSizeMake((KScreenWidth-10-5)/2, (KScreenHeight-64-10-5)/2);
 }
 //定义每个UICollectionView 的间距
 -(UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section

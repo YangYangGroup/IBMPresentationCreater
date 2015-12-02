@@ -79,7 +79,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self setAudioSession];
-    self.navigationItem.title= @"Edit Your Style";
+    self.navigationItem.title= _editNowSummaryNameStr;
     _fullPath = [[NSString alloc]init];
     _audioPath = [[NSString alloc]init];
     
