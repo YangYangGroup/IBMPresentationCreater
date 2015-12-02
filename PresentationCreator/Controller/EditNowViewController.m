@@ -59,6 +59,9 @@
 @property (nonatomic, strong) UIButton *deleteLineBtn;
 
 @property (nonatomic, strong) UIView *backgroundView;
+
+@property (nonatomic,strong)UITextView * mTextView;
+@property (nonatomic,strong)UIView *mBackView;
 @end
 
 @implementation EditNowViewController
@@ -84,7 +87,7 @@
     _audioPath = [[NSString alloc]init];
     
     [self addNewWebView];
-//    [self addAudioBtn];
+    [self addObserverWithKeyboard];
    
     _buttonFlag = FALSE;
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -241,7 +244,6 @@
     _editTextViewControl.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_editTextViewControl];
     
-    
     UIView *backgroundView = [[UIView alloc]init];
     //    backgroundView.hidden = YES;
     backgroundView.frame = CGRectMake(0, 0, KScreenWidth, KScreenHeight);
@@ -251,204 +253,83 @@
     [backgroundView addGestureRecognizer:tapGesture1];
     [_editTextViewControl addSubview:backgroundView];
     
-    _textBackgroundView =[[UIView alloc]initWithFrame:CGRectMake(0, KScreenHeight-216-120, KScreenWidth, 65)];
-    _textBackgroundView.backgroundColor = [UIColor whiteColor];
-    [backgroundView addSubview:_textBackgroundView];
+    self.mBackView =[[UIView alloc]initWithFrame:CGRectMake(0, KScreenHeight, KScreenWidth, 100)];
+    NSLog(@"%p",self.mBackView);
+    self.mBackView.backgroundColor =[UIColor colorWithRed:229/255.0 green:229/255.0 blue:229/255.0 alpha:1];
+    [backgroundView addSubview:self.mBackView];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.myTextView.frame=CGRectMake(2, KScreenHeight-216-110, KScreenWidth-80, 30);
-        self.myTextView.backgroundColor = [UIColor whiteColor];
-        self.myTextView.delegate = self;
-        [self.myTextView becomeFirstResponder];
-        self.myTextView.layer.borderWidth = 1;
-        self.myTextView.layer.cornerRadius = 5;
-        NSString *textStr = [htmlVal stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        // NSString *mytt= [[NSString alloc]initWithFormat:textStr];
-        self.myTextView.text = textStr;
-        self.myTextView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-        [backgroundView addSubview:self.myTextView];
+    self.mTextView =[[UITextView alloc]initWithFrame:CGRectMake(1, 5, KScreenWidth-75, 90)];
+    self.mTextView.backgroundColor =[UIColor whiteColor];
+    self.mTextView.delegate = self;
+    [self.mTextView becomeFirstResponder];
+    NSString *textStr = [htmlVal stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    self.mTextView.text = textStr;
+    self.mTextView.layer.borderWidth = 1;
+    self.mTextView.layer.cornerRadius = 5;
+    self.mTextView.layer.borderColor = [UIColor grayColor].CGColor;
+    [self.mBackView addSubview:self.mTextView];
     });
+        
+    UIButton *mTalkBtn =[UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [mTalkBtn setTitle:@"OK" forState:UIControlStateNormal];
+    [mTalkBtn addTarget:self action:@selector(saveTextData) forControlEvents:UIControlEventTouchUpInside];
+    [mTalkBtn setTintColor:[UIColor blackColor]];
+    _textIndex = htmlIndex;
+    mTalkBtn.backgroundColor = [UIColor whiteColor];
+    mTalkBtn.layer.borderWidth = 1;
+    mTalkBtn.layer.cornerRadius = 5;
+    mTalkBtn.layer.borderColor = [UIColor grayColor].CGColor;
+    [self.mBackView addSubview:mTalkBtn];
     
-        _okButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        _okButton.frame = CGRectMake(KScreenWidth-60 , 10, 40, 20);
-        [_okButton setTitle:@"OK" forState:UIControlStateNormal];
-        [_okButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [_okButton setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
-        _okButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
-        _textIndex = htmlIndex;
-        [_okButton addTarget:self action:@selector(saveTextData) forControlEvents:UIControlEventTouchUpInside];
-        [_textBackgroundView addSubview:_okButton];
     
     _addLineBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    _addLineBtn.frame = CGRectMake(20, KScreenHeight-216-75, 100, 20);
-    [_addLineBtn setTitle:@"New line" forState:UIControlStateNormal];
-    [_addLineBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_addLineBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateDisabled];
+    _addLineBtn.frame = CGRectMake(KScreenWidth-60, 38, 50, 28);
+    [_addLineBtn setTitle:@"New" forState:UIControlStateNormal];
+    [_addLineBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     _addLineBtn.titleLabel.font = [UIFont systemFontOfSize:14.0];
     [_addLineBtn addTarget:self action:@selector(newLineFunction) forControlEvents:UIControlEventTouchUpInside];
-    _addLineBtn.backgroundColor = [UIColor darkGrayColor];
-    [backgroundView addSubview:_addLineBtn];
+    _addLineBtn.backgroundColor = [UIColor whiteColor];
+    _addLineBtn.layer.borderWidth = 1;
+    _addLineBtn.layer.cornerRadius = 5;
+    _addLineBtn.layer.borderColor = [UIColor grayColor].CGColor;
+    [self.mBackView addSubview:_addLineBtn];
     
     
     _deleteLineBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    _deleteLineBtn.frame = CGRectMake(130, KScreenHeight-216-75, 100, 20);
-    [_deleteLineBtn setTitle:@"Delete line" forState:UIControlStateNormal];
+    _deleteLineBtn.frame = CGRectMake(KScreenWidth-60, 70, 50, 28);
+    [_deleteLineBtn setTitle:@"Del" forState:UIControlStateNormal];
     [_deleteLineBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [_deleteLineBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
     _deleteLineBtn.titleLabel.font = [UIFont systemFontOfSize:14.0];
-    [_deleteLineBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_deleteLineBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateDisabled];
-    _deleteLineBtn.backgroundColor = [UIColor darkGrayColor];
+    _deleteLineBtn.backgroundColor = [UIColor whiteColor];
+    _deleteLineBtn.layer.borderWidth = 1;
+    _deleteLineBtn.layer.cornerRadius = 5;
+    _deleteLineBtn.layer.borderColor = [UIColor grayColor].CGColor;
     [_deleteLineBtn addTarget:self action:@selector(deleteFunction) forControlEvents:UIControlEventTouchUpInside];
-    [backgroundView addSubview:_deleteLineBtn];
+    [self.mBackView addSubview:_deleteLineBtn];
     
+    //如果不可以加行
     if([editFlag isEqualToString:@"false"]){
         
-        _addLineBtn.layer.borderColor = [UIColor lightGrayColor].CGColor;
-        _deleteLineBtn.layer.borderColor = [UIColor lightGrayColor].CGColor;
-        _deleteLineBtn.backgroundColor = [UIColor lightGrayColor] ;
-        _addLineBtn.backgroundColor = [UIColor lightGrayColor] ;
+        _deleteLineBtn.hidden = YES;
+        _addLineBtn.hidden = YES;
+        mTalkBtn.frame =CGRectMake(KScreenWidth-60, 30, 50, 28);
         [_addLineBtn setEnabled:NO];
         [_deleteLineBtn setEnabled:NO];
     }else{
-        _addLineBtn.layer.borderColor = [UIColor whiteColor].CGColor;
-        _deleteLineBtn.layer.borderColor = [UIColor whiteColor].CGColor;
-        _deleteLineBtn.backgroundColor = [UIColor darkGrayColor] ;
-        _addLineBtn.backgroundColor = [UIColor darkGrayColor] ;
+        mTalkBtn.frame =CGRectMake(KScreenWidth-60, 5, 50, 28);
+        _deleteLineBtn.backgroundColor = [UIColor whiteColor] ;
+        _addLineBtn.backgroundColor = [UIColor whiteColor] ;
         [_addLineBtn setEnabled:YES];
         [_deleteLineBtn setEnabled:YES];
     }
-    
-    
-    
-    
-    
-//    _editTextViewControl = [[UIControl alloc]initWithFrame:CGRectMake(0, 20, self.view.bounds.size.width, self.view.bounds.size.height-20)];
-//    _editTextViewControl.backgroundColor = [UIColor grayColor];
-//    
-//    
-//    UILabel *titleLabel = [[UILabel alloc]init];
-//    titleLabel.frame = CGRectMake(20, 20, KScreenWidth, 30);
-//    titleLabel.text = @"Please type your word:";
-//    [_editTextViewControl addSubview:titleLabel];
-//    
-//    _txtField = [[UITextField alloc]initWithFrame:CGRectMake(20, 60, KScreenWidth-40, KScreenHeight *0.1)];
-//    _txtField.clearButtonMode = UITextFieldViewModeWhileEditing;
-//    _txtField.selected = YES;
-//    //    txtView.delegate = self;
-//    //  txtView.adjustsFontSizeToFitWidth = YES;
-//    _txtField.backgroundColor = [UIColor whiteColor];
-//    NSString *textStr = [htmlVal stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-//    // NSString *mytt= [[NSString alloc]initWithFormat:textStr];
-//    _txtField.text = textStr;
-//    _txtField.delegate = self;
-//    //[txtView becomeFirstResponder];
-//    [_txtField.layer setMasksToBounds:YES];
-//    [_txtField.layer setCornerRadius:6.0];
-//    [_editTextViewControl addSubview:_txtField];
-//    
-//    _okButton = [UIButton buttonWithType:UIButtonTypeSystem];
-//    _okButton.frame = CGRectMake(20 , 30 + KScreenHeight*0.1 + 40, KScreenWidth * 0.5 - 25, 35);
-//    [_okButton setTitle:@"OK" forState:UIControlStateNormal];
-//    [_okButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [_okButton setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
-//    _okButton.backgroundColor = [UIColor darkGrayColor];
-//    _okButton.titleLabel.font = [UIFont systemFontOfSize:18.0];
-//    [_okButton.layer setMasksToBounds:YES];
-//    
-//    [_okButton.layer setBorderWidth:1.0];
-//    [_okButton.layer setCornerRadius:7.0];
-//    _okButton.layer.borderColor = [UIColor whiteColor].CGColor;
-//    
-//    _textIndex = htmlIndex;
-//    [_okButton addTarget:self action:@selector(saveTextData) forControlEvents:UIControlEventTouchUpInside];
-//    
-//    [_editTextViewControl addSubview:_okButton];
-//    
-//    
-//    UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
-//    cancelButton.frame = CGRectMake(KScreenWidth * 0.5 + 5, 30 + KScreenHeight * 0.1 + 40, KScreenWidth * 0.5 - 25, 35);
-//    [cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
-//    [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    cancelButton.backgroundColor = [UIColor darkGrayColor];
-//    cancelButton.titleLabel.font = [UIFont systemFontOfSize:18.0];
-//    [cancelButton.layer setMasksToBounds:YES];
-//    
-//    [cancelButton.layer setBorderWidth:1.0];
-//    [cancelButton.layer setCornerRadius:7.0];
-//    cancelButton.layer.borderColor = [UIColor whiteColor].CGColor;
-//    _textIndex = htmlIndex;
-//    [cancelButton addTarget:self action:@selector(cancelFunction) forControlEvents:UIControlEventTouchUpInside];
-//    
-//    UIButton *newLineButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    newLineButton.frame = CGRectMake(20, 30 + KScreenHeight * 0.25, KScreenWidth * 0.5 - 25, 35);
-//    [newLineButton setTitle:@"New Line" forState:UIControlStateNormal];
-//    [newLineButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [newLineButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateDisabled];
-//    newLineButton.backgroundColor = [UIColor darkGrayColor] ;
-//    
-//    newLineButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
-//    [newLineButton.layer setMasksToBounds:YES];
-//    [newLineButton.layer setBorderWidth:1.0];
-//    [newLineButton.layer setCornerRadius:7.0];
-//    newLineButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
-//    [newLineButton addTarget:self action:@selector(newLineFunction) forControlEvents:UIControlEventTouchUpInside];
-//    
-//    UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    deleteButton.frame = CGRectMake(KScreenWidth*0.5 +5, 30 + KScreenHeight*0.25, KScreenWidth*0.5 - 25, 35);
-//    [deleteButton setTitle:@"Delete Current line" forState:UIControlStateNormal];
-//    [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [deleteButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateDisabled];
-//    deleteButton.backgroundColor = [UIColor darkGrayColor];
-//    deleteButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
-//    [deleteButton.layer setMasksToBounds:YES];
-//    [deleteButton.layer setBorderWidth:1.0];
-//    [deleteButton.layer setCornerRadius:7.0];
-//    deleteButton.layer.borderColor = [UIColor whiteColor].CGColor;
-//    [deleteButton addTarget:self action:@selector(deleteFunction) forControlEvents:UIControlEventTouchUpInside];
-//    
-//    [_editTextViewControl addSubview:newLineButton];
-//    [_editTextViewControl addSubview:deleteButton];
-//    [_editTextViewControl addSubview:_okButton];
-//    [_editTextViewControl addSubview:cancelButton];
-//    if([editFlag isEqualToString:@"false"]){
-//        
-//        newLineButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
-//        deleteButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
-//        deleteButton.backgroundColor = [UIColor lightGrayColor] ;
-//        newLineButton.backgroundColor = [UIColor lightGrayColor] ;
-//        [newLineButton setEnabled:NO];
-//        [deleteButton setEnabled:NO];
-//    }else{
-//        newLineButton.layer.borderColor = [UIColor whiteColor].CGColor;
-//        deleteButton.layer.borderColor = [UIColor whiteColor].CGColor;
-//        deleteButton.backgroundColor = [UIColor darkGrayColor] ;
-//        newLineButton.backgroundColor = [UIColor darkGrayColor] ;
-//        [newLineButton setEnabled:YES];
-//        [deleteButton setEnabled:YES];
-//    }
-//    [self.view addSubview:_editTextViewControl];
-}
-- (void)textViewDidChange:(UITextView *)textView
-{
-    // 获取原来的 frame
-    CGRect tmpRect = _myTextView.frame;
-    
-    CGSize size = [_myTextView.text sizeWithFont:[UIFont systemFontOfSize:18]
-                              constrainedToSize:CGSizeMake(KScreenWidth, 100)
-                                  lineBreakMode:NSLineBreakByWordWrapping];
-    
-    tmpRect.size.height = size.height; // 20 points for padding
-    tmpRect.origin.y = 216+55-tmpRect.size.height;
-    _textBackgroundView.frame = CGRectMake(0, tmpRect.origin.y-5, KScreenWidth, tmpRect.size.height +35);
-    _myTextView.frame = tmpRect;
+
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [self.myTextView resignFirstResponder];
+    [self.mTextView resignFirstResponder];
     return YES;
 }
-
 -(void)newLineFunction{
     NSString *str = @"addListItem('";
     str = [str stringByAppendingString:_textIndex];
@@ -470,6 +351,7 @@
     [alertController addAction:okAction];
     
     [self presentViewController:alertController animated:YES completion:nil];
+    [self cancelFunction];
 }
 -(void)deleteFunction{
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Delele current line" message:@"This action can not undo. do you want to delete this line? " preferredStyle:UIAlertControllerStyleAlert];
@@ -490,6 +372,7 @@
     [alertController addAction:cancelAction];
     [alertController addAction:deleteAction];
     [self presentViewController:alertController animated:YES completion:nil];
+    [self cancelFunction];
 }
 -(void)cancelFunction{
     self.navigationController.navigationBarHidden = NO;
@@ -499,15 +382,15 @@
 -(void)saveTextData{
     self.navigationController.navigationBarHidden = NO;
     
-    NSString *temp = [_myTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *temp = [_mTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     //看剩下的字符串的长度是否为零
     if ([temp length]!=0) {
-        _currentText = _myTextView.text;
+        _currentText = _mTextView.text;
         NSString *str = @"var field = document.getElementsByClassName('text_element')[";
         str = [str stringByAppendingString:_textIndex];
         str = [str stringByAppendingString:@"];"];
         str = [str stringByAppendingString:@" field.innerHTML='"];
-        str = [str stringByAppendingString:_myTextView.text];
+        str = [str stringByAppendingString:_mTextView.text];
         str = [str stringByAppendingString:@"';"];
         
         NSLog(@"final javascript:%@",str);
@@ -675,41 +558,6 @@
     audioListVC.detailsId = _editNowDetailsIdStr;
     
     [self presentViewController:navigation animated:YES completion:nil];
-//     self.navigationController.navigationBar.hidden = YES;
-//    
-//    _audioView = [[UIView alloc]initWithFrame:CGRectMake(0, 20, KScreenWidth, KScreenHeight-20)];
-//    _audioView.backgroundColor = [UIColor lightGrayColor];
-//    
-//    _audioTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, KScreenWidth, KScreenHeight - 44-20)];
-//    _audioTableView.dataSource = self;
-//    _audioTableView.delegate = self;
-//    _audioTableView.backgroundColor = [UIColor  colorWithRed:187.0f/255.0f green:187.0f/255.0f blue:187.0f/255.0f alpha:0.5];
-//    [_audioView addSubview:_audioTableView];
-//    
-//    
-//    UIButton *selectButton = [UIButton buttonWithType:UIButtonTypeSystem];
-//    selectButton.frame = CGRectMake(2, KScreenHeight - 42 -20, KScreenWidth - 4, 40);
-//    [selectButton setTitle:@"SELECT" forState:UIControlStateNormal];
-//    [selectButton setBackgroundColor:[UIColor darkGrayColor]];
-//    [selectButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [selectButton addTarget:self action:@selector(closeAudioList) forControlEvents:UIControlEventTouchUpInside];
-//    
-//    [_audioView addSubview:selectButton];
-//    [self.view addSubview:_audioView];
-//    _audioArray = [[NSMutableArray alloc]init];
-//    _audioArray = [DBDaoHelper queryAllAudioFiles];
-//    
-//    for (int i = 0 ; i<_audioArray.count; i++) {
-//        FilesModel *fModel = [FilesModel new];
-//        fModel = [_audioArray objectAtIndex:i];
-//        fModel.isChecked = @"0";
-//        if ([fModel.fileIdStr isEqualToString:_editNowAudioIdStr]) {
-//            fModel.isChecked = @"1";
-//            
-//            [_audioArray replaceObjectAtIndex:i  withObject:fModel];
-//        }
-//        fModel = nil;
-//    }
     
 }
 
@@ -982,7 +830,55 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+#pragma mark- 自定义键盘
+#pragma mark - 给键盘添加观察者
+-(void)addObserverWithKeyboard
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
+}
+#pragma mark - 键盘的通知响应事件
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+//系统键盘将要出现
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    NSDictionary *userInfo = [notification userInfo];
+    NSValue* aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [aValue CGRectValue];
+    NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration;
+    [animationDurationValue getValue:&animationDuration];
+    [self moveInputBarWithKeyboardHeight:keyboardRect.size.height withDuration:animationDuration];
+    
+}
+//系统键盘将要消失
+- (void)keyboardWillHide:(NSNotification *)notification
+{
+    NSDictionary* userInfo = [notification userInfo];
+    NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration;
+    [animationDurationValue getValue:&animationDuration];
+    
+    [UIView animateWithDuration:animationDuration animations:^{
+        self.mBackView.frame = CGRectMake(0, KScreenHeight+100, KScreenWidth, 100);
+    }];
+}
+#pragma mark - 移动view
+-(void)moveInputBarWithKeyboardHeight:(float)_CGRectHeight withDuration:(NSTimeInterval)_NSTimeInterval
+{
+    [UIView animateWithDuration:(_NSTimeInterval) animations:^{
+        self.mBackView.frame = CGRectMake(0, KScreenHeight-_CGRectHeight-120, KScreenWidth, 100);
+        
+    }];
+}
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self.view endEditing:YES];
+}
 /*
  #pragma mark - Navigation
  
