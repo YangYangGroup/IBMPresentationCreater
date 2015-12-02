@@ -368,7 +368,6 @@
         _editTextViewControl = nil;
         self.navigationController.navigationBarHidden = NO;
     }];
-    
     [alertController addAction:cancelAction];
     [alertController addAction:deleteAction];
     [self presentViewController:alertController animated:YES completion:nil];
