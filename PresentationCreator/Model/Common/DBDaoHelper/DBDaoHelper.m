@@ -407,7 +407,7 @@
 // 根据summary id 更新 summary status and datetime
 +(BOOL)updateSummaryStatsDateTimeBySummaryId:(NSString *)summaryId SummaryStatus:(NSString *)status{
     FMDatabase *db =[DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"update 'PPT_PRODUCT_SUMMARY' set summary_status=? where summary_id=?",status, summaryId];
+    BOOL result = [db executeUpdate:@"update 'PPT_PRODUCT_SUMMARY' set product_status=? where summary_id=?",status, summaryId];
     
     [db close];
     return result;
