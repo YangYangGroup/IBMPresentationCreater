@@ -243,7 +243,7 @@
         //根据summaryid向summary表中插入productUrl
         [DBDaoHelper insertSummaryWithSummaryId:self.showSummaryIdStr productUrl:str];
         _finalProductUrlStr = [DBDaoHelper queryProductUrlFromSummary:_showSummaryIdStr];
-        [DBDaoHelper updateSummaryStatsDateTimeBySummaryId:self.showSummaryIdStr SummaryStatus:@"Shareable"];
+        [DBDaoHelper updateSummaryStatsDateTimeBySummaryId:self.showSummaryIdStr SummaryStatus:@"Publish"];
         //        [LoadingHelper showLoadingWithView:self.view];
         [LoadingHelper hiddonLoadingWithView:self.view];
         NSString *title = NSLocalizedString(@"Successfully", nil);
