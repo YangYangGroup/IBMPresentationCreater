@@ -310,7 +310,6 @@
     
     //如果不可以加行
     if([editFlag isEqualToString:@"false"]){
-        
         _deleteLineBtn.hidden = YES;
         _addLineBtn.hidden = YES;
         mTalkBtn.frame =CGRectMake(KScreenWidth-60, 30, 50, 28);
