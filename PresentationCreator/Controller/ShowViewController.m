@@ -115,7 +115,6 @@
     self.navigationItem.leftBarButtonItem = backItem;
     
     
-    
     UIButton *uploadButton = [UIButton buttonWithType:UIButtonTypeCustom];
     uploadButton.frame=CGRectMake(0, 0, 30, 30);
     [uploadButton setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
@@ -644,7 +643,8 @@
          UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:successMessage preferredStyle:UIAlertControllerStyleAlert];
          
          UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:backTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-             [self.navigationController popViewControllerAnimated:YES];
+             self.tabBarController.selectedIndex = 0;//点击按钮回到第一个tabbar
+             [self.navigationController popToRootViewControllerAnimated:YES];
          }];
          UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:stayTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                      }];
@@ -661,7 +661,8 @@
          UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:unsuccessMessage preferredStyle:UIAlertControllerStyleAlert];
          
          UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:backTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-             [self.navigationController popViewControllerAnimated:YES];
+             self.tabBarController.selectedIndex = 0;//点击按钮回到第一个tabbar
+             [self.navigationController popToRootViewControllerAnimated:YES];
              
          }];
          UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:stayTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {

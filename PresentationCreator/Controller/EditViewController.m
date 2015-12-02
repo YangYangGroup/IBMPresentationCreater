@@ -123,6 +123,7 @@
 }
 #pragma - back to list page
 -(void)backHome{
+    self.tabBarController.selectedIndex = 0;//点击按钮回到第一个tabbar
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 #pragma -保存生成的html代码写入到summary表中
