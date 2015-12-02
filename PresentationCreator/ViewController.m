@@ -122,6 +122,7 @@
     vc.showSummaryIdStr = model.summaryId;
     vc.showSummaryNameStr = model.summaryName;
     vc.showTemplateIdStr = model.summaryId;
+    vc.productStatus = model.status;
     
     [self.navigationController pushViewController:vc animated:YES];
 }
