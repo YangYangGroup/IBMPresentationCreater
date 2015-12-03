@@ -65,7 +65,7 @@
         sections = [sections stringByAppendingString:tmp];
     }
     _stringSections = sections;
-    NSLog(@"my html code is:::%@", _stringSections);
+    
     
 }
 //处理section 拼接字符串
@@ -243,11 +243,11 @@
         //根据summaryid向summary表中插入productUrl
         [DBDaoHelper insertSummaryWithSummaryId:self.showSummaryIdStr productUrl:str];
         _finalProductUrlStr = [DBDaoHelper queryProductUrlFromSummary:_showSummaryIdStr];
-        BOOL publishStatus = [DBDaoHelper updateSummaryStatsDateTimeBySummaryId:self.showSummaryIdStr SummaryStatus:@"Publish"];
+        BOOL publishStatus = [DBDaoHelper updateSummaryStatsDateTimeBySummaryId:self.showSummaryIdStr SummaryStatus:@"Published"];
         if (publishStatus) {
-            _productStatus = @"Publish";
+            _productStatus = @"Published";
         }
-        _productStatus = @"Publish";
+        _productStatus = @"Published";
         //        [LoadingHelper showLoadingWithView:self.view];
         [LoadingHelper hiddonLoadingWithView:self.view];
         NSString *title = NSLocalizedString(@"Successfully", nil);
@@ -256,7 +256,7 @@
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
         
         UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            NSLog(@"The \"Okay/Cancel\" alert's other action occured.");
+           
         }];
         
         [alertController addAction:otherAction];
@@ -273,7 +273,7 @@
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
         
         UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            NSLog(@"The \"Okay/Cancel\" alert's other action occured.");
+            
         }];
         
         [alertController addAction:otherAction];
@@ -537,7 +537,7 @@
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
     
             UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                NSLog(@"The \"Okay/Cancel\" alert's other action occured.");
+                
             }];
     
             [alertController addAction:otherAction];

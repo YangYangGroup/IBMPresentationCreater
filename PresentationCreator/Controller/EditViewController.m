@@ -51,7 +51,6 @@
     
     
     self.detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:self.showSummaryIdStr];
-    NSLog(@"%@",self.detailsArray);
     [self.collectionView reloadData];
 }
 - (void)viewWillDisappear:(BOOL)animated {
@@ -67,7 +66,7 @@
     [self addCollectionView];
     _fullPath = [[NSString alloc]init];
     self.navigationItem.title= self.showSummaryNameStr;
-    NSLog(@"%@",self.showSummaryNameStr);
+   
 }
 
 -(void)addNavigation
@@ -138,7 +137,6 @@
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        NSLog(@"成功");
         [alertController removeFromParentViewController];
         
     }];
@@ -159,7 +157,6 @@
         sections = [sections stringByAppendingString:tmp];
     }
     _stringSections = sections;
-    NSLog(@"my html code is:::%@", _stringSections);
     
 }
 //处理section 拼接字符串
@@ -195,8 +192,12 @@
     NSString *htmlCodes = final_html_befor_section;
     htmlCodes = [htmlCodes stringByAppendingString:_stringSections];
     htmlCodes = [htmlCodes stringByAppendingString:final_html_after_section];
-    [DBDaoHelper updateSummaryContentById : htmlCodes : self.showSummaryIdStr];
+    
+    BOOL sts = [DBDaoHelper updateSummaryContentById : htmlCodes : self.showSummaryIdStr];
     _finalHtmlCode = htmlCodes;
+    if (sts) {
+        [DBDaoHelper updateSummaryStatsDateTimeBySummaryId:_showSummaryIdStr SummaryStatus:@"Updated"];
+    }
 }
 -(void)backClick
 {
@@ -270,7 +271,6 @@
     NSURL *baseUrl = [NSURL fileURLWithPath:path];
     [self.webView loadHTMLString:model.htmlCodeStr baseURL:baseUrl];
     self.webView.tag = indexPath.row;
-    NSLog(@"%ld",(long)indexPath.row);
     self.webView.delegate = self;
     [cell addSubview:self.webView];
     [self loadHtmlToWebView];
@@ -300,10 +300,8 @@
 -(void)viewClick:(UITapGestureRecognizer *)recognizer
 {
     UIView *viewT = [recognizer view];
-    NSLog(@"%ld",(long)viewT.tag);
     //从detailsArray中获取detailsid
     DetailsModel *model = [self.detailsArray objectAtIndex:viewT.tag];
-    NSLog(@"%@",model.detailsIdStr);
     
     EditNowViewController *vc = [[EditNowViewController alloc]init];
     vc.editNowDetailsIdStr = model.detailsIdStr;
@@ -327,10 +325,8 @@
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        NSLog(@"The \"Okay/Cancel\" alert's other action occured.");
         UIButton *deleteBtn = [[UIButton alloc]init];
         deleteBtn.tag = button.tag;
-        NSLog(@"%ld",(long)deleteBtn.tag);
         DetailsModel *model = [self.detailsArray objectAtIndex:deleteBtn.tag];
         
         [DBDaoHelper deleteDetailsWithsql:model.detailsIdStr];
@@ -388,27 +384,22 @@
     _htmlSource = [_htmlSource stringByAppendingString:@"</html>"];
     //根据summaryid 和templateid查询数据库更换html_code
     DetailsModel *model = [self.detailsArray objectAtIndex:webViewInteger];
-    NSLog(@"self.webView.tag%ld",(long)self.webView.tag);
-    NSLog(@"%@",model.detailsIdStr);
    NSString *str = model.detailsIdStr;
     NSString *finalHtmlCodeStr = [_htmlSource stringByReplacingOccurrencesOfString:@"\"" withString:@"'"];
 //    NSString *str = [NSString stringWithFormat:@"%ld",(long)self.webView.tag];
     [DBDaoHelper updateDetailsIdWith:str htmlCode:finalHtmlCodeStr];
-    NSLog(@"you got html is:::%@", _htmlSource);
 }
 -(void)loadHtmlToWebView{
     
     JSContext *context = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     
     context[@"clickedText"] = ^() {
-        NSLog(@"%ld",(long)self.webView.tag);
+        
         webViewInteger = self.webView.tag;
-        NSLog(@"Begin text");
+       
         NSArray *args = [JSContext currentArguments];
         
         //        NSString *mySt = [args componentsJoinedByString:@","];
-        NSLog(@"input mySt:%@", args[0]);
-        NSLog(@"input mySt:%@", args[1]);
         NSString *htmlVal = [[NSString alloc]initWithFormat:@"%@",args[0]];
         NSString *htmlIndex =[[NSString alloc]initWithFormat:@"%@",args[1]];
         [self editTextComponent:htmlVal :htmlIndex];
@@ -422,7 +413,7 @@
         
         NSArray *args = [JSContext currentArguments];
         
-        NSLog(@"input mySt:%@", args[0]);
+       
         _imgIndex = [[NSString alloc]initWithFormat:@"%@",args[0]];
         [self editImageComponent:_fullPath :_imgIndex];
         //        [self editImageComponent: @"/Users/linlecui/Desktop/10c58PIC2CK_1024.jpg" : imgIndex];//加载本地图片到webview,把图片的索引传给方法
@@ -454,8 +445,7 @@
         str = [str stringByAppendingString:@" field.innerHTML='"];
         str = [str stringByAppendingString:newMessage];
         str = [str stringByAppendingString:@"';"];
-        
-        NSLog(@"final javascript:%@",str);
+ 
         [_webView stringByEvaluatingJavaScriptFromString:str];
         [self getHtmlCodeClick];//获取webview中section里的heml代码
         
@@ -477,7 +467,6 @@
     str = [str stringByAppendingString:imgName];
     str = [str stringByAppendingString:@"';"];
     
-    NSLog(@"final javascript:%@",str);
     [_webView stringByEvaluatingJavaScriptFromString:str];//js字符串通过这个方法传递到webview中的html并执行此js
 }
 - (void)didReceiveMemoryWarning {

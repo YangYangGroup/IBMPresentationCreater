@@ -297,7 +297,7 @@
         sections = [sections stringByAppendingString:tmp];
     }
     _stringSections = sections;
-    NSLog(@"my html code is:::%@", _stringSections);
+    
     
 }
 //处理section 拼接字符串

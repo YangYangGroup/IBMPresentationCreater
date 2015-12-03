@@ -204,8 +204,6 @@
         NSArray *args = [JSContext currentArguments];
         
         //        NSString *mySt = [args componentsJoinedByString:@","];
-        NSLog(@"input mySt:%@", args[0]);
-        NSLog(@"input mySt:%@", args[1]);
         NSString *htmlVal = [[NSString alloc]initWithFormat:@"%@",args[0]];
         NSString *htmlIndex =[[NSString alloc]initWithFormat:@"%@",args[1]];
         NSString *editFlag =[[NSString alloc]initWithFormat:@"%@",args[2]];
@@ -220,8 +218,6 @@
         NSLog(@"Begin image");
         
         NSArray *args = [JSContext currentArguments];
-        
-        NSLog(@"input mySt:%@", args[0]);
         _imgIndex = [[NSString alloc]initWithFormat:@"%@",args[0]];
         //[self editImageComponent:_fullPath :_imgIndex];
         //        [self editImageComponent: @"/Users/linlecui/Desktop/10c58PIC2CK_1024.jpg" : imgIndex];//加载本地图片到webview,把图片的索引传给方法
@@ -254,7 +250,6 @@
     [_editTextViewControl addSubview:backgroundView];
     
     self.mBackView =[[UIView alloc]initWithFrame:CGRectMake(0, KScreenHeight, KScreenWidth, 100)];
-    NSLog(@"%p",self.mBackView);
     self.mBackView.backgroundColor =[UIColor colorWithRed:229/255.0 green:229/255.0 blue:229/255.0 alpha:1];
     [backgroundView addSubview:self.mBackView];
     
@@ -358,7 +353,7 @@
         NSString *str = @"deleteCurrentLine('";
         str = [str stringByAppendingString:_textIndex];
         str = [str stringByAppendingString:@"');"];
-        NSLog(@"delete line javascript:%@",str);
+        
         [_webView stringByEvaluatingJavaScriptFromString:str];
         [_editTextViewControl removeFromSuperview];
         _editTextViewControl = nil;
@@ -392,7 +387,6 @@
         str = [str stringByAppendingString:_mTextView.text];
         str = [str stringByAppendingString:@"';"];
         
-        NSLog(@"final javascript:%@",str);
         [_webView stringByEvaluatingJavaScriptFromString:str];
         [_editTextViewControl removeFromSuperview];
         _editTextViewControl = nil;
@@ -417,7 +411,6 @@
     str = [str stringByAppendingString:imgName];
     str = [str stringByAppendingString:@"';"];
     
-    NSLog(@"final javascript:%@",str);
     [_webView stringByEvaluatingJavaScriptFromString:str];//js字符串通过这个方法传递到webview中的html并执行此js
     [self getHtmlCodeClick];
 }
@@ -499,7 +492,6 @@
     //将detailsid summaryid filetype filepath插入数据库
     [DBDaoHelper insertFilePathToDetails_idWith:self.editNowDetailsIdStr summary_id:self.editNowSummaryIdStr file_type:@"image" file_path:_fullPath ];
     [self editImageComponent : imageFullName : _imgIndex];
-    // NSLog(@"imageFullName:%@",imageFullName);
 }
 
 - (void)cropViewControllerDidCancel:(PECropViewController *)controller
@@ -648,7 +640,6 @@
     str = [str stringByAppendingString:@" field.src='"];
     str = [str stringByAppendingString:_audioPath];
     str = [str stringByAppendingString:@"'; "];
-    NSLog(@"final javascript:%@",str);
     [_webView stringByEvaluatingJavaScriptFromString:str];
     
     [self getHtmlCodeClick];
