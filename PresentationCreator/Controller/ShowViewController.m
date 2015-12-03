@@ -312,7 +312,7 @@
   
     NSArray *menuItems = [[NSArray alloc]init];
    
-    if ([_productStatus isEqualToString:@"Publish"]) {
+    if ([_productStatus isEqualToString:@"Published"]) {
         menuItems = @[
                       [KxMenuItem menuItem:@"Edit"
                                      image:nil
