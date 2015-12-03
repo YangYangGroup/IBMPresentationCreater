@@ -195,8 +195,12 @@
     
     BOOL sts = [DBDaoHelper updateSummaryContentById : htmlCodes : self.showSummaryIdStr];
     _finalHtmlCode = htmlCodes;
+   
     if (sts) {
-        [DBDaoHelper updateSummaryStatsDateTimeBySummaryId:_showSummaryIdStr SummaryStatus:@"Updated"];
+         NSString *statusPro = [DBDaoHelper queryProductStatusBySummaryId:_showSummaryIdStr];
+        if ([statusPro isEqualToString:@"Published"]) {
+             [DBDaoHelper updateSummaryStatsDateTimeBySummaryId:_showSummaryIdStr SummaryStatus:@"Updated"];
+        }
     }
 }
 -(void)backClick

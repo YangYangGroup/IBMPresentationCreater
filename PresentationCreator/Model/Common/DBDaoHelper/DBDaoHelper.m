@@ -494,4 +494,19 @@
     [db close];
     return result;
 }
+
+// 根据summary id 查询 product status
++(NSString *)queryProductStatusBySummaryId:(NSString *)summaryId{
+    FMDatabase *db =[DBHelper openDatabase];
+    FMResultSet *result1 = [db executeQuery:@"SELECT product_status FROM PPT_PRODUCT_SUMMARY WHERE summary_id = ?",summaryId];
+    
+    while (result1.next)
+    {
+        NSString *str = [result1 stringForColumnIndex:0];
+        [db close];
+        return str;
+    }
+    [db close];
+    return nil;
+}
 @end
