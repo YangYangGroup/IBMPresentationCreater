@@ -145,6 +145,8 @@
     
     
     [self presentViewController:alertController animated:YES completion:nil];
+    
+    [self performSelector:@selector(xxx) withObject:nil afterDelay:0.25];
 
 }
 //查询summaryhtmlcode 加载到webview 进行总的预览

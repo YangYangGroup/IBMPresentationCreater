@@ -471,7 +471,7 @@
             
             WXMediaMessage *message = [WXMediaMessage message];
             message.title = @"Share";
-            message.description = @"A Wonderful PPT";
+            message.description = _showSummaryNameStr;
             [message setThumbImage:[UIImage imageNamed:@"sharewechat@2x.png"]];
             
             WXWebpageObject *ext = [WXWebpageObject object];
@@ -522,7 +522,7 @@
             //分享文本到朋友圈
             WXMediaMessage *message = [WXMediaMessage message];
             message.title = @"Share";
-            message.description = @"A Wonderful PPT";
+            message.description = _showSummaryNameStr;
             [message setThumbImage:[UIImage imageNamed:@"sharewechat@2x.png"]];
             
             WXWebpageObject *ext = [WXWebpageObject object];
