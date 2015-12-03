@@ -131,11 +131,11 @@
 {
     [self loadDetailsDataToArray];
     [self generationFinalHtmlCode];
-    NSString *title = NSLocalizedString(@"Successfully", nil);
+//    NSString *title = NSLocalizedString(@"Successfully", nil);
 //    NSString *message = NSLocalizedString(@"Upload successfully.", nil);
     NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         NSLog(@"成功");
@@ -147,6 +147,7 @@
     
     
     [self presentViewController:alertController animated:YES completion:nil];
+
 }
 //查询summaryhtmlcode 加载到webview 进行总的预览
 -(void)loadDetailsDataToArray{
