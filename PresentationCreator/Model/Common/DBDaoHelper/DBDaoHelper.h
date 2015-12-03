@@ -82,4 +82,6 @@
 +(BOOL)checkFileIsUseByFileId:(NSString *)fileId;
 // 删除文件根据文件id
 +(BOOL)deleteFileByFileId:(NSString *)filedId;
+// 根据summary id 查询 product status
++(NSString *)queryProductStatusBySummaryId:(NSString *)summaryId;
 @end

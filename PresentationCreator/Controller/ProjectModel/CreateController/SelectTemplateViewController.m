@@ -27,11 +27,13 @@
 @end
 
 @implementation SelectTemplateViewController
-
+-(void)viewWillAppear:(BOOL)animated{
+    self.navigationItem.title = @"Select A Template";
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.navigationItem.title = @"Select A Template";
+    
     [self addCollectionView];
     self.imageArray = [NSArray arrayWithObjects:[UIImage imageNamed:@"IMG_1"],[UIImage imageNamed:@"IMG_6"],nil];
     
