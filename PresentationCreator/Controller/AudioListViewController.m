@@ -44,6 +44,9 @@
     [self addNavigation];
     _audioArray = [[NSMutableArray alloc]init];
     
+    NSLog(@"details id---%@",_detailsId);
+    NSLog(@"audio path is ---%@",_audioPath);
+    
     [self loadAudioData];
     [self loadAudioTableView];
 }

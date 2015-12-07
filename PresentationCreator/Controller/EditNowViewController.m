@@ -85,7 +85,7 @@
     self.navigationItem.title= _editNowSummaryNameStr;
     _fullPath = [[NSString alloc]init];
     _audioPath = [[NSString alloc]init];
-    
+    [self setAudioSession];
     [self addNewWebView];
     [self addObserverWithKeyboard];
    
@@ -414,6 +414,7 @@
     [_webView stringByEvaluatingJavaScriptFromString:str];//js字符串通过这个方法传递到webview中的html并执行此js
     [self getHtmlCodeClick];
 }
+
 //选择图片
 -(void)backgroundClick
 {

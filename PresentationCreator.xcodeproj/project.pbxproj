@@ -152,6 +152,7 @@
 		BA2BEFD01BFF2D1100718E43 /* checkbox_checked.png in Resources */ = {isa = PBXBuildFile; fileRef = BA2BEFCE1BFF2D1100718E43 /* checkbox_checked.png */; };
 		BA2BEFD11BFF2D1100718E43 /* checkbox_unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = BA2BEFCF1BFF2D1100718E43 /* checkbox_unchecked.png */; };
 		BA2BEFD41BFF2D7D00718E43 /* AudioListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA2BEFD31BFF2D7D00718E43 /* AudioListCell.m */; };
+		BA35A6651C15ADA6007FF0E2 /* EditPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA35A6641C15ADA6007FF0E2 /* EditPageViewController.m */; };
 		BA7BBFF01C058C050033F37A /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = BA7BBFEF1C058C050033F37A /* KxMenu.m */; };
 		BA8A27E91C0D14F200187DA9 /* AudioListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8A27E71C0D14F200187DA9 /* AudioListViewController.m */; };
 		BA8A27EA1C0D14F200187DA9 /* AudioListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA8A27E81C0D14F200187DA9 /* AudioListViewController.xib */; };
@@ -389,6 +390,8 @@
 		BA2BEFCF1BFF2D1100718E43 /* checkbox_unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox_unchecked.png; sourceTree = "<group>"; };
 		BA2BEFD21BFF2D7D00718E43 /* AudioListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioListCell.h; sourceTree = "<group>"; };
 		BA2BEFD31BFF2D7D00718E43 /* AudioListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioListCell.m; sourceTree = "<group>"; };
+		BA35A6631C15ADA6007FF0E2 /* EditPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditPageViewController.h; sourceTree = "<group>"; };
+		BA35A6641C15ADA6007FF0E2 /* EditPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditPageViewController.m; sourceTree = "<group>"; };
 		BA7BBFEE1C058C050033F37A /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
 		BA7BBFEF1C058C050033F37A /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
 		BA8A27E61C0D14F200187DA9 /* AudioListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioListViewController.h; sourceTree = "<group>"; };
@@ -603,6 +606,8 @@
 				BA8A27E61C0D14F200187DA9 /* AudioListViewController.h */,
 				BA8A27E71C0D14F200187DA9 /* AudioListViewController.m */,
 				BA8A27E81C0D14F200187DA9 /* AudioListViewController.xib */,
+				BA35A6631C15ADA6007FF0E2 /* EditPageViewController.h */,
+				BA35A6641C15ADA6007FF0E2 /* EditPageViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1129,6 +1134,7 @@
 				1657BBF71BF83F61000C83C0 /* SBJsonStreamWriter.m in Sources */,
 				16DE71311BD535FD009921B9 /* EditNowViewController.m in Sources */,
 				163130331BC7E1DD00EE9D86 /* FMDatabase.m in Sources */,
+				BA35A6651C15ADA6007FF0E2 /* EditPageViewController.m in Sources */,
 				1628E78D1BE9F8F200D6200A /* AFHTTPSessionManager.m in Sources */,
 				162A37811BBA80DA0069D9BB /* AppDelegate.m in Sources */,
 				162A377E1BBA80DA0069D9BB /* main.m in Sources */,

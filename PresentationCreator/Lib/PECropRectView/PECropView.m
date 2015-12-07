@@ -10,9 +10,7 @@
 #import "PECropRectView.h"
 
 static const CGFloat MarginTop = 37.0f;
-static const CGFloat MarginBottom = MarginTop;
 static const CGFloat MarginLeft = 20.0f;
-static const CGFloat MarginRight = MarginLeft;
 
 @interface PECropView () <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 

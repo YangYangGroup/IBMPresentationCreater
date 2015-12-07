@@ -17,6 +17,7 @@
 #import "KxMenu.h"
 #import "SummaryModel.h"
 #import "EditPresentationNameViewController.h"
+#import "EditPageViewController.h"
 
 @interface ShowViewController ()<UIWebViewDelegate>
 @property (nonatomic, retain) UIWebView *webView;
@@ -134,13 +135,19 @@
 
 -(void)editClick
 {
-    EditViewController *vc = [[EditViewController alloc]init];
-    NSLog(@"%@",self.showSummaryNameStr);
-    NSLog(@"%@",self.showTemplateIdStr);
-    vc.showSummaryNameStr = self.showSummaryNameStr;
-    vc.showTemplateIdStr = self.showTemplateIdStr;
-    vc.showSummaryIdStr = self.showSummaryIdStr;
-    [self.navigationController pushViewController:vc animated:YES];
+//    EditViewController *vc = [[EditViewController alloc]init];
+//    NSLog(@"%@",self.showSummaryNameStr);
+//    NSLog(@"%@",self.showTemplateIdStr);
+//    vc.showSummaryNameStr = self.showSummaryNameStr;
+//    vc.showTemplateIdStr = self.showTemplateIdStr;
+//    vc.showSummaryIdStr = self.showSummaryIdStr;
+//    [self.navigationController pushViewController:vc animated:YES];
+    
+    EditPageViewController *eAllPageVC = [[EditPageViewController alloc] init];
+    eAllPageVC.showSummaryIdStr = _showSummaryIdStr;
+    eAllPageVC.showSummaryNameStr = _showSummaryNameStr;
+    eAllPageVC.showTemplateIdStr = self.showTemplateIdStr;
+    [self.navigationController pushViewController:eAllPageVC animated:YES];
 }
 
 
