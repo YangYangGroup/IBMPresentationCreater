@@ -220,7 +220,7 @@
     }];
     
     [operation setUploadProgressBlock: ^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-        float  progress=(float)totalBytesWritten / totalBytesExpectedToWrite;
+//        float  progress=(float)totalBytesWritten / totalBytesExpectedToWrite;
         //        NSLog(@"上传进度 = %f",progress);
         NSLog(@"totalBytesWritten == %lld totalBytesExpectedToWrite == %lld", totalBytesWritten, totalBytesExpectedToWrite);
     }];

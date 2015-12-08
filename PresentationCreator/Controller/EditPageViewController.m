@@ -57,7 +57,17 @@
 @property (nonatomic, strong) NSMutableArray *volumImages;
 @property (nonatomic, assign) double lowPassResults;
 
-
+// 自定义键盘
+@property (nonatomic, strong) UITextView *myTextView;
+@property (nonatomic, strong) UIView *textBackgroundView;
+@property (nonatomic, strong) UIButton *addLineBtn;
+@property (nonatomic, strong) UIButton *deleteLineBtn;
+@property (nonatomic, strong) UIView *backgroundView;
+@property (nonatomic,strong)UITextView * mTextView;
+@property (nonatomic,strong)UIView *mBackView;
+@property (nonatomic, strong) NSString *oldTextHtml;
+@property (nonatomic, strong) NSString *textIndex;
+@property (nonatomic, strong) NSString *currentText;
 
 @end
 
@@ -70,27 +80,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAudioNameFromList:) name:@"SelectedAudioName" object:nil];
    
     
-    self.parentViewController.tabBarController.tabBar.hidden = YES;
-    //    self.navigationItem.hidesBackButton =YES;//隐藏系统自带导航栏按钮
-    self.navigationItem.title=self.showSummaryNameStr;
-    self.htmlCodeArray = [[NSMutableArray alloc]init];
     
-    _detailsArray = [[NSMutableArray alloc]init];
-    [self loadDetailsToArray];
-    _currentPage = 0;
-    _totalPage = _detailsArray.count;
-    
-    [self addNavigation];
-    [self initPageControl];
-    [self initScrollView];
-    
-    [self setAudioSession];
-    
-    //音量图片数组
-    _volumImages = [[NSMutableArray alloc]initWithObjects:@"RecordingSignal001.png",@"RecordingSignal002.png",
-                    @"RecordingSignal003.png", @"RecordingSignal004.png",
-                      @"RecordingSignal005.png",@"RecordingSignal006.png",
-                    @"RecordingSignal007.png",@"RecordingSignal008.png",   nil];
 }
 
 
@@ -100,7 +90,30 @@
     _fullPath = [[NSString alloc]init];
     _audioPath = [[NSString alloc]init];
    
+    
+    self.parentViewController.tabBarController.tabBar.hidden = YES;
+    //    self.navigationItem.hidesBackButton =YES;//隐藏系统自带导航栏按钮
+    self.navigationItem.title=self.showSummaryNameStr;
+    self.htmlCodeArray = [[NSMutableArray alloc]init];
+    
+    _detailsArray = [[NSMutableArray alloc]init];
+    [self loadDetailsToArray];
+    _currentPage = _detailsArray.count-1;
+    _totalPage = _detailsArray.count;
+    
+    [self addNavigation];
+    [self initPageControl];
+    [self initScrollView];
+    [self addObserverWithKeyboard];
+    [self setAudioSession];
+    
+    //音量图片数组
+    _volumImages = [[NSMutableArray alloc]initWithObjects:@"RecordingSignal001.png",@"RecordingSignal002.png",
+                    @"RecordingSignal003.png", @"RecordingSignal004.png",
+                    @"RecordingSignal005.png",@"RecordingSignal006.png",
+                    @"RecordingSignal007.png",@"RecordingSignal008.png",   nil];
 
+    
     self.view.backgroundColor = [UIColor grayColor];
 }
 
@@ -159,15 +172,13 @@
     }
     
     [self.view addSubview:_scrollView];
-    int sC = _scrollView.subviews.count;
-    NSLog(@"_scrollView.subviews.count---%ld",(long)sC);
     //这个属性很重要，它可以决定是横向还是纵向滚动，一般来说也是其中的 View 的总宽度，和总的高度
     //这里同时考虑到每个 View 间的空隙，所以宽度是 200x3＋5＋10＋10＋5＝630
     //高度上与 ScrollView 相同，只在横向扩展，所以只要在横向上滚动
     _scrollView.contentSize = CGSizeMake(10 + (boundWidth  + 20 ) * _totalPage, 100);
     
     //用它指定 ScrollView 中内容的当前位置，即相对于 ScrollView 的左上顶点的偏移
-    _scrollView.contentOffset = CGPointMake((boundWidth + 20) * (_totalPage-1),0);
+    _scrollView.contentOffset = CGPointMake((boundWidth + 20) * (_detailsArray.count-2),0);
     //按页滚动，总是一次一个宽度，或一个高度单位的滚动
     
     _scrollView.showsHorizontalScrollIndicator = NO;
@@ -269,12 +280,14 @@
         NSLog(@"input myStr index:%@", args[1]);
         NSString *htmlVal = [[NSString alloc]initWithFormat:@"%@",args[0]];
         NSString *htmlIndex =[[NSString alloc]initWithFormat:@"%@",args[1]];
-        _oldText = htmlVal;
-        _txtIndex = htmlIndex;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self editTextComponent];
+        NSString *editFlag =[[NSString alloc]initWithFormat:@"%@",args[2]];
+        NSLog(@"editFlag:%@", editFlag);
+        _oldTextHtml = htmlVal;
+
+//        dispatch_async(dispatch_get_main_queue(), ^{
+            [self editTextComponent:htmlVal htmlIndex:htmlIndex editFlag:editFlag];
             
-        });
+//        });
         
         NSLog(@"-------End Text-------");
         
@@ -294,102 +307,187 @@
 }
 
 #pragma ------------------- edit text function ------------------------
--(void)editTextComponent{
-    self.navigationController.navigationBar.hidden = YES;
-    _buttonMark = [[UIButton alloc]initWithFrame:CGRectMake(0, 64, self.view.bounds.size.width, self.view.bounds.size.height-64)];
-    _buttonMark.backgroundColor = [UIColor grayColor];
-    _buttonMark.alpha = 0.9;
-    [self.view addSubview:_buttonMark];
+
+-(void)editTextClick
+{
+    [_editTextViewControl removeFromSuperview];
+    _editTextViewControl = nil;
+}
+
+//修改文字的时候
+-(void)editTextComponent:(NSString *)htmlVal  htmlIndex:(NSString *)htmlIndex editFlag:(NSString *)editFlag{
+    //    self.navigationController.navigationBarHidden=YES;
     
-    _titleLabel = [[UILabel alloc]init];
-    _titleLabel.frame = CGRectMake(20, 70, KScreenWidth, 30);
-    _titleLabel.text = @"Please type your word:";
-    _titleLabel.textColor = [UIColor whiteColor];
-    [self.view addSubview:_titleLabel];
+    _editTextViewControl = [[UIControl alloc]initWithFrame:CGRectMake(0, 20, KScreenWidth, KScreenHeight+5)];
+    _editTextViewControl.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_editTextViewControl];
     
-    _txtView = [[UITextView alloc]initWithFrame:CGRectMake(20, 100, KScreenWidth-40, KScreenHeight *0.25)];
-    _txtView.delegate = self;
-    _txtView.backgroundColor = [UIColor whiteColor];
-    NSString *textStr = [_oldText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    [_txtView.layer setMasksToBounds:YES];
-    [_txtView.layer setCornerRadius:6.0];
-    [_txtView selectedTextRange];
-    [_txtView setText: textStr];
-    [_txtView becomeFirstResponder];
-    [self.view addSubview:_txtView];
+    UIView *backgroundView = [[UIView alloc]init];
+    //    backgroundView.hidden = YES;
+    backgroundView.frame = CGRectMake(0, 0, KScreenWidth, KScreenHeight);
+    //        backgroundView.backgroundColor = [UIColor redColor];
+    UITapGestureRecognizer *tapGesture1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(editTextClick)];
+    backgroundView.userInteractionEnabled=YES;
+    [backgroundView addGestureRecognizer:tapGesture1];
+    [_editTextViewControl addSubview:backgroundView];
     
-    _okButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    _okButton.frame = CGRectMake(20 , 70 + KScreenHeight*0.25 + 40, KScreenWidth*0.5 -30, 40);
-    [_okButton setTitle:@"OK" forState:UIControlStateNormal];
-    [_okButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _okButton.backgroundColor = [UIColor darkGrayColor];
-    _okButton.titleLabel.font = [UIFont systemFontOfSize:18.0];
-    [_okButton.layer setMasksToBounds:YES];
+    self.mBackView =[[UIView alloc]initWithFrame:CGRectMake(0, KScreenHeight, KScreenWidth, 100)];
+    self.mBackView.backgroundColor =[UIColor colorWithRed:229/255.0 green:229/255.0 blue:229/255.0 alpha:1];
+    [backgroundView addSubview:self.mBackView];
     
-    [_okButton.layer setBorderWidth:1.0];
-    [_okButton.layer setCornerRadius:7.0];
-    _okButton.layer.borderColor = [UIColor whiteColor].CGColor;
-    [_okButton addTarget:self action:@selector(saveTextData) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:_okButton];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.mTextView =[[UITextView alloc]initWithFrame:CGRectMake(1, 5, KScreenWidth-75, 90)];
+        self.mTextView.backgroundColor =[UIColor whiteColor];
+        self.mTextView.delegate = self;
+        [self.mTextView becomeFirstResponder];
+        NSString *textStr = [htmlVal stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        self.mTextView.text = textStr;
+        self.mTextView.layer.borderWidth = 1;
+        self.mTextView.layer.cornerRadius = 5;
+        self.mTextView.layer.borderColor = [UIColor grayColor].CGColor;
+        [self.mBackView addSubview:self.mTextView];
+    });
     
-    _cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    _cancelButton.frame = CGRectMake(10 + KScreenWidth*0.5 , 70 + KScreenHeight*0.25 + 40, KScreenWidth*0.5 -30, 40);
-    [_cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
-    [_cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _cancelButton.backgroundColor = [UIColor lightGrayColor];
-    _cancelButton.titleLabel.font = [UIFont systemFontOfSize:18.0];
-    [_cancelButton.layer setMasksToBounds:YES];
-    
-    [_cancelButton.layer setBorderWidth:1.0];
-    [_cancelButton.layer setCornerRadius:7.0];
-    _cancelButton.layer.borderColor = [UIColor whiteColor].CGColor;
-    [_cancelButton addTarget:self action:@selector(removeTextEditComponent) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:_cancelButton];
+    UIButton *mTalkBtn =[UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [mTalkBtn setTitle:@"OK" forState:UIControlStateNormal];
+    [mTalkBtn addTarget:self action:@selector(saveTextData) forControlEvents:UIControlEventTouchUpInside];
+    [mTalkBtn setTintColor:[UIColor blackColor]];
+    _textIndex = htmlIndex;
+    mTalkBtn.backgroundColor = [UIColor whiteColor];
+    mTalkBtn.layer.borderWidth = 1;
+    mTalkBtn.layer.cornerRadius = 5;
+    mTalkBtn.layer.borderColor = [UIColor grayColor].CGColor;
+    [self.mBackView addSubview:mTalkBtn];
     
     
+    _addLineBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    _addLineBtn.frame = CGRectMake(KScreenWidth-60, 38, 50, 28);
+    [_addLineBtn setTitle:@"New" forState:UIControlStateNormal];
+    [_addLineBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    _addLineBtn.titleLabel.font = [UIFont systemFontOfSize:14.0];
+    [_addLineBtn addTarget:self action:@selector(newLineFunction) forControlEvents:UIControlEventTouchUpInside];
+    _addLineBtn.backgroundColor = [UIColor whiteColor];
+    _addLineBtn.layer.borderWidth = 1;
+    _addLineBtn.layer.cornerRadius = 5;
+    _addLineBtn.layer.borderColor = [UIColor grayColor].CGColor;
+    [self.mBackView addSubview:_addLineBtn];
+    
+    
+    _deleteLineBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    _deleteLineBtn.frame = CGRectMake(KScreenWidth-60, 70, 50, 28);
+    [_deleteLineBtn setTitle:@"Del" forState:UIControlStateNormal];
+    [_deleteLineBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    _deleteLineBtn.titleLabel.font = [UIFont systemFontOfSize:14.0];
+    _deleteLineBtn.backgroundColor = [UIColor whiteColor];
+    _deleteLineBtn.layer.borderWidth = 1;
+    _deleteLineBtn.layer.cornerRadius = 5;
+    _deleteLineBtn.layer.borderColor = [UIColor grayColor].CGColor;
+    [_deleteLineBtn addTarget:self action:@selector(deleteFunction) forControlEvents:UIControlEventTouchUpInside];
+    [self.mBackView addSubview:_deleteLineBtn];
+    
+    //如果不可以加行
+    if([editFlag isEqualToString:@"false"]){
+        _deleteLineBtn.hidden = YES;
+        _addLineBtn.hidden = YES;
+        mTalkBtn.frame =CGRectMake(KScreenWidth-60, 30, 50, 28);
+        [_addLineBtn setEnabled:NO];
+        [_deleteLineBtn setEnabled:NO];
+    }else{
+        mTalkBtn.frame =CGRectMake(KScreenWidth-60, 5, 50, 28);
+        _deleteLineBtn.backgroundColor = [UIColor whiteColor] ;
+        _addLineBtn.backgroundColor = [UIColor whiteColor] ;
+        [_addLineBtn setEnabled:YES];
+        [_deleteLineBtn setEnabled:YES];
+    }
     
 }
--(void)textViewDidBeginEditing:(UITextView *)textView{
-    NSInteger len = [textView.text length];
-    
-    textView.selectedRange = NSMakeRange(0, len);
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self.mTextView resignFirstResponder];
+    return YES;
 }
+-(void)newLineFunction{
+    NSString *str = @"addListItem('";
+    str = [str stringByAppendingString:_textIndex];
+    str = [str stringByAppendingString:@"');"];
+    NSLog(@"add new line javascript:%@",str);
+    UIWebView *currentWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
+    currentWebView.delegate = self;
+    
+    [currentWebView stringByEvaluatingJavaScriptFromString:str];
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"You added new line sucessfully, do you want to stay here or exit?" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Stay" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        //
+    }];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Exit" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [_editTextViewControl removeFromSuperview];
+        _editTextViewControl = nil;
+        self.navigationController.navigationBarHidden = NO;
+        //        [self getHtmlCodeClick];//获取webview中section里的heml代码
+    }];
+    [alertController addAction:cancelAction];
+    [alertController addAction:okAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+    [self cancelFunction];
+}
+-(void)deleteFunction{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Delele current line" message:@"This action can not undo. do you want to delete this line? " preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *str = @"deleteCurrentLine('";
+        str = [str stringByAppendingString:_textIndex];
+        str = [str stringByAppendingString:@"');"];
+        
+        UIWebView *currentWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
+        currentWebView.delegate = self;
+        [currentWebView stringByEvaluatingJavaScriptFromString:str];
+        [_editTextViewControl removeFromSuperview];
+        _editTextViewControl = nil;
+        self.navigationController.navigationBarHidden = NO;
+        //
+    }];
+    UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    [alertController addAction:cancelAction];
+    [alertController addAction:deleteAction];
+    [self presentViewController:alertController animated:YES completion:nil];
+    [self cancelFunction];
+}
+-(void)cancelFunction{
+    self.navigationController.navigationBarHidden = NO;
+    [_editTextViewControl removeFromSuperview];
+    _editTextViewControl = nil;
+}
+
 -(void)saveTextData{
-    //self.navigationController.navigationBarHidden=NO;
-    _getText = _txtView.text;
-    //    dispatch_async(dispatch_get_main_queue(), ^{
-    NSString *jsString = [[NSString alloc]init];
-    jsString =  @"var field = document.getElementsByClassName('text_element')[";
-    jsString = [jsString stringByAppendingString:_txtIndex];
-    jsString = [jsString stringByAppendingString:@"];"];
-    jsString = [jsString stringByAppendingString:@" field.innerHTML='"];
-    jsString = [jsString stringByAppendingString:_getText];
-    jsString = [jsString stringByAppendingString:@"';"];
+    self.navigationController.navigationBarHidden = NO;
     
-    UIWebView *cWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
-    
-    cWebView.delegate = self;
-    [cWebView stringByEvaluatingJavaScriptFromString:jsString];
-    [self removeTextEditComponent];
-    
-    
-    NSString *jsToGetHtmlSource = [[NSString alloc] initWithFormat: @"document.getElementsByTagName('html')[0].innerHTML"];
-    //    NSString *htmlSource = @"<section class='swiper-slide swiper-slide2'>";//slide2需要拼接获取正确的索引值
-    _htmlSource = @"<!DOCTYPE html><html>";
-    _htmlSource = [_htmlSource stringByAppendingString: [cWebView stringByEvaluatingJavaScriptFromString:jsToGetHtmlSource]];
-    _htmlSource = [_htmlSource stringByAppendingString:@"</html>"];
-    //根据summaryid 和templateid查询数据库更换html_code
-    //在details表中 根据detailsid 修改html代码
-    
-    DetailsModel *dm = [_detailsArray objectAtIndex:_currentPage];
-    NSString *dtlsId = dm.detailsIdStr;
-    
-    NSString *newStr = [_htmlSource stringByReplacingOccurrencesOfString:@"swiper-slide-active" withString:@""];
-    
-    [DBDaoHelper updateDetailsIdWith:dtlsId htmlCode:newStr];
-    NSLog(@"you got html is:::%@", newStr);
-    self.navigationController.navigationBar.hidden = NO;
-    //    });
+    NSString *temp = [_mTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    //看剩下的字符串的长度是否为零
+    if ([temp length]!=0) {
+        _currentText = _mTextView.text;
+        NSString *str = @"var field = document.getElementsByClassName('text_element')[";
+        str = [str stringByAppendingString:_textIndex];
+        str = [str stringByAppendingString:@"];"];
+        str = [str stringByAppendingString:@" field.innerHTML='"];
+        str = [str stringByAppendingString:_mTextView.text];
+        str = [str stringByAppendingString:@"';"];
+        
+        UIWebView *currentWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
+        currentWebView.delegate = self;
+        
+        [currentWebView stringByEvaluatingJavaScriptFromString:str];
+        [_editTextViewControl removeFromSuperview];
+        _editTextViewControl = nil;
+        [self getHtmlCodeClick];//获取webview中section里的heml代码
+    }else{
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"Content is not null." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        
+        [alertView show ];
+        
+    }
 }
 -(void)removeTextEditComponent{
     [_buttonMark removeFromSuperview];
@@ -445,10 +543,10 @@
 
 -(void)backClick
 {
+    [self loadDetailsDataToArray];
+    [self generationFinalHtmlCode];
     [self.navigationController popViewControllerAnimated:YES];
 }
-
-
 
 -(void)talkClick
 {
@@ -459,7 +557,6 @@
     //    }
     [self addAudioBtn];
 }
-
 
 -(void)addPageClick
 {
@@ -572,10 +669,12 @@
     str = [str stringByAppendingString:imgName];
     str = [str stringByAppendingString:@"';"];
 
-    UIWebView *imgWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
-    imgWebView.delegate = self;
+//    UIWebView *imgWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
+//    imgWebView.delegate = self;
 
-    [imgWebView stringByEvaluatingJavaScriptFromString:str];//js字符串通过这个方法传递到webview中的html并执行此js
+    UIWebView *currentWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
+    currentWebView.delegate = self;
+    [currentWebView stringByEvaluatingJavaScriptFromString:str];//js字符串通过这个方法传递到webview中的html并执行此js
     [self getHtmlCodeClick];
 }
 
@@ -1032,6 +1131,58 @@
     
 }
 
+
+
+
+#pragma mark- 自定义键盘
+#pragma mark - 给键盘添加观察者
+-(void)addObserverWithKeyboard
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
+}
+#pragma mark - 键盘的通知响应事件
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+//系统键盘将要出现
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    NSDictionary *userInfo = [notification userInfo];
+    NSValue* aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [aValue CGRectValue];
+    NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration;
+    [animationDurationValue getValue:&animationDuration];
+    [self moveInputBarWithKeyboardHeight:keyboardRect.size.height withDuration:animationDuration];
+    
+}
+//系统键盘将要消失
+- (void)keyboardWillHide:(NSNotification *)notification
+{
+    NSDictionary* userInfo = [notification userInfo];
+    NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration;
+    [animationDurationValue getValue:&animationDuration];
+    
+    [UIView animateWithDuration:animationDuration animations:^{
+        self.mBackView.frame = CGRectMake(0, KScreenHeight+100, KScreenWidth, 100);
+    }];
+}
+#pragma mark - 移动view
+-(void)moveInputBarWithKeyboardHeight:(float)_CGRectHeight withDuration:(NSTimeInterval)_NSTimeInterval
+{
+    [UIView animateWithDuration:(_NSTimeInterval) animations:^{
+        self.mBackView.frame = CGRectMake(0, KScreenHeight-_CGRectHeight-120, KScreenWidth, 100);
+        
+    }];
+}
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self.view endEditing:YES];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

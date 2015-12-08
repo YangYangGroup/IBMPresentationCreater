@@ -821,6 +821,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 #pragma mark- 自定义键盘
 #pragma mark - 给键盘添加观察者
 -(void)addObserverWithKeyboard
