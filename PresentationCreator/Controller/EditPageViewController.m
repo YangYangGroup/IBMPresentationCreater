@@ -78,9 +78,10 @@
 {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAudioNameFromList:) name:@"SelectedAudioName" object:nil];
-   
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getTemplateNotification:) name:@"SelectedTemplate" object:nil];
+    [self loadDetailsToArray];
     
-    
+     [self addObserverWithKeyboard];
 }
 
 
@@ -89,6 +90,7 @@
     // Do any additional setup after loading the view.
     _fullPath = [[NSString alloc]init];
     _audioPath = [[NSString alloc]init];
+   
    
     
     self.parentViewController.tabBarController.tabBar.hidden = YES;
@@ -104,7 +106,7 @@
     [self addNavigation];
     [self initPageControl];
     [self initScrollView];
-    [self addObserverWithKeyboard];
+   
     [self setAudioSession];
     
     //音量图片数组
@@ -112,7 +114,6 @@
                     @"RecordingSignal003.png", @"RecordingSignal004.png",
                     @"RecordingSignal005.png",@"RecordingSignal006.png",
                     @"RecordingSignal007.png",@"RecordingSignal008.png",   nil];
-
     
     self.view.backgroundColor = [UIColor grayColor];
 }
@@ -1129,8 +1130,24 @@
         
     }
     
+    
+    
 }
 
+-(void)getTemplateNotification:(NSNotification *)sender{
+    if ([sender.name isEqual:@"SelectedTemplate"])
+    {
+        
+        [self loadDetailsToArray];
+        _currentPage = _detailsArray.count-1;
+        _totalPage = _detailsArray.count;
+        [self initPageControl];
+        [self initScrollView];
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        
+    }
+}
 
 
 

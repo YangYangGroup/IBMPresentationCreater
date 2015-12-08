@@ -136,6 +136,7 @@
     
     //等待修改 插入
     [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.showSummaryIdStr TemplateId:str HtmlCode:htmlStr PageNumber:maxPageNumber];
+     [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedTemplate" object:nil];
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
