@@ -425,7 +425,7 @@
         [_editTextViewControl removeFromSuperview];
         _editTextViewControl = nil;
         self.navigationController.navigationBarHidden = NO;
-        //        [self getHtmlCodeClick];//获取webview中section里的heml代码
+        [self getHtmlCodeClick];//获取webview中section里的heml代码
     }];
     [alertController addAction:cancelAction];
     [alertController addAction:okAction];
@@ -446,6 +446,7 @@
         [_editTextViewControl removeFromSuperview];
         _editTextViewControl = nil;
         self.navigationController.navigationBarHidden = NO;
+        [self getHtmlCodeClick];//获取webview中section里的heml代码
         //
     }];
     UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
