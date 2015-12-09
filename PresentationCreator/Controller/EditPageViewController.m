@@ -131,7 +131,7 @@
     CGRect bound = [[UIScreen mainScreen]bounds];
     _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 80, bound.size.width, bound.size.height-4)];
     
-    int boundWidth = bound.size.width - 20;
+    int boundWidth = bound.size.width - 30;
     NSInteger uiViewHeight = bound.size.height -60 -35 ;
     //    _scrollView.clipsToBounds = NO;
     _scrollView.delegate = self;
@@ -141,8 +141,8 @@
     //向 ScrollView 中加入第一个 View，View 的宽度 200 加上两边的空隙 5 等于 ScrollView 的宽度
     
     for (int i = 0; i < _detailsArray.count; i++) {
-        int numX = 10 + (boundWidth + 20) * i;
-        UIWebView *webView = [[UIWebView  alloc] initWithFrame:CGRectMake(numX,8,boundWidth,uiViewHeight)];
+        int numX = 15 + (boundWidth + 30) * i;
+        UIWebView *webView = [[UIWebView  alloc] initWithFrame:CGRectMake(numX,8+5,boundWidth,uiViewHeight-10)];
         NSString *path = [[NSBundle mainBundle] bundlePath];
         NSURL *baseURL = [NSURL fileURLWithPath:path];
         DetailsModel *detail = [[DetailsModel alloc]init];
@@ -154,11 +154,11 @@
         
         [self loadHtmlToWebView:webView];
         
-        webView.backgroundColor = [UIColor purpleColor];
+        webView.backgroundColor = [UIColor whiteColor];
         
         UIButton *deleteBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         deleteBtn.titleLabel.font = [UIFont systemFontOfSize:11.0f];
-        deleteBtn.frame = CGRectMake(numX-10, 0, 25, 25);
+        deleteBtn.frame = CGRectMake(numX-15, 0, 25, 25);
         [deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
         [deleteBtn addTarget:self action:@selector(deletePage) forControlEvents:UIControlEventTouchUpInside];
         
@@ -172,10 +172,10 @@
     //这个属性很重要，它可以决定是横向还是纵向滚动，一般来说也是其中的 View 的总宽度，和总的高度
     //这里同时考虑到每个 View 间的空隙，所以宽度是 200x3＋5＋10＋10＋5＝630
     //高度上与 ScrollView 相同，只在横向扩展，所以只要在横向上滚动
-    _scrollView.contentSize = CGSizeMake(10 + (boundWidth  + 20 ) * _totalPage, 100);
+    _scrollView.contentSize = CGSizeMake(10 + (boundWidth  + 30 ) * _totalPage, 100);
     
     //用它指定 ScrollView 中内容的当前位置，即相对于 ScrollView 的左上顶点的偏移
-    _scrollView.contentOffset = CGPointMake((boundWidth + 20) * (_detailsArray.count-2),0);
+    _scrollView.contentOffset = CGPointMake((boundWidth + 30) * (_detailsArray.count-2),0);
     //按页滚动，总是一次一个宽度，或一个高度单位的滚动
     
     _scrollView.showsHorizontalScrollIndicator = NO;
@@ -670,7 +670,7 @@
     [self getHtmlCodeClick];
 }
 
-//获取webview中section里的heml代码
+//获取webview中section里的html代码
 - (void)getHtmlCodeClick {
     //native  call js 代码
     UIWebView *aWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
