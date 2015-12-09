@@ -115,7 +115,7 @@
                     @"RecordingSignal005.png",@"RecordingSignal006.png",
                     @"RecordingSignal007.png",@"RecordingSignal008.png",   nil];
     
-    self.view.backgroundColor = [UIColor grayColor];
+    self.view.backgroundColor = [UIColor whiteColor];
 }
 
 -(void)loadDetailsToArray{
@@ -139,7 +139,7 @@
     //    _scrollView.clipsToBounds = NO;
     _scrollView.delegate = self;
     _scrollView.pagingEnabled =  YES;
-    _scrollView.backgroundColor = [UIColor lightGrayColor];
+    _scrollView.backgroundColor = [UIColor whiteColor];
     // ScrollView 背景色，即 View 间的填充色
     //向 ScrollView 中加入第一个 View，View 的宽度 200 加上两边的空隙 5 等于 ScrollView 的宽度
     
