@@ -39,7 +39,6 @@
 @property (nonatomic, strong) NSString *imgIndex;
 @property (nonatomic ,strong) NSString *fullPath;
 
-
 @property (nonatomic, strong) UIControl *editTextViewControl;
 @property (nonatomic, strong) UIControl *aduioViewControl;
 @property (nonatomic) BOOL buttonFlag;
@@ -81,7 +80,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getTemplateNotification:) name:@"SelectedTemplate" object:nil];
     [self loadDetailsToArray];
     
-     [self addObserverWithKeyboard];
+    [self addObserverWithKeyboard];
 }
 
 
@@ -125,8 +124,6 @@
     
 }
 
-
-
 #pragma -------------- init scroll view ----------------
 -(void)initScrollView{
     // 设定 ScrollView 的   Frame，逐页滚动时，如果横向滚动，按宽度为一个单位滚动，纵向时，按高度为一个单位滚动
@@ -154,7 +151,6 @@
         [webView loadHTMLString:detail.htmlCodeStr baseURL:baseURL];
         
         webView.delegate = self;
-        
         
         [self loadHtmlToWebView:webView];
         
@@ -238,7 +234,7 @@
     _pageControl = [[UIPageControl alloc]init];
     _pageControl.center = CGPointMake(self.view.frame.size.width/2, 73);
     _pageControl.numberOfPages = _totalPage;
-    _pageControl.currentPage = _totalPage;
+    _pageControl.currentPage = _totalPage-1;
     [self.view addSubview:_pageControl];
     //    }
     
@@ -541,8 +537,6 @@
                  menuItems:menuItems];
 }
 
-
-
 -(void)backClick
 {
     [self loadDetailsDataToArray];
@@ -571,7 +565,6 @@
     [self presentViewController:navigation animated:YES completion:nil];
     
 }
-
 
 #pragma -保存生成的html代码写入到summary表中
 -(void)saveClick
@@ -655,9 +648,6 @@
     }
 }
 
-
-
-
 #pragma edit image function ----------------
 
 //更改图片
@@ -679,7 +669,6 @@
     [currentWebView stringByEvaluatingJavaScriptFromString:str];//js字符串通过这个方法传递到webview中的html并执行此js
     [self getHtmlCodeClick];
 }
-
 
 //获取webview中section里的heml代码
 - (void)getHtmlCodeClick {
@@ -717,7 +706,6 @@
 
     [actionSheet showInView:self.view];
 }
-
 
 - (void)showCamera
 {
@@ -788,8 +776,6 @@
 {
     [controller dismissViewControllerAnimated:YES completion:NULL];
 }
-
-
 
 #pragma mark --------------------------- addAudio ----------------------
 //点击录音按钮，弹出录音画面
@@ -872,7 +858,6 @@
     
     
 }
-
 
 #pragma ------------------- start record ---------------------
 -(void)startRecord{
@@ -1138,19 +1123,20 @@
 -(void)getTemplateNotification:(NSNotification *)sender{
     if ([sender.name isEqual:@"SelectedTemplate"])
     {
-        
+        [_pageControl removeFromSuperview];
+        _pageControl = nil;
+        [_scrollView removeFromSuperview];
+        _scrollView = nil;
         [self loadDetailsToArray];
-        _currentPage = _detailsArray.count-1;
+        _currentPage = _detailsArray.count;
         _totalPage = _detailsArray.count;
         [self initPageControl];
         [self initScrollView];
-        
+
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         
     }
 }
-
-
 
 #pragma mark- 自定义键盘
 #pragma mark - 给键盘添加观察者
