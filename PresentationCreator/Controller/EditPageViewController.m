@@ -152,7 +152,6 @@
         
         webView.delegate = self;
         
-        
         [self loadHtmlToWebView:webView];
         
         webView.backgroundColor = [UIColor purpleColor];
