@@ -236,7 +236,7 @@
     _pageControl.numberOfPages = _totalPage;
     _pageControl.currentPage = _totalPage-1;
     _pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
-    _pageControl.pageIndicatorTintColor = [UIColor grayColor];
+    _pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
     [self.view addSubview:_pageControl];
     //    }
     
