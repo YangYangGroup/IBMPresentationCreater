@@ -235,6 +235,8 @@
     _pageControl.center = CGPointMake(self.view.frame.size.width/2, 73);
     _pageControl.numberOfPages = _totalPage;
     _pageControl.currentPage = _totalPage-1;
+    _pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
+    _pageControl.pageIndicatorTintColor = [UIColor grayColor];
     [self.view addSubview:_pageControl];
     //    }
     
