@@ -28,7 +28,7 @@
 
 @implementation SelectTemplateViewController
 -(void)viewWillAppear:(BOOL)animated{
-    self.navigationItem.title = @"Select A Template";
+    self.navigationItem.title = @"Select Template";
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
