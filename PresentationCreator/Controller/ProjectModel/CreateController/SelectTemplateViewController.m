@@ -10,11 +10,12 @@
 #import "SelectTemplateCollectionViewCell.h"
 #import "CreationEditViewController.h"
 #import "ShowViewController.h"
+#import "TemplateModel.h"
+#import "ShowTemplateDetailsViewController.h"
 
 @interface SelectTemplateViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITextViewDelegate>
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) NSArray *imageArray;
-@property (nonatomic, strong) NSArray *titleArray;
+@property (nonatomic, strong) NSMutableArray *templateArray;
 
 @property (nonatomic, strong) NSMutableArray *detailsArray;//获取details表对象
 @property (nonatomic, strong) NSString *maxSummaryIdStr;//取summary表中最大的主键值
@@ -29,15 +30,14 @@
 @implementation SelectTemplateViewController
 -(void)viewWillAppear:(BOOL)animated{
     self.navigationItem.title = @"Select Template";
+//    self.parentViewController.tabBarController.tabBar.hidden = YES;
+    self.parentViewController.tabBarController.tabBar.hidden = NO;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+    self.templateArray = [DBDaoHelper queryAllTemplate];
     [self addCollectionView];
-    self.imageArray = [NSArray arrayWithObjects:[UIImage imageNamed:@"IMG_1"],[UIImage imageNamed:@"IMG_6"],nil];
-    
-    self.titleArray = [NSArray arrayWithObjects:@"First Template",@"Second Template", nil];
 }
 #pragma mark - CollectionView
 -(void)addCollectionView
@@ -62,7 +62,7 @@
 }
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.imageArray.count;
+    return self.templateArray.count;
 }
 //定义展示的Section的个数
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -74,8 +74,11 @@
 {
     static NSString *identify = @"cell";
     SelectTemplateCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
-    cell.imgView.image = [self.imageArray objectAtIndex:indexPath.item];
-    cell.titleLable.text = [self.titleArray objectAtIndex:indexPath.item];
+    
+    TemplateModel *tm = [[TemplateModel alloc]init];
+    tm = [self.templateArray objectAtIndex:indexPath.row];
+    cell.imgView.image = [UIImage imageNamed:tm.templateThumbNail];
+    cell.titleLable.text = tm.templateName;
     
     return cell;
 }
@@ -109,7 +112,17 @@
 //    creationVC.selectTemplateIndex = indexPath.item;
 //    [self.navigationController pushViewController:creationVC animated:YES];
     _selectTemplateIndex = indexPath.row;
-    [self addClick];
+    NSString *tmpTId = [NSString stringWithFormat:@"%ld",(long)self.selectTemplateIndex];
+    TemplateModel *tm = [[TemplateModel alloc]init];
+    tm = [self.templateArray objectAtIndex:indexPath.row];
+    
+    ShowTemplateDetailsViewController *showVC =
+                            [[ShowTemplateDetailsViewController alloc]init];
+    showVC.templateId = tm.templateId;
+   
+    [self.navigationController pushViewController:showVC animated:YES];
+    
+    //[self addClick];
     
 }
 
@@ -198,26 +211,10 @@
         [_titleViewControl removeFromSuperview];
         _titleViewControl = nil;
         self.navigationController.navigationBarHidden =NO;
+        NSString *tmpTId = [NSString stringWithFormat:@"%ld",(long)self.selectTemplateIndex];
+        TemplateDetailsModel *tdModel = [DBDaoHelper queryOneTemplateWithTemplateId:tmpTId];
         
-        if (self.selectTemplateIndex == 0) {
-            
-            //像details表添加2条数据 首页 尾页
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"1" HtmlCode:template_1 PageNumber:@"1"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"2" HtmlCode:template_2 PageNumber:@"2"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"3" HtmlCode:template_3 PageNumber:@"3"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"4" HtmlCode:template_4 PageNumber:@"4"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"5" HtmlCode:template_5 PageNumber:@"5"];
-        }else if (self.selectTemplateIndex == 1){
-            //像details表添加2条数据 首页 尾页
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"1" HtmlCode:template_1 PageNumber:@"1"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"6" HtmlCode:template_6 PageNumber:@"2"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"7" HtmlCode:template_7 PageNumber:@"3"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"8" HtmlCode:template_8 PageNumber:@"4"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"9" HtmlCode:template_9 PageNumber:@"5"];
-            //            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"5" HtmlCode:template_5 PageNumber:@"6"];
-            //        [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"5" HtmlCode:template_5 PageNumber:@"7"];
-        }
-        
+        [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:tmpTId TemplateDetailsId:tdModel.templateDetailsId HtmlCode:tdModel.templateHtml PageNumber:@"1"];
         
         ShowViewController *vc = [[ShowViewController alloc]init];
         

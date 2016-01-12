@@ -12,21 +12,25 @@
 #import "DetailsModel.h"
 #import "FilesModel.h"
 #import "SummaryModel.h"
+#import "TemplateDetailsModel.h"
 
 @interface DBDaoHelper : NSObject
 //创建数据库表
 +(BOOL)createAllTable;
 +(NSString *)selectTable;
 //插入html代码
-+(BOOL )insetIntoTemplateHtml:(NSString *)templateHtml;
++(BOOL )insertIntoTemplateDetailsHtml:(NSString *)templateHtml TemplateId:(NSString *)templateId;
 //向summary表中插入我的名字，返回最大的主键值
 +(NSString *)insertSummaryWithName:(NSString *)name;
 //查询table数组内容
 +(NSMutableArray *)selectTableArray;
 //查询创作页面数组内容
 +(NSString *)selectCreationPageString:(NSString *)templateId;
-//插入TABLE_TEMPLATE的html代码
-+(BOOL)insertHtmlToDetailsSummaryIdWith:(NSString *)summaryid TemplateId:(NSString *)templateid HtmlCode:(NSString *)htmlcode PageNumber:(NSString *)pagenumber;
+//插入TABLE_TEMPLATE_DETAILS的html代码
++(BOOL)insertHtmlToDetailsSummaryIdWith:(NSString *)summaryId TemplateId:(NSString *)templateId TemplateDetailsId:(NSString *)templateDetailsId HtmlCode:(NSString *)htmlCode PageNumber:(NSString *)pageNumber;
+//插入template 的代码
++(NSString *)insertIntoTemplateWithTemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)image TemplateType:(NSString *)type;
+
 // 根据summary id 查询 PPT_PRODUCT_DETAILS 表中对应的结果集
 +(NSMutableArray *)selectDetailsDataBySummaryId:(NSString *)summaryId;
 
@@ -84,4 +88,12 @@
 +(BOOL)deleteFileByFileId:(NSString *)filedId;
 // 根据summary id 查询 product status
 +(NSString *)queryProductStatusBySummaryId:(NSString *)summaryId;
+
+//查询template details 表的数据 根据template id
++(NSMutableArray *)queryTemplateDetailsWithTemplateId:(NSString *)templateId;
+//查询 所有 的 template
++(NSMutableArray *)queryAllTemplate;
+//查询首页的template detail
++(TemplateDetailsModel *)queryOneTemplateWithTemplateId:(NSString *)templateId;
+
 @end

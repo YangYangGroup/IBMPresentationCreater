@@ -77,7 +77,7 @@
         [DBDaoHelper updatePageNumberToMaxNumber:self.maxSummaryIdStr pageNumber:maxPageNumber];
         
         //等待修改 插入
-        [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:self.returnTempleIdStr HtmlCode:htmlStr PageNumber:maxPageNumber];
+//        [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:self.returnTempleIdStr HtmlCode:htmlStr PageNumber:maxPageNumber];
     }
 }
 -(void)dealloc
@@ -183,24 +183,7 @@
         _titleViewControl = nil;
         self.navigationController.navigationBarHidden =NO;
         
-        if (self.selectTemplateIndex == 0) {
-            
-            //像details表添加2条数据 首页 尾页
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"1" HtmlCode:template_1 PageNumber:@"1"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"2" HtmlCode:template_2 PageNumber:@"2"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"3" HtmlCode:template_3 PageNumber:@"3"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"4" HtmlCode:template_4 PageNumber:@"4"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"5" HtmlCode:template_5 PageNumber:@"5"];
-        }else if (self.selectTemplateIndex == 1){
-            //像details表添加2条数据 首页 尾页
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"1" HtmlCode:template_1 PageNumber:@"1"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"6" HtmlCode:template_6 PageNumber:@"2"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"7" HtmlCode:template_7 PageNumber:@"3"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"8" HtmlCode:template_8 PageNumber:@"4"];
-            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"9" HtmlCode:template_9 PageNumber:@"5"];
-//            [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"5" HtmlCode:template_5 PageNumber:@"6"];
-            //        [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"5" HtmlCode:template_5 PageNumber:@"7"];
-        }
+       
         
         
         ShowViewController *vc = [[ShowViewController alloc]init];

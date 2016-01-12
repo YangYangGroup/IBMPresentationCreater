@@ -153,6 +153,10 @@
 		BA2BEFD11BFF2D1100718E43 /* checkbox_unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = BA2BEFCF1BFF2D1100718E43 /* checkbox_unchecked.png */; };
 		BA2BEFD41BFF2D7D00718E43 /* AudioListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA2BEFD31BFF2D7D00718E43 /* AudioListCell.m */; };
 		BA35A6651C15ADA6007FF0E2 /* EditPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA35A6641C15ADA6007FF0E2 /* EditPageViewController.m */; };
+		BA4216881C43A28400547ADC /* TemplateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA4216871C43A28400547ADC /* TemplateModel.m */; };
+		BA42168B1C43A29C00547ADC /* TemplateDetailsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA42168A1C43A29C00547ADC /* TemplateDetailsModel.m */; };
+		BA6AF50D1C43D2C300D5A866 /* ShowTemplateDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA6AF50C1C43D2C300D5A866 /* ShowTemplateDetailsViewController.m */; };
+		BA6AF5101C43DABF00D5A866 /* TemplateDetailsCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA6AF50F1C43DABF00D5A866 /* TemplateDetailsCollectionViewCell.m */; };
 		BA7BBFF01C058C050033F37A /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = BA7BBFEF1C058C050033F37A /* KxMenu.m */; };
 		BA8A27E91C0D14F200187DA9 /* AudioListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8A27E71C0D14F200187DA9 /* AudioListViewController.m */; };
 		BA8A27EA1C0D14F200187DA9 /* AudioListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA8A27E81C0D14F200187DA9 /* AudioListViewController.xib */; };
@@ -392,6 +396,14 @@
 		BA2BEFD31BFF2D7D00718E43 /* AudioListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioListCell.m; sourceTree = "<group>"; };
 		BA35A6631C15ADA6007FF0E2 /* EditPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditPageViewController.h; sourceTree = "<group>"; };
 		BA35A6641C15ADA6007FF0E2 /* EditPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditPageViewController.m; sourceTree = "<group>"; };
+		BA4216861C43A28400547ADC /* TemplateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateModel.h; sourceTree = "<group>"; };
+		BA4216871C43A28400547ADC /* TemplateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateModel.m; sourceTree = "<group>"; };
+		BA4216891C43A29C00547ADC /* TemplateDetailsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateDetailsModel.h; sourceTree = "<group>"; };
+		BA42168A1C43A29C00547ADC /* TemplateDetailsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateDetailsModel.m; sourceTree = "<group>"; };
+		BA6AF50B1C43D2C300D5A866 /* ShowTemplateDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowTemplateDetailsViewController.h; sourceTree = "<group>"; };
+		BA6AF50C1C43D2C300D5A866 /* ShowTemplateDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowTemplateDetailsViewController.m; sourceTree = "<group>"; };
+		BA6AF50E1C43DABF00D5A866 /* TemplateDetailsCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateDetailsCollectionViewCell.h; sourceTree = "<group>"; };
+		BA6AF50F1C43DABF00D5A866 /* TemplateDetailsCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateDetailsCollectionViewCell.m; sourceTree = "<group>"; };
 		BA7BBFEE1C058C050033F37A /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
 		BA7BBFEF1C058C050033F37A /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
 		BA8A27E61C0D14F200187DA9 /* AudioListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioListViewController.h; sourceTree = "<group>"; };
@@ -637,6 +649,8 @@
 				16312F791BC608CB00EE9D86 /* AddPageCollectionViewCell.m */,
 				16350CDC1BD7B9DC005C1291 /* SelectTemplateCollectionViewCell.h */,
 				16350CDD1BD7B9DC005C1291 /* SelectTemplateCollectionViewCell.m */,
+				BA6AF50E1C43DABF00D5A866 /* TemplateDetailsCollectionViewCell.h */,
+				BA6AF50F1C43DABF00D5A866 /* TemplateDetailsCollectionViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -837,6 +851,10 @@
 				1628E7751BE9E1C300D6200A /* FilesModel.m */,
 				BA8DC51F1C032EE3005CBB73 /* SummaryModel.h */,
 				BA8DC5201C032EE3005CBB73 /* SummaryModel.m */,
+				BA4216861C43A28400547ADC /* TemplateModel.h */,
+				BA4216871C43A28400547ADC /* TemplateModel.m */,
+				BA4216891C43A29C00547ADC /* TemplateDetailsModel.h */,
+				BA42168A1C43A29C00547ADC /* TemplateDetailsModel.m */,
 			);
 			name = ProjectModel;
 			path = ../../Controller/ProjectModel;
@@ -848,6 +866,8 @@
 				16350CD71BD7B6C0005C1291 /* SelectTemplateViewController.h */,
 				16350CD81BD7B6C0005C1291 /* SelectTemplateViewController.m */,
 				16350CD91BD7B6C0005C1291 /* SelectTemplateViewController.xib */,
+				BA6AF50B1C43D2C300D5A866 /* ShowTemplateDetailsViewController.h */,
+				BA6AF50C1C43D2C300D5A866 /* ShowTemplateDetailsViewController.m */,
 				163484461BCBE57C002DB6AD /* CreationEditViewController.h */,
 				163484471BCBE57C002DB6AD /* CreationEditViewController.m */,
 				163484481BCBE57C002DB6AD /* CreationEditViewController.xib */,
@@ -1125,13 +1145,16 @@
 				1628E78B1BE9F8F200D6200A /* AFHTTPRequestOperation.m in Sources */,
 				BA8A27E91C0D14F200187DA9 /* AudioListViewController.m in Sources */,
 				16335CCA1BF476A300DD1DB7 /* PECropViewController.m in Sources */,
+				BA6AF5101C43DABF00D5A866 /* TemplateDetailsCollectionViewCell.m in Sources */,
 				1646CCF31BF0DDD80051BA4A /* LoadingHelper.m in Sources */,
 				1657BBF81BF83F61000C83C0 /* SBJsonStreamWriterAccumulator.m in Sources */,
 				16312F7A1BC608CB00EE9D86 /* AddPageCollectionViewCell.m in Sources */,
 				162A37B21BBA81BA0069D9BB /* ViewController.m in Sources */,
 				1662C4C71BCE7E5E002764EF /* AddEditViewController.m in Sources */,
+				BA42168B1C43A29C00547ADC /* TemplateDetailsModel.m in Sources */,
 				16335CCB1BF476A300DD1DB7 /* PEResizeControl.m in Sources */,
 				1657BBF71BF83F61000C83C0 /* SBJsonStreamWriter.m in Sources */,
+				BA4216881C43A28400547ADC /* TemplateModel.m in Sources */,
 				16DE71311BD535FD009921B9 /* EditNowViewController.m in Sources */,
 				163130331BC7E1DD00EE9D86 /* FMDatabase.m in Sources */,
 				BA35A6651C15ADA6007FF0E2 /* EditPageViewController.m in Sources */,
@@ -1174,6 +1197,7 @@
 				163484401BCA4D2F002DB6AD /* DBDaoHelper.m in Sources */,
 				BA8DC5211C032EE3005CBB73 /* SummaryModel.m in Sources */,
 				163130371BC7E1DD00EE9D86 /* FMResultSet.m in Sources */,
+				BA6AF50D1C43D2C300D5A866 /* ShowTemplateDetailsViewController.m in Sources */,
 				1646CCEF1BF0DD000051BA4A /* MBProgressHUD.m in Sources */,
 				16350CDA1BD7B6C0005C1291 /* SelectTemplateViewController.m in Sources */,
 				163130501BC7F1AF00EE9D86 /* DBHelper.m in Sources */,

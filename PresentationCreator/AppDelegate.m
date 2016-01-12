@@ -31,15 +31,19 @@
     [DBDaoHelper createAllTable];
     NSString *firstStr = [DBDaoHelper selectTable];
     if (firstStr == NULL) {
-        [DBDaoHelper insetIntoTemplateHtml:template_1];
-        [DBDaoHelper insetIntoTemplateHtml:template_2];
-        [DBDaoHelper insetIntoTemplateHtml:template_3];
-        [DBDaoHelper insetIntoTemplateHtml:template_4];
-        [DBDaoHelper insetIntoTemplateHtml:template_5];
-        [DBDaoHelper insetIntoTemplateHtml:template_6];
-        [DBDaoHelper insetIntoTemplateHtml:template_7];
-        [DBDaoHelper insetIntoTemplateHtml:template_8];
-        [DBDaoHelper insetIntoTemplateHtml:template_9];
+        NSString *templateId = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_1" TemplateThumbnail:@"IMG_1.png" TemplateType:@"0"];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_1 TemplateId:templateId];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_2 TemplateId:templateId];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_3 TemplateId:templateId];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_4 TemplateId:templateId];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_5 TemplateId:templateId];
+        
+         NSString *templateId2 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_2" TemplateThumbnail:@"IMG_6.png" TemplateType:@"0"];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_6 TemplateId:templateId2];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_7 TemplateId:templateId2];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_8 TemplateId:templateId2];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_9 TemplateId:templateId2];
+       
     }
     
     ViewController *viewVC = [[ViewController alloc]init];

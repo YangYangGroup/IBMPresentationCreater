@@ -9,20 +9,24 @@
 #import "DBDaoHelper.h"
 #import "Global.h"
 #import "SummaryModel.h"
+#import "TemplateDetailsModel.h"
+#import "TemplateModel.h"
 
 @implementation DBDaoHelper
 //创建所有的数据库表
 +(BOOL)createAllTable{
     FMDatabase *db =[DBHelper openDatabase];
-    BOOL result1 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_TEMPLATE'('template_id'INTEGER PRIMARY KEY AUTOINCREMENT,'template_html'varchar)"];
+    BOOL result1 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_TEMPLATE_DETAILS'('template_details_id'INTEGER PRIMARY KEY AUTOINCREMENT,'template_id'INTEGER,'template_html'varchar)"];
     //summary_name tableview创建ppt的名称 content_html最终生成的总的用于演示的html代码
     BOOL result2 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_SUMMARY'('summary_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_name'varchar,'content_html'varchar,'product_url'varchar,'product_status'varchar,'created_ts'datetime)"];
     //details_id主键 summary_id 外键关联到PPT_PRODUCT_SUMMARY表的主键 template_id关联到PPT_PRODUCT_template表的主键
-    BOOL result3 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_DETAILS'('details_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_id'integer,'template_id'integer,'html_code'varchar,'page_number'integer,'file_id'INTEGER )"];
+    BOOL result3 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_DETAILS'('details_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_id'integer,'template_id'integer,'template_details_id'integer,'html_code'varchar,'page_number'integer,'file_id'INTEGER )"];
     
     BOOL result4 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_FILES'('file_id'INTEGER PRIMARY KEY AUTOINCREMENT,'details_id'integer,'summary_id'integer,'file_path'varchar,'file_type'varchar)"];
+    BOOL result5 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_TEMPLATE'('template_id'INTEGER PRIMARY KEY AUTOINCREMENT,'template_name'varchar,'template_thumbnail'varchar,'template_type'varchar,'created_ts'datetime)"];
+    
     [db close];
-    if (result1&&result2&&result3&&result4) {
+    if (result1&&result2&&result3&&result4&&result5) {
         return YES;
     }else{
         return NO;
@@ -43,14 +47,33 @@
     [db close];
     return nil;
 }
-//插入html代码
-+(BOOL )insetIntoTemplateHtml:(NSString *)templateHtml
+//插入template details 的 html 代码
++(BOOL )insertIntoTemplateDetailsHtml:(NSString *)templateHtml TemplateId:(NSString *)templateId
 {
     FMDatabase *db = [DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_TEMPLATE'('template_html') values(?)",templateHtml];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_TEMPLATE_DETAILS'('template_html','template_id') values(?,?)",templateHtml,templateId];
     [db close];
     return result;
 }
+//插入template 的代码
++(NSString *)insertIntoTemplateWithTemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)image TemplateType:(NSString *)type
+{
+    FMDatabase *db = [DBHelper openDatabase];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_TEMPLATE'('template_name','template_thumbnail','template_type','created_ts') values(?,?,?,datetime('now','localtime'))",templateName,image,type];
+    if (result) {
+        FMResultSet *result1 = [db executeQuery:@"SELECT  MAX(TEMPLATE_ID) FROM PPT_PRODUCT_TEMPLATE"];
+        
+        while (result1.next)
+        {
+            NSString *str = [result1 stringForColumnIndex:0];
+            [db close];
+            return str;
+        }
+    }
+    [db close];
+    return nil;
+}
+
 //向summary表中插入我的名字，返回最大的主键值
 +(NSString *)insertSummaryWithName:(NSString *)name{
     FMDatabase *db =[DBHelper openDatabase];
@@ -89,6 +112,9 @@
     [db close];
     return array;
 }
+
+
+
 //查询创作页面数组内容
 +(NSString *)selectCreationPageString:(NSString *)templateId
 {
@@ -109,10 +135,10 @@
 }
 
 //插入TABLE_TEMPLATE的html代码
-+(BOOL)insertHtmlToDetailsSummaryIdWith:(NSString *)summaryid TemplateId:(NSString *)templateid HtmlCode:(NSString *)htmlcode PageNumber:(NSString *)pagenumber{
++(BOOL)insertHtmlToDetailsSummaryIdWith:(NSString *)summaryId TemplateId:(NSString *)templateId TemplateDetailsId:(NSString *)templateDetailsId HtmlCode:(NSString *)htmlCode PageNumber:(NSString *)pageNumber{
     
     FMDatabase *db =[DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_DETAILS'('summary_id','template_id','html_code','page_number') values (?,?,?,?)", summaryid, templateid, htmlcode, pagenumber];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_DETAILS'('summary_id','template_id','template_details_id','html_code','page_number') values (?,?,?,?)", summaryId, templateId,templateDetailsId, htmlCode, pageNumber];
     [db close];
     return result;
 }
@@ -508,5 +534,73 @@
     }
     [db close];
     return nil;
+}
+
+//查询template details 表的数据 根据template id
++(NSMutableArray *)queryTemplateDetailsWithTemplateId:(NSString *)templateId
+{
+    FMDatabase *db =[DBHelper openDatabase];
+    //执行查询语句
+    FMResultSet *result = [db executeQuery:@"select * from PPT_PRODUCT_TEMPLATE_DETAILS where template_id = ?",templateId];
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    //当下边还有分类的时候执行
+    while (result.next)
+    {
+        //根据列名取出分类信息存到对象中以对象返回
+        TemplateDetailsModel *model = [[TemplateDetailsModel alloc]init];
+        model.templateId = templateId;
+        model.templateDetailsId = [result stringForColumn:@"template_details_id"];
+        model.templateHtml = [result stringForColumn:@"template_html"];
+        
+        [array addObject:model];
+    }
+    [db close];
+    return array;
+}
+
+
+//查询 所有 的 template
++(NSMutableArray *)queryAllTemplate
+{
+    FMDatabase *db =[DBHelper openDatabase];
+    //执行查询语句
+    FMResultSet *result = [db executeQuery:@"select * from PPT_PRODUCT_TEMPLATE order by created_ts desc"];
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    //当下边还有分类的时候执行
+    while (result.next)
+    {
+        //根据列名取出分类信息存到对象中以对象返回
+        TemplateModel *model = [[TemplateModel alloc]init];
+        model.templateId = [result stringForColumn:@"template_id"];
+        model.templateName = [result stringForColumn:@"template_name"];
+        model.templateThumbNail = [result stringForColumn:@"template_thumbnail"];
+        model.templateType = [result stringForColumn:@"template_type"];
+        model.createdTS = [result stringForColumn:@"created_ts"];
+        
+        [array addObject:model];
+    }
+    [db close];
+    return array;
+}
+//查询首页的template detail
++(NSMutableArray *)queryTemplateWithTemplateId:(NSString *)templateId
+{
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    FMDatabase *db =[DBHelper openDatabase];
+    //执行查询语句
+    FMResultSet *result = [db executeQuery:@"select * from PPT_PRODUCT_TEMPLATE_details where template_id = ? order by template_details_id",templateId];
+    //当下边还有分类的时候执行
+    while (result.next)
+    {
+        //根据列名取出分类信息存到对象中以对象返回
+        TemplateDetailsModel *model = [[TemplateDetailsModel alloc]init];
+        model.templateId = templateId;
+        model.templateHtml = [result stringForColumn:@"template_html"];
+        model.templateDetailsId = [result stringForColumn:@"template_details_id"];
+        
+        [array addObject:model];
+    }
+    [db close];
+    return array;
 }
 @end
