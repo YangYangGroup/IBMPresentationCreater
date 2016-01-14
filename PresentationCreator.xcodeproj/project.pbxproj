@@ -159,9 +159,15 @@
 		BA6AF5101C43DABF00D5A866 /* TemplateDetailsCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA6AF50F1C43DABF00D5A866 /* TemplateDetailsCollectionViewCell.m */; };
 		BA7664141C452092003E37B3 /* SelectTemplateForEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA7664121C452092003E37B3 /* SelectTemplateForEditViewController.m */; };
 		BA7664151C452092003E37B3 /* SelectTemplateForEditViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA7664131C452092003E37B3 /* SelectTemplateForEditViewController.xib */; };
-		BA76641E1C4692AA003E37B3 /* SynchroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA76641C1C4692AA003E37B3 /* SynchroViewController.m */; };
-		BA76641F1C4692AA003E37B3 /* SynchroViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA76641D1C4692AA003E37B3 /* SynchroViewController.xib */; };
 		BA7BBFF01C058C050033F37A /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = BA7BBFEF1C058C050033F37A /* KxMenu.m */; };
+		BA8012911C476E06005F1D86 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA80128F1C476E06005F1D86 /* SettingsViewController.m */; };
+		BA8012921C476E06005F1D86 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA8012901C476E06005F1D86 /* SettingsViewController.xib */; };
+		BA8012981C47726F005F1D86 /* download-1.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8012931C47726F005F1D86 /* download-1.png */; };
+		BA8012991C47726F005F1D86 /* download-2.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8012941C47726F005F1D86 /* download-2.png */; };
+		BA80129A1C47726F005F1D86 /* download-3.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8012951C47726F005F1D86 /* download-3.png */; };
+		BA80129B1C47726F005F1D86 /* download-4.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8012961C47726F005F1D86 /* download-4.png */; };
+		BA80129F1C4775A9005F1D86 /* SynchronizeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA80129E1C4775A9005F1D86 /* SynchronizeTableViewCell.m */; };
+		BA8012A11C4784B4005F1D86 /* Synchronize-1.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8012A01C4784B4005F1D86 /* Synchronize-1.png */; };
 		BA8A27E91C0D14F200187DA9 /* AudioListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8A27E71C0D14F200187DA9 /* AudioListViewController.m */; };
 		BA8A27EA1C0D14F200187DA9 /* AudioListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA8A27E81C0D14F200187DA9 /* AudioListViewController.xib */; };
 		BA8DC5211C032EE3005CBB73 /* SummaryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8DC5201C032EE3005CBB73 /* SummaryModel.m */; };
@@ -411,11 +417,18 @@
 		BA7664111C452092003E37B3 /* SelectTemplateForEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTemplateForEditViewController.h; sourceTree = "<group>"; };
 		BA7664121C452092003E37B3 /* SelectTemplateForEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTemplateForEditViewController.m; sourceTree = "<group>"; };
 		BA7664131C452092003E37B3 /* SelectTemplateForEditViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectTemplateForEditViewController.xib; sourceTree = "<group>"; };
-		BA76641B1C4692AA003E37B3 /* SynchroViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynchroViewController.h; sourceTree = "<group>"; };
-		BA76641C1C4692AA003E37B3 /* SynchroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SynchroViewController.m; sourceTree = "<group>"; };
-		BA76641D1C4692AA003E37B3 /* SynchroViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SynchroViewController.xib; sourceTree = "<group>"; };
 		BA7BBFEE1C058C050033F37A /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
 		BA7BBFEF1C058C050033F37A /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
+		BA80128E1C476E06005F1D86 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		BA80128F1C476E06005F1D86 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		BA8012901C476E06005F1D86 /* SettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
+		BA8012931C47726F005F1D86 /* download-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download-1.png"; sourceTree = "<group>"; };
+		BA8012941C47726F005F1D86 /* download-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download-2.png"; sourceTree = "<group>"; };
+		BA8012951C47726F005F1D86 /* download-3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download-3.png"; sourceTree = "<group>"; };
+		BA8012961C47726F005F1D86 /* download-4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download-4.png"; sourceTree = "<group>"; };
+		BA80129D1C4775A9005F1D86 /* SynchronizeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynchronizeTableViewCell.h; sourceTree = "<group>"; };
+		BA80129E1C4775A9005F1D86 /* SynchronizeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SynchronizeTableViewCell.m; sourceTree = "<group>"; };
+		BA8012A01C4784B4005F1D86 /* Synchronize-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Synchronize-1.png"; sourceTree = "<group>"; };
 		BA8A27E61C0D14F200187DA9 /* AudioListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioListViewController.h; sourceTree = "<group>"; };
 		BA8A27E71C0D14F200187DA9 /* AudioListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioListViewController.m; sourceTree = "<group>"; };
 		BA8A27E81C0D14F200187DA9 /* AudioListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioListViewController.xib; sourceTree = "<group>"; };
@@ -569,6 +582,11 @@
 		162A37B71BBA856D0069D9BB /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				BA8012A01C4784B4005F1D86 /* Synchronize-1.png */,
+				BA8012931C47726F005F1D86 /* download-1.png */,
+				BA8012941C47726F005F1D86 /* download-2.png */,
+				BA8012951C47726F005F1D86 /* download-3.png */,
+				BA8012961C47726F005F1D86 /* download-4.png */,
 				16E538BC1C0C6C070069B5C6 /* audio@2x.png */,
 				16E538BA1C0C4F360069B5C6 /* moments@2x.png */,
 				1632FEF51C0AF8CB00DBFA1A /* SMS@2x.png */,
@@ -630,9 +648,9 @@
 				BA8A27E81C0D14F200187DA9 /* AudioListViewController.xib */,
 				BA35A6631C15ADA6007FF0E2 /* EditPageViewController.h */,
 				BA35A6641C15ADA6007FF0E2 /* EditPageViewController.m */,
-				BA76641B1C4692AA003E37B3 /* SynchroViewController.h */,
-				BA76641C1C4692AA003E37B3 /* SynchroViewController.m */,
-				BA76641D1C4692AA003E37B3 /* SynchroViewController.xib */,
+				BA80128E1C476E06005F1D86 /* SettingsViewController.h */,
+				BA80128F1C476E06005F1D86 /* SettingsViewController.m */,
+				BA8012901C476E06005F1D86 /* SettingsViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -664,6 +682,8 @@
 				16350CDD1BD7B9DC005C1291 /* SelectTemplateCollectionViewCell.m */,
 				BA6AF50E1C43DABF00D5A866 /* TemplateDetailsCollectionViewCell.h */,
 				BA6AF50F1C43DABF00D5A866 /* TemplateDetailsCollectionViewCell.m */,
+				BA80129D1C4775A9005F1D86 /* SynchronizeTableViewCell.h */,
+				BA80129E1C4775A9005F1D86 /* SynchronizeTableViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1072,15 +1092,18 @@
 				16DE703B1BCF9897009921B9 /* PreviewViewController.xib in Resources */,
 				163420EF1BD6777A006CBC87 /* template_4.html in Resources */,
 				163420ED1BD6777A006CBC87 /* template_2.html in Resources */,
+				BA8012921C476E06005F1D86 /* SettingsViewController.xib in Resources */,
 				163420E91BD6777A006CBC87 /* swiper.min.js in Resources */,
 				163420F11BD6777A006CBC87 /* template_6.html in Resources */,
 				1631DEDA1BFDE8BB005B0116 /* RecordingSignal003.png in Resources */,
 				163420E81BD6777A006CBC87 /* swiper.animate.min.js in Resources */,
 				163421041BD6866D006CBC87 /* IMG_5.png in Resources */,
 				1631DED81BFDE8BB005B0116 /* RecordingSignal001.png in Resources */,
+				BA80129B1C47726F005F1D86 /* download-4.png in Resources */,
 				163420FF1BD6777A006CBC87 /* Picture1.png in Resources */,
 				16E538BB1C0C4F360069B5C6 /* moments@2x.png in Resources */,
 				162A37B31BBA81BA0069D9BB /* ViewController.xib in Resources */,
+				BA8012A11C4784B4005F1D86 /* Synchronize-1.png in Resources */,
 				1632FEFB1C0AF8CB00DBFA1A /* friend@2x.png in Resources */,
 				166C04971BC5782100A9EFB3 /* AddPageViewController.xib in Resources */,
 				1632FEFA1C0AF8CB00DBFA1A /* safari@2x.png in Resources */,
@@ -1100,8 +1123,8 @@
 				163420E51BD6777A006CBC87 /* index.html in Resources */,
 				163420EE1BD6777A006CBC87 /* template_3.html in Resources */,
 				1632FEF21C05D5DB00DBFA1A /* back@2x.png in Resources */,
-				BA76641F1C4692AA003E37B3 /* SynchroViewController.xib in Resources */,
 				163420FA1BD6777A006CBC87 /* img2.jpg in Resources */,
+				BA8012991C47726F005F1D86 /* download-2.png in Resources */,
 				163420F01BD6777A006CBC87 /* template_5.html in Resources */,
 				16DE70351BCF4A00009921B9 /* my_ppt@2x.png in Resources */,
 				163420E61BD6777A006CBC87 /* jquery-1.10.1.min.js in Resources */,
@@ -1135,7 +1158,9 @@
 				163130421BC7E65500EE9D86 /* IMG_6.png in Resources */,
 				1632FEF91C0AF8CB00DBFA1A /* SMS@2x.png in Resources */,
 				16DE71321BD535FD009921B9 /* EditNowViewController.xib in Resources */,
+				BA80129A1C47726F005F1D86 /* download-3.png in Resources */,
 				163420E71BD6777A006CBC87 /* swiper.3.1.2.jquery.min.js in Resources */,
+				BA8012981C47726F005F1D86 /* download-1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1172,6 +1197,7 @@
 				BA42168B1C43A29C00547ADC /* TemplateDetailsModel.m in Sources */,
 				16335CCB1BF476A300DD1DB7 /* PEResizeControl.m in Sources */,
 				1657BBF71BF83F61000C83C0 /* SBJsonStreamWriter.m in Sources */,
+				BA8012911C476E06005F1D86 /* SettingsViewController.m in Sources */,
 				BA4216881C43A28400547ADC /* TemplateModel.m in Sources */,
 				16DE71311BD535FD009921B9 /* EditNowViewController.m in Sources */,
 				163130331BC7E1DD00EE9D86 /* FMDatabase.m in Sources */,
@@ -1183,7 +1209,6 @@
 				16DE703A1BCF9897009921B9 /* PreviewViewController.m in Sources */,
 				1628E7931BE9F8F200D6200A /* AFURLSessionManager.m in Sources */,
 				1657BBFA1BF83F61000C83C0 /* SBJsonTokeniser.m in Sources */,
-				BA76641E1C4692AA003E37B3 /* SynchroViewController.m in Sources */,
 				163484491BCBE57C002DB6AD /* CreationEditViewController.m in Sources */,
 				1628E78F1BE9F8F200D6200A /* AFSecurityPolicy.m in Sources */,
 				1628E7921BE9F8F200D6200A /* AFURLResponseSerialization.m in Sources */,
@@ -1218,6 +1243,7 @@
 				BA8DC5211C032EE3005CBB73 /* SummaryModel.m in Sources */,
 				163130371BC7E1DD00EE9D86 /* FMResultSet.m in Sources */,
 				BA6AF50D1C43D2C300D5A866 /* ShowTemplateDetailsViewController.m in Sources */,
+				BA80129F1C4775A9005F1D86 /* SynchronizeTableViewCell.m in Sources */,
 				1646CCEF1BF0DD000051BA4A /* MBProgressHUD.m in Sources */,
 				16350CDA1BD7B6C0005C1291 /* SelectTemplateViewController.m in Sources */,
 				163130501BC7F1AF00EE9D86 /* DBHelper.m in Sources */,

@@ -12,7 +12,7 @@
 #import "Global.h"
 #import "CreationEditViewController.h"
 #import "SelectTemplateViewController.h"
-#import "SynchroViewController.h"
+#import "SettingsViewController.h"
 
 @interface AppDelegate ()<UITabBarControllerDelegate,UITabBarDelegate>
 {
@@ -87,7 +87,7 @@
     _tabVc.delegate = self;
     
     // init sync tab
-    SynchroViewController *snycVC = [[SynchroViewController alloc]init];
+    SettingsViewController *snycVC = [[SettingsViewController alloc]init];
     _thirdNav = [[UINavigationController alloc]initWithRootViewController:snycVC];
     // set word and image for third tab item
     UITabBarItem *thirdItem = [[UITabBarItem alloc]initWithTitle:@"Settings" image:[UIImage imageNamed:@"set"] selectedImage:[UIImage imageNamed:@"set"]];
