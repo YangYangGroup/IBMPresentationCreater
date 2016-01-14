@@ -120,7 +120,7 @@
 {
     FMDatabase *db =[DBHelper openDatabase];
     //执行查询语句
-    NSString *sql = [NSString stringWithFormat:@"select * from 'PPT_PRODUCT_TEMPLATE' where template_id =%@",templateId];
+    NSString *sql = [NSString stringWithFormat:@"select * from 'PPT_PRODUCT_TEMPLATE_DETAILS' where template_details_id =%@",templateId];
     FMResultSet *result = [db executeQuery:sql];
     //当下边还有分类的时候执行
     while (result.next)
@@ -138,7 +138,7 @@
 +(BOOL)insertHtmlToDetailsSummaryIdWith:(NSString *)summaryId TemplateId:(NSString *)templateId TemplateDetailsId:(NSString *)templateDetailsId HtmlCode:(NSString *)htmlCode PageNumber:(NSString *)pageNumber{
     
     FMDatabase *db =[DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_DETAILS'('summary_id','template_id','template_details_id','html_code','page_number') values (?,?,?,?)", summaryId, templateId,templateDetailsId, htmlCode, pageNumber];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_DETAILS'('summary_id','template_id','template_details_id','html_code','page_number') values (?,?,?,?,?)", summaryId, templateId,templateDetailsId, htmlCode, pageNumber];
     [db close];
     return result;
 }

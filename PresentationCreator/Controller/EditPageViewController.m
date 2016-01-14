@@ -13,6 +13,7 @@
 #import "AddPageViewController.h"
 #import "PECropViewController.h"
 #import "AudioListViewController.h"
+#import "SelectTemplateForEditViewController.h"
 
 @interface EditPageViewController ()<UIWebViewDelegate,UIScrollViewDelegate,UITextViewDelegate>
 @property (nonatomic, strong) NSMutableArray *detailsArray;//获取details表对象
@@ -559,12 +560,21 @@
 -(void)addPageClick
 {
     //模态跳转
-    AddPageViewController *loginVC = [[AddPageViewController alloc]init];
-    loginVC.showSummaryIdStr = self.showSummaryIdStr;
+//    AddPageViewController *loginVC = [[AddPageViewController alloc]init];
+//    loginVC.showSummaryIdStr = self.showSummaryIdStr;
+//    
+//    UINavigationController * navigation = [[UINavigationController alloc]initWithRootViewController:loginVC];
+//    
+//    [self presentViewController:navigation animated:YES completion:nil];
     
-    UINavigationController * navigation = [[UINavigationController alloc]initWithRootViewController:loginVC];
+    NSLog(@"add page////");
+    SelectTemplateForEditViewController *selectVC = [[SelectTemplateForEditViewController alloc]init];
+    selectVC.showSummaryIdStr = self.showSummaryIdStr;
+    
+    UINavigationController *navigation = [[UINavigationController alloc]initWithRootViewController:selectVC];
     
     [self presentViewController:navigation animated:YES completion:nil];
+
     
 }
 

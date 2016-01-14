@@ -32,6 +32,7 @@
 
 -(void)addNavigation
 {
+    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     self.parentViewController.tabBarController.tabBar.hidden = YES;
     self.navigationItem.title=@"Select Page";
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -50,7 +51,7 @@
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];//横竖滚动样式
     
     self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 64, KScreenWidth, KScreenHeight-64) collectionViewLayout:flowLayout];
-    self.collectionView.backgroundColor = [UIColor lightGrayColor];
+    self.collectionView.backgroundColor = [UIColor colorWithRed:220/255.f green:220/255.f blue:220/255.f alpha:1.0];
     
     //设置代理
     self.collectionView.delegate = self;
@@ -84,6 +85,8 @@
     NSURL *baseURL = [NSURL fileURLWithPath:path];
     [cell.webView loadHTMLString:tdModel.templateHtml baseURL:baseURL];
     [cell.webView setScalesPageToFit:YES];
+//    cell.maskView.tag = (NSInteger)tdModel.templateDetailsId;
+    
     return cell;
 }
 
@@ -107,10 +110,32 @@
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     return 0;
 }
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath{
+    TemplateDetailsModel *tdm = [[TemplateDetailsModel alloc]init];
+    tdm = [self.templateDetailsArray objectAtIndex:indexPath.row];
+    NSLog(@"you selected template is:%@", tdm.templateDetailsId);
+    
+    
+    // 根据 summary id 查询最大的 page number
+    NSString *maxPageNumber = [DBDaoHelper getMaxPageNumber:self.showSummaryIdStr];
+    
+    // 根据summary id 修改最后一页的page number 为最大的page number
+    [DBDaoHelper updatePageNumberToMaxNumber:self.showSummaryIdStr pageNumber:maxPageNumber];
+    
+    //等待修改 插入
+     [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.showSummaryIdStr TemplateId:tdm.templateId TemplateDetailsId:tdm.templateDetailsId HtmlCode:tdm.templateHtml PageNumber:maxPageNumber];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedTemplate" object:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+    
+    
+    [self dismissViewControllerAnimated:YES completion:^{}];
+}
 
 -(void)backClick{
     [self.navigationController popViewControllerAnimated:YES];
-//    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+
 }
 
 - (void)didReceiveMemoryWarning {

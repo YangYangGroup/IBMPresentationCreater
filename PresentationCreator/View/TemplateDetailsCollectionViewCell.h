@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface TemplateDetailsCollectionViewCell : UICollectionViewCell
+@property (nonatomic, strong) UIView *maskView;
 @property(nonatomic ,strong) UIWebView *webView;
 
 @end

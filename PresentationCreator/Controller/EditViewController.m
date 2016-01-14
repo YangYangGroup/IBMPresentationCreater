@@ -8,10 +8,10 @@
 
 #import "EditViewController.h"
 #import "CollectionViewCell.h"
-#import "AddPageViewController.h"
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "EditNowViewController.h"
 #import "KxMenu.h"
+#import "SelectTemplateViewController.h"
 
 @interface EditViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate,UIWebViewDelegate>
 {
@@ -239,10 +239,11 @@
     //    //    }];
     
     //模态跳转
-    AddPageViewController *loginVC = [[AddPageViewController alloc]init];
-    loginVC.showSummaryIdStr = self.showSummaryIdStr;
+    NSLog(@"add page////");
+    SelectTemplateViewController *selectVC = [[SelectTemplateViewController alloc]init];
+//    selectVC.showSummaryIdStr = self.showSummaryIdStr;
     
-    UINavigationController * navigation = [[UINavigationController alloc]initWithRootViewController:loginVC];
+    UINavigationController *navigation = [[UINavigationController alloc]initWithRootViewController:selectVC];
     
     [self presentViewController:navigation animated:YES completion:nil];
     

@@ -72,8 +72,9 @@
 //处理section 拼接字符串
 -(NSString *)processStringWithSection:(NSString *)htmlCode :(NSInteger) currentRowIndex{
     
-    NSRange rangeStartSection = [htmlCode rangeOfString:@"<section"];
-    NSInteger startLocation = rangeStartSection.location;
+    NSRange rangeStartSection = [htmlCode
+                                 rangeOfString:@"<section class='swiper-slide swiper-slide"];
+    NSInteger startLocation = rangeStartSection.location + 34;
     
     
     //-substringFromIndex: 以指定位置开始（包括指定位置的字符），并包括之后的全部字符
@@ -164,8 +165,42 @@
     NSURL *baseURL = [NSURL fileURLWithPath:path];
     [_webView loadHTMLString:_finalHtmlCode baseURL:baseURL];
     [self.view addSubview: _webView];
+    [self loadHtmlToWebView];
+}
+
+-(void)loadHtmlToWebView{
+    
+    JSContext *context = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    
+    context[@"clickedText"] = ^() {
+        
+        NSLog(@"Begin text");
+        NSArray *args = [JSContext currentArguments];
+        
+        NSString *htmlVal = [[NSString alloc]initWithFormat:@"%@",args[0]];
+        NSString *htmlIndex =[[NSString alloc]initWithFormat:@"%@",args[1]];
+        NSString *editFlag =[[NSString alloc]initWithFormat:@"%@",args[2]];
+        NSLog(@"editFlag:%@,---%@", htmlVal,htmlIndex);
+//        _oldTextHtml = htmlVal;
+//        [self editTextComponent:htmlVal htmlIndex:htmlIndex editFlag:editFlag];
+        NSLog(@"-------End Text-------");
+        
+    };
+    //点击图片js方法调用native
+    context[@"clickedImage"] = ^() {
+        NSLog(@"Begin image");
+        
+        NSArray *args = [JSContext currentArguments];
+//        _imgIndex = [[NSString alloc]initWithFormat:@"%@",args[0]];
+        //[self editImageComponent:_fullPath :_imgIndex];
+        //        [self editImageComponent: @"/Users/linlecui/Desktop/10c58PIC2CK_1024.jpg" : imgIndex];//加载本地图片到webview,把图片的索引传给方法
+//        [self backgroundClick];
+        
+        NSLog(@"-------End Image-------");
+    };
     
 }
+
 -(void)uploadClick
 {
     self.returnFileArray = [DBDaoHelper selectFromFileToSummary_idWith:self.showSummaryIdStr];

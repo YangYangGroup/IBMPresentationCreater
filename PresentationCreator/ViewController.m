@@ -88,8 +88,8 @@
     }
 //    ProjectModel *model = [self.mutableArray objectAtIndex:indexPath.row];
 //    cell.titleLabel.text = model.tableNameStr;
-    NSString *statusStr = @"Status: ";
-    NSString *timeStr = @"Time: ";
+    NSString *statusStr = @"";
+    NSString *timeStr = @"";
     SummaryModel *model = [_summaryArray objectAtIndex:indexPath.row];
     cell.imgView.image = [UIImage imageNamed:@"IMG_1.png"];
     cell.nameLabel.text = model.summaryName;

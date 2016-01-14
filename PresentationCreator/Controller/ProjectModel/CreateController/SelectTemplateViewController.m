@@ -39,6 +39,7 @@
     self.templateArray = [DBDaoHelper queryAllTemplate];
     [self addCollectionView];
 }
+
 #pragma mark - CollectionView
 -(void)addCollectionView
 {
@@ -49,7 +50,7 @@
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];//横竖滚动样式
     //    flowLayout.footerReferenceSize = CGSizeMake(KScreenWidth-80, 400);//头部.尾部设置
     self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 64+5, KScreenWidth-10, KScreenHeight-64-10-50) collectionViewLayout:flowLayout];
-    self.collectionView.backgroundColor = [UIColor whiteColor];
+     self.collectionView.backgroundColor = [UIColor colorWithRed:240/255.f green:240/255.f blue:240/255.f alpha:1.0];
     
     //设置代理
     self.collectionView.delegate = self;
@@ -112,17 +113,21 @@
 //    creationVC.selectTemplateIndex = indexPath.item;
 //    [self.navigationController pushViewController:creationVC animated:YES];
     _selectTemplateIndex = indexPath.row;
-    NSString *tmpTId = [NSString stringWithFormat:@"%ld",(long)self.selectTemplateIndex];
-    TemplateModel *tm = [[TemplateModel alloc]init];
-    tm = [self.templateArray objectAtIndex:indexPath.row];
-    
-    ShowTemplateDetailsViewController *showVC =
-                            [[ShowTemplateDetailsViewController alloc]init];
-    showVC.templateId = tm.templateId;
    
-    [self.navigationController pushViewController:showVC animated:YES];
-    
-    //[self addClick];
+//    if([self.checkFlag isEqualToString:@"new"]){
+    [self addClick];
+//    }
+//    if ([self.checkFlag isEqualToString:@"edit"]) {
+//        NSString *tmpTId = [NSString stringWithFormat:@"%ld",(long)self.selectTemplateIndex];
+//        TemplateModel *tm = [[TemplateModel alloc]init];
+//        tm = [self.templateArray objectAtIndex:indexPath.row];
+//        
+//        ShowTemplateDetailsViewController *showVC =
+//        [[ShowTemplateDetailsViewController alloc]init];
+//        showVC.templateId = tm.templateId;
+//        [self.navigationController pushViewController:showVC animated:YES];
+//
+//    }
     
 }
 
@@ -211,10 +216,19 @@
         [_titleViewControl removeFromSuperview];
         _titleViewControl = nil;
         self.navigationController.navigationBarHidden =NO;
-        NSString *tmpTId = [NSString stringWithFormat:@"%ld",(long)self.selectTemplateIndex];
-        TemplateDetailsModel *tdModel = [DBDaoHelper queryOneTemplateWithTemplateId:tmpTId];
         
-        [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:tmpTId TemplateDetailsId:tdModel.templateDetailsId HtmlCode:tdModel.templateHtml PageNumber:@"1"];
+        TemplateModel *tModel = [[TemplateModel alloc]init];
+        tModel = [self.templateArray objectAtIndex:self.selectTemplateIndex];
+        NSMutableArray *tdArray = [DBDaoHelper queryTemplateDetailsWithTemplateId:tModel.templateId];
+        
+        
+        for (int i=0; i<tdArray.count; i++) {
+            NSString *pageNumber = [NSString stringWithFormat:@"%ld",(long)i];
+            TemplateDetailsModel *tdModel = [[TemplateDetailsModel alloc]init];
+            tdModel = [tdArray objectAtIndex:i];
+            
+             [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:tModel.templateId TemplateDetailsId:tdModel.templateDetailsId HtmlCode:tdModel.templateHtml PageNumber:pageNumber];
+        }
         
         ShowViewController *vc = [[ShowViewController alloc]init];
         
@@ -223,10 +237,6 @@
         vc.showTemplateIdStr = _maxSummaryIdStr;
         [self.navigationController pushViewController:vc animated:YES];
         
-        //    //像details表添加2条数据 首页 尾页
-        //    [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"1" HtmlCode:template_1 PageNumber:@"1"];
-        //    [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.maxSummaryIdStr TemplateId:@"5" HtmlCode:template_5 PageNumber:@"2"];
-        //查询details表
         self.detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:self.maxSummaryIdStr];
         [self.collectionView reloadData];
     }else{

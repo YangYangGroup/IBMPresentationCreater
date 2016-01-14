@@ -12,12 +12,14 @@
 #import "Global.h"
 #import "CreationEditViewController.h"
 #import "SelectTemplateViewController.h"
+#import "SynchroViewController.h"
 
 @interface AppDelegate ()<UITabBarControllerDelegate,UITabBarDelegate>
 {
     UITabBarController *_tabVc;
     UINavigationController *_firstNav;
     UINavigationController *_secondNav;
+    UINavigationController *_thirdNav;
 }
 @end
 
@@ -43,6 +45,32 @@
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_7 TemplateId:templateId2];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_8 TemplateId:templateId2];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_9 TemplateId:templateId2];
+        
+        NSString *templateId3 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_1" TemplateThumbnail:@"IMG_1.png" TemplateType:@"0"];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_1 TemplateId:templateId3];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_2 TemplateId:templateId3];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_3 TemplateId:templateId3];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_4 TemplateId:templateId3];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_5 TemplateId:templateId3];
+        
+        NSString *templateId4 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_2" TemplateThumbnail:@"IMG_6.png" TemplateType:@"0"];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_6 TemplateId:templateId4];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_7 TemplateId:templateId4];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_8 TemplateId:templateId4];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_9 TemplateId:templateId4];
+        
+        NSString *templateId5 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_1" TemplateThumbnail:@"IMG_1.png" TemplateType:@"0"];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_1 TemplateId:templateId5];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_2 TemplateId:templateId5];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_3 TemplateId:templateId5];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_4 TemplateId:templateId5];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_5 TemplateId:templateId5];
+        
+        NSString *templateId6 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_2" TemplateThumbnail:@"IMG_6.png" TemplateType:@"0"];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_6 TemplateId:templateId6];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_7 TemplateId:templateId6];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_8 TemplateId:templateId6];
+        [DBDaoHelper insertIntoTemplateDetailsHtml:template_9 TemplateId:templateId6];
        
     }
     
@@ -57,10 +85,19 @@
     CreationVc.tabBarItem = secondItem;
     _secondNav = [[UINavigationController alloc]initWithRootViewController:CreationVc];
     _tabVc.delegate = self;
+    
+    // init sync tab
+    SynchroViewController *snycVC = [[SynchroViewController alloc]init];
+    _thirdNav = [[UINavigationController alloc]initWithRootViewController:snycVC];
+    // set word and image for third tab item
+    UITabBarItem *thirdItem = [[UITabBarItem alloc]initWithTitle:@"Settings" image:[UIImage imageNamed:@"set"] selectedImage:[UIImage imageNamed:@"set"]];
+    snycVC.tabBarItem = thirdItem;
+    
+    
     //创建一个UITabBarController
     _tabVc = [[UITabBarController alloc]init];
     //设置显示一个ViewController数组
-    _tabVc.viewControllers = [NSArray arrayWithObjects:_firstNav,_secondNav, nil];
+    _tabVc.viewControllers = [NSArray arrayWithObjects:_firstNav,_secondNav,_thirdNav, nil];
     self.window.rootViewController = _tabVc;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];

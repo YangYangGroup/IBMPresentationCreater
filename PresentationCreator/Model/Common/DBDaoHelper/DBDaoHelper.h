@@ -28,6 +28,7 @@
 +(NSString *)selectCreationPageString:(NSString *)templateId;
 //插入TABLE_TEMPLATE_DETAILS的html代码
 +(BOOL)insertHtmlToDetailsSummaryIdWith:(NSString *)summaryId TemplateId:(NSString *)templateId TemplateDetailsId:(NSString *)templateDetailsId HtmlCode:(NSString *)htmlCode PageNumber:(NSString *)pageNumber;
+
 //插入template 的代码
 +(NSString *)insertIntoTemplateWithTemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)image TemplateType:(NSString *)type;
 
