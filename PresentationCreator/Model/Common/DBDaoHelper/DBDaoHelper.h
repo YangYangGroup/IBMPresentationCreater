@@ -30,7 +30,7 @@
 +(BOOL)insertHtmlToDetailsSummaryIdWith:(NSString *)summaryId TemplateId:(NSString *)templateId TemplateDetailsId:(NSString *)templateDetailsId HtmlCode:(NSString *)htmlCode PageNumber:(NSString *)pageNumber;
 
 //插入template 的代码
-+(NSString *)insertIntoTemplateWithTemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)image TemplateType:(NSString *)type;
++(NSString *)insertIntoTemplateWithTemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)image UpdateFlag:(NSString *)updateFlag;
 
 // 根据summary id 查询 PPT_PRODUCT_DETAILS 表中对应的结果集
 +(NSMutableArray *)selectDetailsDataBySummaryId:(NSString *)summaryId;

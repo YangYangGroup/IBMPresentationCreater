@@ -23,7 +23,7 @@
     BOOL result3 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_DETAILS'('details_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_id'integer,'template_id'integer,'template_details_id'integer,'html_code'varchar,'page_number'integer,'file_id'INTEGER )"];
     
     BOOL result4 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_FILES'('file_id'INTEGER PRIMARY KEY AUTOINCREMENT,'details_id'integer,'summary_id'integer,'file_path'varchar,'file_type'varchar)"];
-    BOOL result5 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_TEMPLATE'('template_id'INTEGER PRIMARY KEY AUTOINCREMENT,'template_name'varchar,'template_thumbnail'varchar,'template_type'varchar,'created_ts'datetime)"];
+    BOOL result5 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_TEMPLATE'('template_id'INTEGER PRIMARY KEY AUTOINCREMENT,'template_name'varchar,'template_thumbnail'varchar,'update_flag'varchar,'created_ts'datetime)"];
     
     [db close];
     if (result1&&result2&&result3&&result4&&result5) {
@@ -56,10 +56,10 @@
     return result;
 }
 //插入template 的代码
-+(NSString *)insertIntoTemplateWithTemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)image TemplateType:(NSString *)type
++(NSString *)insertIntoTemplateWithTemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)image UpdateFlag:(NSString *)updateFlag
 {
     FMDatabase *db = [DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_TEMPLATE'('template_name','template_thumbnail','template_type','created_ts') values(?,?,?,datetime('now','localtime'))",templateName,image,type];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_TEMPLATE'('template_name','template_thumbnail','update_flag','created_ts') values(?,?,?,datetime('now','localtime'))",templateName,image,updateFlag];
     if (result) {
         FMResultSet *result1 = [db executeQuery:@"SELECT  MAX(TEMPLATE_ID) FROM PPT_PRODUCT_TEMPLATE"];
         
@@ -574,7 +574,7 @@
         model.templateId = [result stringForColumn:@"template_id"];
         model.templateName = [result stringForColumn:@"template_name"];
         model.templateThumbNail = [result stringForColumn:@"template_thumbnail"];
-        model.templateType = [result stringForColumn:@"template_type"];
+        model.updateFlag = [result stringForColumn:@"update_flag"];
         model.createdTS = [result stringForColumn:@"created_ts"];
         
         [array addObject:model];

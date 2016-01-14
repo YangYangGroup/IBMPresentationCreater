@@ -33,40 +33,40 @@
     [DBDaoHelper createAllTable];
     NSString *firstStr = [DBDaoHelper selectTable];
     if (firstStr == NULL) {
-        NSString *templateId = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_1" TemplateThumbnail:@"IMG_1.png" TemplateType:@"0"];
+        NSString *templateId = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_1" TemplateThumbnail:@"IMG_1.png" UpdateFlag:@"0"];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_1 TemplateId:templateId];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_2 TemplateId:templateId];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_3 TemplateId:templateId];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_4 TemplateId:templateId];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_5 TemplateId:templateId];
         
-         NSString *templateId2 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_2" TemplateThumbnail:@"IMG_6.png" TemplateType:@"0"];
+         NSString *templateId2 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_2" TemplateThumbnail:@"IMG_6.png" UpdateFlag:@"0"];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_6 TemplateId:templateId2];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_7 TemplateId:templateId2];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_8 TemplateId:templateId2];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_9 TemplateId:templateId2];
         
-        NSString *templateId3 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_1" TemplateThumbnail:@"IMG_1.png" TemplateType:@"0"];
+        NSString *templateId3 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_1" TemplateThumbnail:@"IMG_1.png" UpdateFlag:@"0"];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_1 TemplateId:templateId3];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_2 TemplateId:templateId3];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_3 TemplateId:templateId3];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_4 TemplateId:templateId3];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_5 TemplateId:templateId3];
         
-        NSString *templateId4 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_2" TemplateThumbnail:@"IMG_6.png" TemplateType:@"0"];
+        NSString *templateId4 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_2" TemplateThumbnail:@"IMG_6.png" UpdateFlag:@"0"];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_6 TemplateId:templateId4];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_7 TemplateId:templateId4];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_8 TemplateId:templateId4];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_9 TemplateId:templateId4];
         
-        NSString *templateId5 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_1" TemplateThumbnail:@"IMG_1.png" TemplateType:@"0"];
+        NSString *templateId5 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_1" TemplateThumbnail:@"IMG_1.png" UpdateFlag:@"0"];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_1 TemplateId:templateId5];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_2 TemplateId:templateId5];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_3 TemplateId:templateId5];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_4 TemplateId:templateId5];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_5 TemplateId:templateId5];
         
-        NSString *templateId6 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_2" TemplateThumbnail:@"IMG_6.png" TemplateType:@"0"];
+        NSString *templateId6 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_2" TemplateThumbnail:@"IMG_6.png" UpdateFlag:@"0"];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_6 TemplateId:templateId6];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_7 TemplateId:templateId6];
         [DBDaoHelper insertIntoTemplateDetailsHtml:template_8 TemplateId:templateId6];
@@ -77,11 +77,11 @@
     ViewController *viewVC = [[ViewController alloc]init];
     _firstNav = [[UINavigationController alloc]initWithRootViewController:viewVC];
     //设置第一个tabbar的文字
-    UITabBarItem *firstItem = [[UITabBarItem alloc]initWithTitle:@"My ppt" image:[UIImage imageNamed:@"my_ppt"] selectedImage:[UIImage imageNamed:@"my_ppt"]];
+    UITabBarItem *firstItem = [[UITabBarItem alloc]initWithTitle:@"My PPT" image:[UIImage imageNamed:@"my_ppt"] selectedImage:[UIImage imageNamed:@"my_ppt"]];
     viewVC.tabBarItem = firstItem;
     
     SelectTemplateViewController *CreationVc = [[SelectTemplateViewController alloc]init];
-    UITabBarItem *secondItem = [[UITabBarItem alloc]initWithTitle:@"New ppt" image:[UIImage imageNamed:@"new_ppt"] selectedImage:[UIImage imageNamed:@"new_ppt"]];
+    UITabBarItem *secondItem = [[UITabBarItem alloc]initWithTitle:@"New PPT" image:[UIImage imageNamed:@"new_ppt"] selectedImage:[UIImage imageNamed:@"new_ppt"]];
     CreationVc.tabBarItem = secondItem;
     _secondNav = [[UINavigationController alloc]initWithRootViewController:CreationVc];
     _tabVc.delegate = self;

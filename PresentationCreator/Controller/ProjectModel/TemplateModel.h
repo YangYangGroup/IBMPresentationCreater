@@ -12,7 +12,7 @@
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) NSString *templateName;
 @property (nonatomic, strong) NSString *templateThumbNail;
-@property (nonatomic, strong) NSString *templateType;
+@property (nonatomic, strong) NSString *updateFlag;
 @property (nonatomic, strong) NSString *createdTS;
 
 @end

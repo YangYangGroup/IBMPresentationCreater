@@ -356,7 +356,12 @@
    
     if ([_productStatus isEqualToString:@"Published"]) {
         menuItems = @[
-                      [KxMenuItem menuItem:@"Edit"
+                      [KxMenuItem menuItem:@"Add Page"
+                                     image:nil
+                                    target:self
+                                    action:@selector(editClick)],
+                      
+                      [KxMenuItem menuItem:@"Delete Page"
                                      image:nil
                                     target:self
                                     action:@selector(editClick)],
@@ -385,7 +390,12 @@
        
     }else{
         menuItems = @[
-                      [KxMenuItem menuItem:@"Edit"
+                      [KxMenuItem menuItem:@"Add Page"
+                                     image:nil
+                                    target:self
+                                    action:@selector(editClick)],
+                      
+                      [KxMenuItem menuItem:@"Delete Page"
                                      image:nil
                                     target:self
                                     action:@selector(editClick)],
