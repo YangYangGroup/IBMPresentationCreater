@@ -32,6 +32,7 @@
 @property (nonatomic, strong) UIButton *cancelBtn;
 @property (nonatomic, strong) SummaryModel *sumyModel;
 @property (nonatomic, strong) UIControl *backgroundViewControl;
+@property (nonatomic, strong) NSString *currentPageNumber;
 @end
 
 @implementation ShowViewController
@@ -165,14 +166,20 @@
     NSURL *baseURL = [NSURL fileURLWithPath:path];
     [_webView loadHTMLString:_finalHtmlCode baseURL:baseURL];
     [self.view addSubview: _webView];
+    
     [self loadHtmlToWebView];
+    
+ 
 }
 
 -(void)loadHtmlToWebView{
+   
     
     JSContext *context = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     
     context[@"clickedText"] = ^() {
+        
+        [self getCurrentPageNumber];
         
         NSLog(@"Begin text");
         NSArray *args = [JSContext currentArguments];
@@ -364,7 +371,7 @@
                       [KxMenuItem menuItem:@"Delete Page"
                                      image:nil
                                     target:self
-                                    action:@selector(editClick)],
+                                    action:@selector(deleteClick)],
                       
                       [KxMenuItem menuItem:@"Rename"
                                      image:nil
@@ -390,6 +397,8 @@
        
     }else{
         menuItems = @[
+                      [KxMenuItem menuItem:@"Page Number" image:nil target:self action:@selector(getCurrentPageNumber)],
+                      
                       [KxMenuItem menuItem:@"Add Page"
                                      image:nil
                                     target:self
@@ -398,7 +407,7 @@
                       [KxMenuItem menuItem:@"Delete Page"
                                      image:nil
                                     target:self
-                                    action:@selector(editClick)],
+                                    action:@selector(deleteClick)],
                       
                       [KxMenuItem menuItem:@"Rename"
                                      image:nil
@@ -762,7 +771,27 @@
          [self presentViewController:alertController animated:YES completion:nil];
      }
  }
-
+-(void)getCurrentPageNumber{
+    NSString *pageNumberJS = @"document.getElementById('numOfPage').value";
+    NSString *getPageNumber =
+    [self.webView stringByEvaluatingJavaScriptFromString:pageNumberJS];
+    self.currentPageNumber = getPageNumber;
+    
+    
+    [_webView reload];
+    NSString *str = @"initSwiper(4)";
+    [_webView stringByEvaluatingJavaScriptFromString:str];
+    
+}
+-(void)deleteClick{
+    NSString *pageNumberJS = @"document.getElementById('numOfPage').value";
+    NSString *getPageNumber =
+    [self.webView stringByEvaluatingJavaScriptFromString:pageNumberJS];
+    
+    NSLog(@"current page number is:%@",getPageNumber);
+    
+    [DBDaoHelper deleteCurrentPageByPageNumber:getPageNumber SummaryId:self.showSummaryIdStr];
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

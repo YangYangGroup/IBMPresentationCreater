@@ -97,4 +97,9 @@
 //查询首页的template detail
 +(TemplateDetailsModel *)queryOneTemplateWithTemplateId:(NSString *)templateId;
 
+//delete current page
++(BOOL)deleteCurrentPageByPageNumber:(NSString *)pageNumber SummaryId:(NSString *)summaryId;
+
+// add new page
++(BOOL)updateOldPageNumberByNewPageNumber:(NSString *)pageNumber SummaryId:(NSString *)summaryId;
 @end

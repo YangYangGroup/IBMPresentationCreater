@@ -603,4 +603,26 @@
     [db close];
     return array;
 }
+
+//delete current page
++(BOOL)deleteCurrentPageByPageNumber:(NSString *)pageNumber SummaryId:(NSString *)summaryId{
+    FMDatabase *db = [DBHelper openDatabase];
+    BOOL result = [db executeUpdate:@"DELETE FROM PPT_PRODUCT_DETAILS WHERE summary_id= ? and page_number=?",summaryId, pageNumber];
+    BOOL resultUpdate;
+    if (result) {
+        resultUpdate = [db executeUpdate:@"UPDATE PPT_PRODUCT_DETAILS SET page_number= page_number - 1   WHERE summary_id =? and page_number > ?",summaryId ,pageNumber];
+    }
+    [db close];
+    return resultUpdate;
+}
+
+// add new page
++(BOOL)updateOldPageNumberByNewPageNumber:(NSString *)pageNumber SummaryId:(NSString *)summaryId{
+    FMDatabase *db = [DBHelper openDatabase];
+    
+    BOOL resultUpdate = [db executeUpdate:@"UPDATE PPT_PRODUCT_DETAILS SET page_number= page_number + 1   WHERE summary_id =? and page_number >= ?",summaryId ,pageNumber];
+    
+    [db close];
+    return resultUpdate;
+}
 @end

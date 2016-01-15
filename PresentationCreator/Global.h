@@ -32,4 +32,4 @@
 
 #define final_html_befor_section @"<!DOCTYPE html><html><head>    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>    <title>Template</title>    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'/>    <link rel='stylesheet' href='swiper.min.css'>    <link rel='stylesheet' href='animate.min.css'>    <link rel='stylesheet' href='common.css'> <script src='swiper.min.js'></script>    <script src='swiper.animate.min.js'></script></head><body><div class='swiper-container'>    <div class='swiper-wrapper'>       "
 
-#define final_html_after_section @"    </div>    <img src='arrow.png' style='width:20px;height:15px; top:450px; left:160px; margin-left: -10px;' id='array' class='resize'>   </div> <script src='templateUtils.js'></script><script src='templateCommon.js'></script></body></html>"
+#define final_html_after_section @"    </div>    <img src='arrow.png' style='width:20px;height:15px; top:450px; left:160px; margin-left: -10px;' id='array' class='resize'>   </div> <script src='templateUtils.js'></script><script src='templateCommon.js'></script></body><input type='hidden' id='numOfPage' value='0' /></html>"

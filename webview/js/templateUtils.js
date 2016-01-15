@@ -1,4 +1,7 @@
 window.onload=function(){
+    
+    //initSwiper(0);
+    
     var textDomList=document.getElementsByClassName("text_element");
     for(var i=0;i<textDomList.length;i++){
         textDomList[i].index=i;
@@ -20,6 +23,7 @@ window.onload=function(){
                                        clickedImage(this.index);
                                        })
     }
+    
 }
 
 
