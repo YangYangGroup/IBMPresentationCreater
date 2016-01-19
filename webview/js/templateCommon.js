@@ -87,7 +87,7 @@ var mySwiper = new Swiper(
                           })
 
 var initSwiper = function(pageNumber){
-  
+    mySwiper = null;
   
     var mySwiper = new Swiper(
                               '.swiper-container', {

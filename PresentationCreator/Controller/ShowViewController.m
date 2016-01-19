@@ -18,6 +18,7 @@
 #import "SummaryModel.h"
 #import "EditPresentationNameViewController.h"
 #import "EditPageViewController.h"
+#import "SelectTemplateForEditViewController.h"
 
 @interface ShowViewController ()<UIWebViewDelegate>
 @property (nonatomic, retain) UIWebView *webView;
@@ -33,32 +34,43 @@
 @property (nonatomic, strong) SummaryModel *sumyModel;
 @property (nonatomic, strong) UIControl *backgroundViewControl;
 @property (nonatomic, strong) NSString *currentPageNumber;
+@property (nonatomic, strong) NSString *maxPageNumber;
+
 @end
 
 @implementation ShowViewController
 -(void)viewWillAppear:(BOOL)animated{
+    [self loadDetailsDataToArray];
+    [self generationFinalHtmlCode];
+    
     self.tabBarController.tabBar.hidden = YES;
     self.navigationItem.title = [DBDaoHelper querySummaryNameBySummaryId:_showSummaryIdStr];
+    [self initDataForAction];
+    [self addWebView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getTemplateNotification:) name:@"SelectedTemplate" object:nil];
+    
+}
+-(void)initDataForAction{
+    self.maxPageNumber = [DBDaoHelper getMaxPageNumber:self.showSummaryIdStr];
+
     _sumyModel = [DBDaoHelper qeuryOneSummaryDataById:_showSummaryIdStr];
     //从summary 表中根据summary id获取html代码，并加载到webView中
     _finalHtmlCode = _sumyModel.contentHtml;
     _finalProductUrlStr = _sumyModel.product_url;
     _showSummaryNameStr = _sumyModel.summaryName;
-    [self addWebView];
-    
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    _sumyModel = [[SummaryModel alloc]init];
     [self addNavigation];
     
-    
-    [self loadDetailsDataToArray];
-    [self generationFinalHtmlCode];
 }
 //查询summaryhtmlcode 加载到webview 进行总的预览
 -(void)loadDetailsDataToArray{
     NSString *sections = [[NSString alloc] init];
+    _detailsListMuArray = [[NSMutableArray alloc]init];
     _detailsListMuArray = [DBDaoHelper selectDetailsDataBySummaryId:self.showSummaryIdStr];//播放的details表的summaryid
     for (int i =0; i<_detailsListMuArray.count; i++) {
         DetailsModel *dm = [_detailsListMuArray objectAtIndex:i];
@@ -101,6 +113,7 @@
 }
 //生成最终的html代码保存到summary表中
 -(void)generationFinalHtmlCode{
+    _finalHtmlCode = @"";
     NSString *htmlCodes = final_html_befor_section;
     htmlCodes = [htmlCodes stringByAppendingString:_stringSections];
     htmlCodes = [htmlCodes stringByAppendingString:final_html_after_section];
@@ -179,7 +192,7 @@
     
     context[@"clickedText"] = ^() {
         
-        [self getCurrentPageNumber];
+//        [self setWebViewPosition:self.currentPageNumber];
         
         NSLog(@"Begin text");
         NSArray *args = [JSContext currentArguments];
@@ -366,7 +379,7 @@
                       [KxMenuItem menuItem:@"Add Page"
                                      image:nil
                                     target:self
-                                    action:@selector(editClick)],
+                                    action:@selector(addPageClick)],
                       
                       [KxMenuItem menuItem:@"Delete Page"
                                      image:nil
@@ -397,12 +410,11 @@
        
     }else{
         menuItems = @[
-                      [KxMenuItem menuItem:@"Page Number" image:nil target:self action:@selector(getCurrentPageNumber)],
                       
                       [KxMenuItem menuItem:@"Add Page"
                                      image:nil
                                     target:self
-                                    action:@selector(editClick)],
+                                    action:@selector(addPageClick)],
                       
                       [KxMenuItem menuItem:@"Delete Page"
                                      image:nil
@@ -771,31 +783,166 @@
          [self presentViewController:alertController animated:YES completion:nil];
      }
  }
--(void)getCurrentPageNumber{
-    NSString *pageNumberJS = @"document.getElementById('numOfPage').value";
-    NSString *getPageNumber =
-    [self.webView stringByEvaluatingJavaScriptFromString:pageNumberJS];
-    self.currentPageNumber = getPageNumber;
-    
-    
-    [_webView reload];
-    NSString *str = @"initSwiper(4)";
-    [_webView stringByEvaluatingJavaScriptFromString:str];
-    
-}
+
+
+#pragma delete current page from UIWebView
 -(void)deleteClick{
-    NSString *pageNumberJS = @"document.getElementById('numOfPage').value";
-    NSString *getPageNumber =
-    [self.webView stringByEvaluatingJavaScriptFromString:pageNumberJS];
     
-    NSLog(@"current page number is:%@",getPageNumber);
+    if (self.detailsListMuArray.count == 0) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@""    message:@"There are no page to delete." preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            
+        }];
+        
+        [alertController addAction:cancelAction];
+        [self presentViewController:alertController animated:YES completion:nil];
+    }else{
+        NSString *title = NSLocalizedString(@"Please confirm", nil);
+        NSString *message = NSLocalizedString(@"Do you want to delete?", nil);
+        NSString *deleteTitle = NSLocalizedString(@"Delete", nil);
+        NSString *cancelTitle = NSLocalizedString(@"Cancel", nil);
+        
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:deleteTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            [self deleteCurrentPageFromUIWebView];
+        }];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            
+        }];
+        [alertController addAction:deleteAction];
+        [alertController addAction:cancelAction];
+        [self presentViewController:alertController animated:YES completion:nil];
+
+    }
     
-    [DBDaoHelper deleteCurrentPageByPageNumber:getPageNumber SummaryId:self.showSummaryIdStr];
 }
+#pragma delete page function
+-(void)deleteCurrentPageFromUIWebView{
+    
+        int iPageNumber = [self getUIWebViewPageNumber];
+        NSString *pageNumber = [NSString stringWithFormat:@"%ld", (long)iPageNumber];
+        
+        [DBDaoHelper deleteCurrentPageByPageNumber:pageNumber
+                                         SummaryId:self.showSummaryIdStr];
+        
+        self.maxPageNumber = [DBDaoHelper getMaxPageNumber:self.showSummaryIdStr];
+       
+        NSLog(@"Current page number is:%@",pageNumber);
+        NSLog(@"Max page number is:%@",self.maxPageNumber);
+        
+        if([self.currentPageNumber isEqualToString:self.maxPageNumber]){
+             iPageNumber --;
+            self.currentPageNumber = [NSString stringWithFormat:@"%ld",(long)iPageNumber];
+            
+            // change page number --
+            [self changePageNumberOfWebView:false];
+        }
+        [self loadDetailsDataToArray];
+        [self generationFinalHtmlCode];
+        [self initDataForAction];
+        NSString *path = [[NSBundle mainBundle] bundlePath];
+        NSURL *baseURL = [NSURL fileURLWithPath:path];
+        [self.webView loadHTMLString:_finalHtmlCode baseURL:baseURL];
+        [self loadHtmlToWebView];
+        //[self.webView reload];
+//        [self setWebViewPosition:self.currentPageNumber];
+    
+}
+
+#pragma get html code from webview
+-(NSString *)getHtmlFromUIWebView{
+    //native  call js 代码
+    NSString *jsToGetHtmlSource =  @"document.getElementsByTagName('html')[0].innerHTML";
+    NSString *htmlSource = @"<!DOCTYPE html><html>";
+    htmlSource = [htmlSource stringByAppendingString: [self.webView stringByEvaluatingJavaScriptFromString:jsToGetHtmlSource]];
+    htmlSource = [htmlSource stringByAppendingString:@"</html>"];
+    
+    return htmlSource;
+}
+
+#pragma get current page number from UIWebView
+-(int)getUIWebViewPageNumber{
+    NSString *pageNumberJS = @"document.getElementById('numOfPage').value";
+    NSString *pageNumberString =
+            [self.webView stringByEvaluatingJavaScriptFromString:pageNumberJS];
+    self.currentPageNumber = pageNumberString;
+    int pageNumber = [pageNumberString intValue];
+    return pageNumber;
+}
+
+#pragma reset the page number of UIWebView, pageNumber ++ OR --
+-(void)changePageNumberOfWebView:(BOOL)isAddOrSub{
+    int pageNumber = [self getUIWebViewPageNumber];
+    if (isAddOrSub) {
+        pageNumber ++;
+    }else{
+        pageNumber --;
+    }
+    
+    NSString *pageNumberStr = [NSString stringWithFormat:@"%ld",(long)pageNumber];
+
+    NSString *jsCode = @"document.getElementById('numOfPage').value = ";
+    jsCode = [jsCode stringByAppendingString:pageNumberStr];
+    jsCode = [jsCode stringByAppendingString:@";"];
+ 
+    [self.webView stringByEvaluatingJavaScriptFromString:jsCode];
+}
+
+#pragma set position of webview section
+-(void)setWebViewPosition:(NSString *)pageNumber{
+    NSString *jsCode = @"initSwiper(";
+    jsCode = [jsCode stringByAppendingString:pageNumber];
+    jsCode = [jsCode stringByAppendingString:@");"];
+    jsCode = [jsCode stringByAppendingString:@"document.getElementById('numOfPage').value ="];
+    jsCode = [jsCode stringByAppendingString:pageNumber];
+    
+    [self.webView stringByEvaluatingJavaScriptFromString:jsCode];
+}
+-(void)webViewDidFinishLoad:(UIWebView *)webView{
+    [self setWebViewPosition:self.currentPageNumber];
+}
+
+-(void)addPageClick{
+    [self getUIWebViewPageNumber];
+    
+    SelectTemplateForEditViewController *selectVC = [[SelectTemplateForEditViewController alloc]init];
+    selectVC.showSummaryIdStr = self.showSummaryIdStr;
+    selectVC.currentPageNumber = self.currentPageNumber;
+    
+    UINavigationController *navigation = [[UINavigationController alloc]initWithRootViewController:selectVC];
+    
+    [self presentViewController:navigation animated:YES completion:nil];
+}
+
+
+
+-(void)getTemplateNotification:(NSNotification *)sender{
+    if ([sender.name isEqual:@"SelectedTemplate"])
+    {
+       
+        [self loadDetailsDataToArray];
+        [self generationFinalHtmlCode];
+        [self initDataForAction];
+        NSString *path = [[NSBundle mainBundle] bundlePath];
+        NSURL *baseURL = [NSURL fileURLWithPath:path];
+        [self.webView loadHTMLString:_finalHtmlCode baseURL:baseURL];
+        [self loadHtmlToWebView];
+        
+    }
+}
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 /*
  #pragma mark - Navigation

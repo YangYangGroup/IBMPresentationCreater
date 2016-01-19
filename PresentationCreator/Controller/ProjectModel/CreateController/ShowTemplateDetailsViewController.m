@@ -115,22 +115,24 @@
     tdm = [self.templateDetailsArray objectAtIndex:indexPath.row];
     NSLog(@"you selected template is:%@", tdm.templateDetailsId);
     
+    if ([[DBDaoHelper getMaxPageNumber:self.showSummaryIdStr] isEqualToString:self.currentPageNumber]) {
+        int pageNum = [self.currentPageNumber intValue];
+        pageNum ++;
+        NSString *pStr = [NSString stringWithFormat:@"%ld",(long)pageNum];
+        [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.showSummaryIdStr TemplateId:tdm.templateId TemplateDetailsId:tdm.templateDetailsId HtmlCode:tdm.templateHtml PageNumber:pStr];
+    }else{
+        [DBDaoHelper updateOldPageNumberByNewPageNumber:self.currentPageNumber SummaryId:self.showSummaryIdStr];
+        
+        [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.showSummaryIdStr TemplateId:tdm.templateId TemplateDetailsId:tdm.templateDetailsId HtmlCode:tdm.templateHtml PageNumber:self.currentPageNumber];
+    }
     
-    // 根据 summary id 查询最大的 page number
-    NSString *maxPageNumber = [DBDaoHelper getMaxPageNumber:self.showSummaryIdStr];
     
-    // 根据summary id 修改最后一页的page number 为最大的page number
-    [DBDaoHelper updatePageNumberToMaxNumber:self.showSummaryIdStr pageNumber:maxPageNumber];
     
-    //等待修改 插入
-     [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.showSummaryIdStr TemplateId:tdm.templateId TemplateDetailsId:tdm.templateDetailsId HtmlCode:tdm.templateHtml PageNumber:maxPageNumber];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedTemplate" object:nil];
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
-    
-    
-    [self dismissViewControllerAnimated:YES completion:^{}];
+
 }
 
 -(void)backClick{

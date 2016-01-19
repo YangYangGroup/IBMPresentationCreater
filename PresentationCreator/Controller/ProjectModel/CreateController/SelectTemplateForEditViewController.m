@@ -126,7 +126,7 @@
                                     [[ShowTemplateDetailsViewController alloc]init];
     showVC.templateId = tm.templateId;
     showVC.showSummaryIdStr = self.showSummaryIdStr;
-    
+    showVC.currentPageNumber = self.currentPageNumber;
     [self.navigationController pushViewController:showVC animated:YES];
     
 }

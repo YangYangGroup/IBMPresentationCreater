@@ -10,4 +10,5 @@
 
 @interface SelectTemplateForEditViewController : UIViewController
 @property (nonatomic, strong) NSString *showSummaryIdStr;
+@property (nonatomic, strong) NSString *currentPageNumber;
 @end

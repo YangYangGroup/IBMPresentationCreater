@@ -222,7 +222,7 @@
         NSMutableArray *tdArray = [DBDaoHelper queryTemplateDetailsWithTemplateId:tModel.templateId];
         
         
-        for (int i=0; i<tdArray.count; i++) {
+        for (int i=0; i < tdArray.count; i++) {
             NSString *pageNumber = [NSString stringWithFormat:@"%ld",(long)i];
             TemplateDetailsModel *tdModel = [[TemplateDetailsModel alloc]init];
             tdModel = [tdArray objectAtIndex:i];

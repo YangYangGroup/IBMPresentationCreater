@@ -20,7 +20,7 @@
     //summary_name tableview创建ppt的名称 content_html最终生成的总的用于演示的html代码
     BOOL result2 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_SUMMARY'('summary_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_name'varchar,'content_html'varchar,'product_url'varchar,'product_status'varchar,'created_ts'datetime)"];
     //details_id主键 summary_id 外键关联到PPT_PRODUCT_SUMMARY表的主键 template_id关联到PPT_PRODUCT_template表的主键
-    BOOL result3 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_DETAILS'('details_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_id'integer,'template_id'integer,'template_details_id'integer,'html_code'varchar,'page_number'integer,'file_id'INTEGER )"];
+    BOOL result3 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_DETAILS'('details_id'INTEGER PRIMARY KEY AUTOINCREMENT,'page_number'integer,'file_id'INTEGER,'summary_id'integer,'template_id'integer,'template_details_id'integer,'html_code'varchar)"];
     
     BOOL result4 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_FILES'('file_id'INTEGER PRIMARY KEY AUTOINCREMENT,'details_id'integer,'summary_id'integer,'file_path'varchar,'file_type'varchar)"];
     BOOL result5 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_TEMPLATE'('template_id'INTEGER PRIMARY KEY AUTOINCREMENT,'template_name'varchar,'template_thumbnail'varchar,'update_flag'varchar,'created_ts'datetime)"];

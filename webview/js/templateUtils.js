@@ -1,6 +1,6 @@
 window.onload=function(){
     
-    //initSwiper(0);
+//    initSwiper(2);
     
     var textDomList=document.getElementsByClassName("text_element");
     for(var i=0;i<textDomList.length;i++){

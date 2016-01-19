@@ -10,6 +10,6 @@
 
 @interface ShowTemplateDetailsViewController : UIViewController
 @property (nonatomic, strong) NSString *templateId;
-@property (nonatomic,strong) NSString *showSummaryIdStr;
-
+@property (nonatomic, strong) NSString *showSummaryIdStr;
+@property (nonatomic, strong) NSString *currentPageNumber;
 @end
