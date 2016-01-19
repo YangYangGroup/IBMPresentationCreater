@@ -943,8 +943,23 @@
 -(void)getSectionFromWebView{
     NSString *allHtml = [self getHtmlFromUIWebView];
     
-    NSLog(@"%@",allHtml);
-//    return @"";
+    //-substringFromIndex: 以指定位置开始（包括指定位置的字符），并包括之后的全部字符
+    NSRange rangeStartSection = [allHtml rangeOfString:@"swiper-slide-active"];
+    NSInteger startLocation = rangeStartSection.location;
+    NSString *stringStart = [allHtml substringFromIndex:startLocation+19];
+   
+    NSRange rangeEndSection = [stringStart rangeOfString:@"</section>"];
+    NSInteger endLocation = rangeEndSection.location;
+    
+    //-substringToIndex: 从字符串的开头一直截取到指定的位置，但不包括该位置的字符 +10表示包括</section>
+    NSString *stringEnd = [stringStart substringToIndex:endLocation+10];
+    
+    NSString *tmpHtmlCode = @"<section class='swiper-slide swiper-slide";
+    
+    tmpHtmlCode = [tmpHtmlCode stringByAppendingString:stringEnd];
+    NSString *finalHtmlCode = [tmpHtmlCode stringByReplacingOccurrencesOfString:@"\"" withString:@"'"];
+    
+    NSLog(@"%@",finalHtmlCode);
 }
 
 - (void)didReceiveMemoryWarning {
