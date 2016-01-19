@@ -900,7 +900,9 @@
     [self.webView stringByEvaluatingJavaScriptFromString:jsCode];
 }
 -(void)webViewDidFinishLoad:(UIWebView *)webView{
+    
     [self setWebViewPosition:self.currentPageNumber];
+     NSLog(@"webview did finish load current page is: %@",self.currentPageNumber);
 }
 
 -(void)addPageClick{
@@ -920,7 +922,6 @@
 -(void)getTemplateNotification:(NSNotification *)sender{
     if ([sender.name isEqual:@"SelectedTemplate"])
     {
-       
         [self loadDetailsDataToArray];
         [self generationFinalHtmlCode];
         [self initDataForAction];
@@ -928,11 +929,13 @@
         NSURL *baseURL = [NSURL fileURLWithPath:path];
         [self.webView loadHTMLString:_finalHtmlCode baseURL:baseURL];
         [self loadHtmlToWebView];
-        if([sender.object isEqualToString:@"1"]){
-            self.currentPageNumber = self.maxPageNumber;
-            [self setWebViewPosition:self.currentPageNumber];
-            
-        }
+        
+        self.maxPageNumber = [DBDaoHelper getMaxPageNumber:self.showSummaryIdStr];
+        self.currentPageNumber = sender.object;
+      
+        [self setWebViewPosition:self.currentPageNumber];
+        NSLog(@"current page is: %@",self.currentPageNumber);
+        
     }
 }
 
