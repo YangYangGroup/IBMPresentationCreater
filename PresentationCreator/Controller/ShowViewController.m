@@ -85,31 +85,24 @@
 //处理section 拼接字符串
 -(NSString *)processStringWithSection:(NSString *)htmlCode :(NSInteger) currentRowIndex{
     
-    NSRange rangeStartSection = [htmlCode
-                                 rangeOfString:@"<section class='swiper-slide swiper-slide"];
-    NSInteger startLocation = rangeStartSection.location + 34;
+    NSString *setIndexString = @"swiper-slide swiper-slide";
+    NSString *tmpString = [NSString stringWithFormat:@"%ld",(long)currentRowIndex];
+    setIndexString = [setIndexString stringByAppendingString:tmpString];
+    NSString *newHtmlCode = [htmlCode
+                             stringByReplacingOccurrencesOfString:
+                             @"swiper-slide swiper-slide" withString:setIndexString];
     
+    NSRange rangeStartSection = [newHtmlCode rangeOfString:@"<section"];
+    NSInteger startLocation = rangeStartSection.location;
     
     //-substringFromIndex: 以指定位置开始（包括指定位置的字符），并包括之后的全部字符
-    NSString *stringStart = [htmlCode substringFromIndex:startLocation];
-    
-    
+    NSString *stringStart = [newHtmlCode substringFromIndex:startLocation];
     NSRange rangeEndSection = [stringStart rangeOfString:@"</section>"];
     NSInteger endLocation = rangeEndSection.location;
     
     //-substringToIndex: 从字符串的开头一直截取到指定的位置，但不包括该位置的字符 +10表示包括</section>
     NSString *stringEnd = [stringStart substringToIndex:endLocation+10];
-    
-    NSMutableString *finalString = [[NSMutableString alloc] initWithString:stringEnd];
-    
-    NSString *className = @"<section class='swiper-slide swiper-slide" ;
-    
-    className =  [className stringByAppendingString:[NSString stringWithFormat:@"%ld",(long)currentRowIndex]];
-    className = [className stringByAppendingFormat:@"'"];
-    
-    [finalString replaceCharactersInRange:NSMakeRange(0,9) withString:className];
-    
-    return  finalString;
+    return  stringEnd;
 }
 //生成最终的html代码保存到summary表中
 -(void)generationFinalHtmlCode{
@@ -436,7 +429,10 @@
                                     target:self
                                     action:@selector(uploadClick)],
                       
-                      
+                      [KxMenuItem menuItem:@"get html code"
+                                     image:nil
+                                    target:self
+                                    action:@selector(getSectionFromWebView)],
                       ];
     }
     
@@ -916,9 +912,7 @@
     
     [self presentViewController:navigation animated:YES completion:nil];
 }
-
-
-
+// select template notification
 -(void)getTemplateNotification:(NSNotification *)sender{
     if ([sender.name isEqual:@"SelectedTemplate"])
     {
@@ -944,6 +938,14 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
+
+#pragma get current section html code 
+-(void)getSectionFromWebView{
+    NSString *allHtml = [self getHtmlFromUIWebView];
+    
+    NSLog(@"%@",allHtml);
+//    return @"";
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
