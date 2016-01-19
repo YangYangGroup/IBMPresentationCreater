@@ -928,7 +928,11 @@
         NSURL *baseURL = [NSURL fileURLWithPath:path];
         [self.webView loadHTMLString:_finalHtmlCode baseURL:baseURL];
         [self loadHtmlToWebView];
-        
+        if([sender.object isEqualToString:@"1"]){
+            self.currentPageNumber = self.maxPageNumber;
+            [self setWebViewPosition:self.currentPageNumber];
+            
+        }
     }
 }
 

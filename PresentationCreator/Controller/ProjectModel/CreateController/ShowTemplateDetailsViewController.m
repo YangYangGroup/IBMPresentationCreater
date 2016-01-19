@@ -114,7 +114,7 @@
     TemplateDetailsModel *tdm = [[TemplateDetailsModel alloc]init];
     tdm = [self.templateDetailsArray objectAtIndex:indexPath.row];
     NSLog(@"you selected template is:%@", tdm.templateDetailsId);
-    
+    NSString *isMaxPageNumber = @"1";
     if ([[DBDaoHelper getMaxPageNumber:self.showSummaryIdStr] isEqualToString:self.currentPageNumber]) {
         int pageNum = [self.currentPageNumber intValue];
         pageNum ++;
@@ -124,11 +124,12 @@
         [DBDaoHelper updateOldPageNumberByNewPageNumber:self.currentPageNumber SummaryId:self.showSummaryIdStr];
         
         [DBDaoHelper insertHtmlToDetailsSummaryIdWith:self.showSummaryIdStr TemplateId:tdm.templateId TemplateDetailsId:tdm.templateDetailsId HtmlCode:tdm.templateHtml PageNumber:self.currentPageNumber];
+        isMaxPageNumber = 0;
     }
     
     
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedTemplate" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedTemplate" object:isMaxPageNumber];
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
