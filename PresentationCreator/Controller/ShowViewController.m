@@ -1757,7 +1757,7 @@
 -(void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
     _audioPlayer = nil;
     if (![self.audioPlayer isPlaying]) {
-        [self.audioPlayer play];
+        //[self.audioPlayer play];
         //将detailsid summaryid filetype filepath插入数据库
         DetailsModel *dmm = [[DetailsModel alloc]init];
         dmm = [self.detailsListMuArray objectAtIndex:[self getUIWebViewPageNumber]];
