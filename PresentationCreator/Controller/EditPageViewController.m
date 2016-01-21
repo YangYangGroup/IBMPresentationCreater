@@ -297,7 +297,7 @@
         NSLog(@"Begin image");
         NSArray *args = [JSContext currentArguments];
         _imgIndex = [[NSString alloc]initWithFormat:@"%@",args[0]];
-       // [self editImageComponent:_fullPath :_imgIndex];
+        [self editImageComponent:_fullPath :_imgIndex];
         //加载本地图片到webview,把图片的索引传给方法
         [self backgroundClick];
         
@@ -649,7 +649,7 @@
     htmlC = [htmlC stringByAppendingString:_stringSections];
     htmlC = [htmlC stringByAppendingString:final_html_after_section];
     
-    BOOL sts = [DBDaoHelper updateSummaryContentById : htmlC : self.showSummaryIdStr];
+    BOOL sts = [DBDaoHelper updateSummaryContentById:self.showSummaryIdStr HtmlCode:htmlC];
     _finalHtmlCode = htmlC;
     
     if (sts) {

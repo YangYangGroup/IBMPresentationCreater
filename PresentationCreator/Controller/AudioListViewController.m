@@ -78,6 +78,7 @@
     if(_audioId.length != 0){
         [DBDaoHelper updateDetailByFileId:_audioId DetailsId:_detailsId];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedAudioName" object:_selectedAudioName];
+        [self.audioPlayer stop];
         [self dismissViewControllerAnimated:YES completion:^{}];
     }
 }

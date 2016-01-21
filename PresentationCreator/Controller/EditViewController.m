@@ -196,7 +196,7 @@
     htmlCodes = [htmlCodes stringByAppendingString:_stringSections];
     htmlCodes = [htmlCodes stringByAppendingString:final_html_after_section];
     
-    BOOL sts = [DBDaoHelper updateSummaryContentById : htmlCodes : self.showSummaryIdStr];
+    BOOL sts = [DBDaoHelper updateSummaryContentById:self.showSummaryIdStr HtmlCode:htmlCodes];
     _finalHtmlCode = htmlCodes;
    
     if (sts) {
