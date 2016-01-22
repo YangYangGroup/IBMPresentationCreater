@@ -535,6 +535,7 @@
 }
 // edit presentation name
 -(void)editPresentationName{
+    [self getUIWebViewPageNumber];
     EditPresentationNameViewController *editPName = [[EditPresentationNameViewController alloc]init];
     editPName.summaryId = _showSummaryIdStr;
     editPName.summaryName = _showSummaryNameStr;
@@ -1586,10 +1587,12 @@
     
     [self.webView stringByEvaluatingJavaScriptFromString:str];
     
-    [self getHTMLAndUpdateSummary];
-    
     [self setWebViewPosition:self.currentPageNumber];
     NSLog(@"current page is: %@",self.currentPageNumber);
+    
+    [self getHTMLAndUpdateSummary];
+    
+    
 }
 
 #pragma mark - 私有方法 - 录音相关方法 -----------------------------
