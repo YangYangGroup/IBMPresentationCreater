@@ -657,4 +657,13 @@
     [db close];
     return nil;
 }
+// update summary details
++(BOOL)updateSummaryDetailsBySummaryId:(NSString *)summaryId PageNumber:(NSString *)pageNumber HtmlCode:(NSString *)htmlCode{
+    FMDatabase *db = [DBHelper openDatabase];
+    
+    BOOL resultUpdate = [db executeUpdate:@"UPDATE PPT_PRODUCT_DETAILS SET html_code= ?   WHERE summary_id =? and page_number = ?", htmlCode, summaryId, pageNumber];
+    
+    [db close];
+    return resultUpdate;
+}
 @end
