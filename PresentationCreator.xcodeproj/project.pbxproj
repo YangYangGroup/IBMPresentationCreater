@@ -173,6 +173,8 @@
 		BA8DC5211C032EE3005CBB73 /* SummaryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8DC5201C032EE3005CBB73 /* SummaryModel.m */; };
 		BAA006341C05C3E400D3C522 /* EditPresentationNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAA006321C05C3E400D3C522 /* EditPresentationNameViewController.m */; };
 		BAA006351C05C3E400D3C522 /* EditPresentationNameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAA006331C05C3E400D3C522 /* EditPresentationNameViewController.xib */; };
+		BABBB8A71C565CEC000B9D0C /* EditCurrentPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BABBB8A51C565CEC000B9D0C /* EditCurrentPageViewController.m */; };
+		BABBB8A81C565CEC000B9D0C /* EditCurrentPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BABBB8A61C565CEC000B9D0C /* EditCurrentPageViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -437,6 +439,9 @@
 		BAA006311C05C3E400D3C522 /* EditPresentationNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditPresentationNameViewController.h; sourceTree = "<group>"; };
 		BAA006321C05C3E400D3C522 /* EditPresentationNameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditPresentationNameViewController.m; sourceTree = "<group>"; };
 		BAA006331C05C3E400D3C522 /* EditPresentationNameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditPresentationNameViewController.xib; sourceTree = "<group>"; };
+		BABBB8A41C565CEC000B9D0C /* EditCurrentPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditCurrentPageViewController.h; sourceTree = "<group>"; };
+		BABBB8A51C565CEC000B9D0C /* EditCurrentPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditCurrentPageViewController.m; sourceTree = "<group>"; };
+		BABBB8A61C565CEC000B9D0C /* EditCurrentPageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditCurrentPageViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -625,6 +630,9 @@
 		162A37C31BBA8C830069D9BB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				BABBB8A41C565CEC000B9D0C /* EditCurrentPageViewController.h */,
+				BABBB8A51C565CEC000B9D0C /* EditCurrentPageViewController.m */,
+				BABBB8A61C565CEC000B9D0C /* EditCurrentPageViewController.xib */,
 				162A37AF1BBA81BA0069D9BB /* ViewController.h */,
 				162A37B01BBA81BA0069D9BB /* ViewController.m */,
 				162A37B11BBA81BA0069D9BB /* ViewController.xib */,
@@ -1117,6 +1125,7 @@
 				1632FEF41C05D5EF00DBFA1A /* share@2x.png in Resources */,
 				16350CDB1BD7B6C0005C1291 /* SelectTemplateViewController.xib in Resources */,
 				1631DEDB1BFDE8BB005B0116 /* RecordingSignal004.png in Resources */,
+				BABBB8A81C565CEC000B9D0C /* EditCurrentPageViewController.xib in Resources */,
 				BA2BEFD01BFF2D1100718E43 /* checkbox_checked.png in Resources */,
 				BAA006351C05C3E400D3C522 /* EditPresentationNameViewController.xib in Resources */,
 				16335CCD1BF476C300DD1DB7 /* Localizable.strings in Resources */,
@@ -1210,6 +1219,7 @@
 				1628E7931BE9F8F200D6200A /* AFURLSessionManager.m in Sources */,
 				1657BBFA1BF83F61000C83C0 /* SBJsonTokeniser.m in Sources */,
 				163484491BCBE57C002DB6AD /* CreationEditViewController.m in Sources */,
+				BABBB8A71C565CEC000B9D0C /* EditCurrentPageViewController.m in Sources */,
 				1628E78F1BE9F8F200D6200A /* AFSecurityPolicy.m in Sources */,
 				1628E7921BE9F8F200D6200A /* AFURLResponseSerialization.m in Sources */,
 				1657BBF21BF83F61000C83C0 /* SBJsonParser.m in Sources */,
