@@ -104,4 +104,6 @@
 +(BOOL)updateOldPageNumberByNewPageNumber:(NSString *)pageNumber SummaryId:(NSString *)summaryId;
 //查询template表中所有数据，放入数组中
 +(NSMutableArray *)selectTemplateIdAndUpdateFlag;
+// fetch summary details by summary id and page number
++(NSString *)queryProductDetailsHtmlCodeWithSummaryId:(NSString *)summaryId PageNumber:(NSString *)pageNuber;
 @end
