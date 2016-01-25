@@ -625,4 +625,22 @@
     [db close];
     return resultUpdate;
 }
+//查询template表中所有数据，放入数组中
++(NSMutableArray *)selectTemplateIdAndUpdateFlag
+{
+    FMDatabase *db =[DBHelper openDatabase];
+    //执行查询语句
+    FMResultSet *result = [db executeQuery:@"select * from 'PPT_PRODUCT_TEMPLATE'"];
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    while (result.next)
+    {
+        //根据列名取出分类信息存到对象中以对象返回
+        TemplateModel *model = [[TemplateModel alloc]init];
+        model.templateId = [result stringForColumn:@"template_id"];
+        model.updateFlag = [result stringForColumn:@"update_flag"];
+        [array addObject:model];
+    }
+    [db close];
+    return array;
+}
 @end

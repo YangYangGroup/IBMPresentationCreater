@@ -102,4 +102,6 @@
 
 // add new page
 +(BOOL)updateOldPageNumberByNewPageNumber:(NSString *)pageNumber SummaryId:(NSString *)summaryId;
+//查询template表中所有数据，放入数组中
++(NSMutableArray *)selectTemplateIdAndUpdateFlag;
 @end
