@@ -105,4 +105,7 @@
 
 // update summary details
 +(BOOL)updateSummaryDetailsBySummaryId:(NSString *)summaryId PageNumber:(NSString *)pageNumber HtmlCode:(NSString *)htmlCode;
+
+// fetch summary details by summary id and page number
++(NSString *)queryProductDetailsHtmlCodeWithSummaryId:(NSString *)summaryId PageNumber:(NSString *)pageNuber;
 @end
