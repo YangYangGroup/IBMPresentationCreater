@@ -641,7 +641,7 @@
     FMDatabase *db =[DBHelper openDatabase];
     FMResultSet *result1 = [db executeQuery:@"SELECT html_code FROM PPT_PRODUCT_DETAILS WHERE summary_id = ? and page_number = ?",summaryId,pageNuber];
      
-    while (result1.next)
+    while(result1.next) 
     {
         NSString *str = [result1 stringForColumnIndex:0];
         [db close];
