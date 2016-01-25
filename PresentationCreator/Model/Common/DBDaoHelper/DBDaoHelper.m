@@ -163,7 +163,7 @@
     return  detailsArray;
 }
 // 点预览时生成html代码，更新到对应的PPT_PRODUCT_SUMMARY表中的记录
-+(BOOL)updateSummaryContentById:(NSString *)htmlCode :(NSString *)summaryId{
++(BOOL)updateSummaryContentById:(NSString *)summaryId HtmlCode:(NSString *)htmlCode{
     FMDatabase *db =[DBHelper openDatabase];
     BOOL result = [db executeUpdate:@"UPDATE PPT_PRODUCT_SUMMARY SET content_html=? WHERE summary_id =?",htmlCode, summaryId];
     [db close];

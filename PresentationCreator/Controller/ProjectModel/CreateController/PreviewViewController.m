@@ -333,7 +333,7 @@
     NSString *htmlCodes = final_html_befor_section;
     htmlCodes = [htmlCodes stringByAppendingString:_stringSections];
     htmlCodes = [htmlCodes stringByAppendingString:final_html_after_section];
-    [DBDaoHelper updateSummaryContentById : htmlCodes : self.showSummaryIdStr];
+    [DBDaoHelper updateSummaryContentById:self.showSummaryIdStr HtmlCode:htmlCodes];
     _finalHtmlCode = htmlCodes;
 }
 

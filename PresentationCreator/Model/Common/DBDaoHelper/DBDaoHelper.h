@@ -36,7 +36,7 @@
 +(NSMutableArray *)selectDetailsDataBySummaryId:(NSString *)summaryId;
 
 // 点预览时生成html代码，更新到对应的PPT_PRODUCT_SUMMARY表中的记录
-+(BOOL)updateSummaryContentById:(NSString *)htmlCode :(NSString *)summaryId;
++(BOOL)updateSummaryContentById:(NSString *)summaryId HtmlCode:(NSString *)htmlCode;
 //向details表中插入我的summaryid和templateid，返回最大的主键值
 +(NSString *)insertDetailsWithSummaryId:(NSString *)summaryid templateId:(NSString *)templateid;
 //根据传过来的details表的detailsid修改html_code

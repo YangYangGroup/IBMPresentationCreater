@@ -5,7 +5,7 @@
 //  Created by songyang on 15/9/29.
 //  Copyright © 2015年 songyang. All rights reserved.
 //
-
+#import "PECropViewController.h"
 #import "ShowViewController.h"
 #import "EditViewController.h"
 #import "DetailsModel.h"
@@ -20,7 +20,10 @@
 #import "EditPageViewController.h"
 #import "SelectTemplateForEditViewController.h"
 
-@interface ShowViewController ()<UIWebViewDelegate>
+#import "EditCurrentPageViewController.h"
+
+
+@interface ShowViewController ()<UIWebViewDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic, retain) UIWebView *webView;
 @property (nonatomic, strong) NSMutableArray *detailsListMuArray;
 @property (nonatomic, strong) NSString *getHtmlFromSummaryStr;
@@ -36,6 +39,7 @@
 @property (nonatomic, strong) NSString *currentPageNumber;
 @property (nonatomic, strong) NSString *maxPageNumber;
 
+
 @end
 
 @implementation ShowViewController
@@ -49,6 +53,7 @@
     [self addWebView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getTemplateNotification:) name:@"SelectedTemplate" object:nil];
+    
     
 }
 -(void)initDataForAction{
@@ -64,6 +69,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     _sumyModel = [[SummaryModel alloc]init];
+    
     [self addNavigation];
     
 }
@@ -85,31 +91,24 @@
 //处理section 拼接字符串
 -(NSString *)processStringWithSection:(NSString *)htmlCode :(NSInteger) currentRowIndex{
     
-    NSRange rangeStartSection = [htmlCode
-                                 rangeOfString:@"<section class='swiper-slide swiper-slide"];
-    NSInteger startLocation = rangeStartSection.location + 34;
+    NSString *setIndexString = @"swiper-slide swiper-slide";
+    NSString *tmpString = [NSString stringWithFormat:@"%ld",(long)currentRowIndex];
+    setIndexString = [setIndexString stringByAppendingString:tmpString];
+    NSString *newHtmlCode = [htmlCode
+                             stringByReplacingOccurrencesOfString:
+                             @"swiper-slide swiper-slide" withString:setIndexString];
     
+    NSRange rangeStartSection = [newHtmlCode rangeOfString:@"<section"];
+    NSInteger startLocation = rangeStartSection.location;
     
     //-substringFromIndex: 以指定位置开始（包括指定位置的字符），并包括之后的全部字符
-    NSString *stringStart = [htmlCode substringFromIndex:startLocation];
-    
-    
+    NSString *stringStart = [newHtmlCode substringFromIndex:startLocation];
     NSRange rangeEndSection = [stringStart rangeOfString:@"</section>"];
     NSInteger endLocation = rangeEndSection.location;
     
     //-substringToIndex: 从字符串的开头一直截取到指定的位置，但不包括该位置的字符 +10表示包括</section>
     NSString *stringEnd = [stringStart substringToIndex:endLocation+10];
-    
-    NSMutableString *finalString = [[NSMutableString alloc] initWithString:stringEnd];
-    
-    NSString *className = @"<section class='swiper-slide swiper-slide" ;
-    
-    className =  [className stringByAppendingString:[NSString stringWithFormat:@"%ld",(long)currentRowIndex]];
-    className = [className stringByAppendingFormat:@"'"];
-    
-    [finalString replaceCharactersInRange:NSMakeRange(0,9) withString:className];
-    
-    return  finalString;
+    return  stringEnd;
 }
 //生成最终的html代码保存到summary表中
 -(void)generationFinalHtmlCode{
@@ -117,7 +116,7 @@
     NSString *htmlCodes = final_html_befor_section;
     htmlCodes = [htmlCodes stringByAppendingString:_stringSections];
     htmlCodes = [htmlCodes stringByAppendingString:final_html_after_section];
-    [DBDaoHelper updateSummaryContentById : htmlCodes : self.showSummaryIdStr];
+    [DBDaoHelper updateSummaryContentById:self.showSummaryIdStr HtmlCode:htmlCodes];
     _finalHtmlCode = htmlCodes;
 }
 -(void)addNavigation
@@ -129,6 +128,7 @@
     [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
     self.navigationItem.leftBarButtonItem = backItem;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
     
     
     UIButton *uploadButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -174,53 +174,14 @@
     
     _webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 64, KScreenWidth, KScreenHeight-64)];
     _webView.delegate = self;
-    _webView.backgroundColor = [UIColor redColor];
+    _webView.backgroundColor = [UIColor whiteColor];
     NSString *path = [[NSBundle mainBundle] bundlePath];
     NSURL *baseURL = [NSURL fileURLWithPath:path];
     [_webView loadHTMLString:_finalHtmlCode baseURL:baseURL];
     [self.view addSubview: _webView];
     
-    [self loadHtmlToWebView];
-    
  
 }
-
--(void)loadHtmlToWebView{
-   
-    
-    JSContext *context = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
-    
-    context[@"clickedText"] = ^() {
-        
-//        [self setWebViewPosition:self.currentPageNumber];
-        
-        NSLog(@"Begin text");
-        NSArray *args = [JSContext currentArguments];
-        
-        NSString *htmlVal = [[NSString alloc]initWithFormat:@"%@",args[0]];
-        NSString *htmlIndex =[[NSString alloc]initWithFormat:@"%@",args[1]];
-        NSString *editFlag =[[NSString alloc]initWithFormat:@"%@",args[2]];
-        NSLog(@"editFlag:%@,---%@", htmlVal,htmlIndex);
-//        _oldTextHtml = htmlVal;
-//        [self editTextComponent:htmlVal htmlIndex:htmlIndex editFlag:editFlag];
-        NSLog(@"-------End Text-------");
-        
-    };
-    //点击图片js方法调用native
-    context[@"clickedImage"] = ^() {
-        NSLog(@"Begin image");
-        
-        NSArray *args = [JSContext currentArguments];
-//        _imgIndex = [[NSString alloc]initWithFormat:@"%@",args[0]];
-        //[self editImageComponent:_fullPath :_imgIndex];
-        //        [self editImageComponent: @"/Users/linlecui/Desktop/10c58PIC2CK_1024.jpg" : imgIndex];//加载本地图片到webview,把图片的索引传给方法
-//        [self backgroundClick];
-        
-        NSLog(@"-------End Image-------");
-    };
-    
-}
-
 -(void)uploadClick
 {
     self.returnFileArray = [DBDaoHelper selectFromFileToSummary_idWith:self.showSummaryIdStr];
@@ -386,6 +347,16 @@
                                     target:self
                                     action:@selector(deleteClick)],
                       
+                      [KxMenuItem menuItem:@"Edit"
+                                     image:nil
+                                    target:self
+                                    action:@selector(editCurrentPage)],
+                      
+//                      [KxMenuItem menuItem:@"Recording"
+//                                     image:nil
+//                                    target:self
+//                                    action:@selector(talkClick)],
+                      
                       [KxMenuItem menuItem:@"Rename"
                                      image:nil
                                     target:self
@@ -421,6 +392,21 @@
                                     target:self
                                     action:@selector(deleteClick)],
                       
+                      [KxMenuItem menuItem:@"Edit"
+                                     image:nil
+                                    target:self
+                                    action:@selector(editCurrentPage)],
+
+//                      [KxMenuItem menuItem:@"Audio List"
+//                                     image:nil
+//                                    target:self
+//                                    action:@selector(openAudioList)],
+//                      
+//                      [KxMenuItem menuItem:@"Recording"
+//                                     image:nil
+//                                    target:self
+//                                    action:@selector(talkClick)],
+                      
                       [KxMenuItem menuItem:@"Rename"
                                      image:nil
                                     target:self
@@ -452,6 +438,7 @@
 }
 // edit presentation name
 -(void)editPresentationName{
+    [self getUIWebViewPageNumber];
     EditPresentationNameViewController *editPName = [[EditPresentationNameViewController alloc]init];
     editPName.summaryId = _showSummaryIdStr;
     editPName.summaryName = _showSummaryNameStr;
@@ -844,7 +831,6 @@
         NSString *path = [[NSBundle mainBundle] bundlePath];
         NSURL *baseURL = [NSURL fileURLWithPath:path];
         [self.webView loadHTMLString:_finalHtmlCode baseURL:baseURL];
-        [self loadHtmlToWebView];
         //[self.webView reload];
 //        [self setWebViewPosition:self.currentPageNumber];
     
@@ -857,7 +843,7 @@
     NSString *htmlSource = @"<!DOCTYPE html><html>";
     htmlSource = [htmlSource stringByAppendingString: [self.webView stringByEvaluatingJavaScriptFromString:jsToGetHtmlSource]];
     htmlSource = [htmlSource stringByAppendingString:@"</html>"];
-    
+    [self getUIWebViewPageNumber];
     return htmlSource;
 }
 
@@ -900,7 +886,9 @@
     [self.webView stringByEvaluatingJavaScriptFromString:jsCode];
 }
 -(void)webViewDidFinishLoad:(UIWebView *)webView{
+    
     [self setWebViewPosition:self.currentPageNumber];
+     NSLog(@"webview did finish load current page is: %@",self.currentPageNumber);
 }
 
 -(void)addPageClick{
@@ -915,24 +903,67 @@
     [self presentViewController:navigation animated:YES completion:nil];
 }
 
+#pragma get current section html code 
+-(NSString *)getSectionFromWebView{
+    NSString *allHtml = [self getHtmlFromUIWebView];
+    
+    //-substringFromIndex: 以指定位置开始（包括指定位置的字符），并包括之后的全部字符
+    NSRange rangeStartSection = [allHtml rangeOfString:@"swiper-slide-active"];
+    NSInteger startLocation = rangeStartSection.location;
+    NSString *stringStart = [allHtml substringFromIndex:startLocation+19];
+   
+    //-substringToIndex: 从字符串的开头一直截取到指定的位置，但不包括该位置的字符 +10表示包括</section>
+    NSRange rangeEndSection = [stringStart rangeOfString:@"</section>"];
+    NSInteger endLocation = rangeEndSection.location;
+    NSString *stringEnd = [stringStart substringToIndex:endLocation+10];
+    
+    NSString *tmpHtmlCode = @"<section class='swiper-slide swiper-slide";
+    tmpHtmlCode = [tmpHtmlCode stringByAppendingString:stringEnd];
+    NSString *finalHtmlCode = [tmpHtmlCode stringByReplacingOccurrencesOfString:@"\"" withString:@"'"];
+    
+    return finalHtmlCode;
+}
+
+// generation one details html code
+-(NSString *)generationOneDetailsCode:(NSString *)detailsCode{
+    // get html code from start location, until this location
+    NSRange rangeStartSection = [detailsCode rangeOfString:@"<section "];
+    NSInteger startLocation = rangeStartSection.location;
+    NSString *beforeString = [detailsCode substringWithRange:NSMakeRange(0, startLocation)];
+    
+    // get html code from set location until end.
+    NSRange rangeEndSection = [detailsCode rangeOfString:@"</section>"];
+    NSInteger endLocation = rangeEndSection.location;
+    NSString *afterString = [detailsCode substringFromIndex:endLocation+10];
+    
+    NSString *detailHtmlCode = beforeString;
+    detailHtmlCode = [detailHtmlCode stringByAppendingString:[self getSectionFromWebView]];
+    detailHtmlCode = [detailHtmlCode stringByAppendingString:afterString];
+    
+    return detailHtmlCode;
+}
 
 
+
+
+
+// select template notification
 -(void)getTemplateNotification:(NSNotification *)sender{
     if ([sender.name isEqual:@"SelectedTemplate"])
     {
-       
         [self loadDetailsDataToArray];
         [self generationFinalHtmlCode];
         [self initDataForAction];
         NSString *path = [[NSBundle mainBundle] bundlePath];
         NSURL *baseURL = [NSURL fileURLWithPath:path];
         [self.webView loadHTMLString:_finalHtmlCode baseURL:baseURL];
-        [self loadHtmlToWebView];
-        if([sender.object isEqualToString:@"1"]){
-            self.currentPageNumber = self.maxPageNumber;
-            [self setWebViewPosition:self.currentPageNumber];
-            
-        }
+        
+        self.maxPageNumber = [DBDaoHelper getMaxPageNumber:self.showSummaryIdStr];
+        self.currentPageNumber = sender.object;
+        
+        [self setWebViewPosition:self.currentPageNumber];
+        NSLog(@"current page is: %@",self.currentPageNumber);
+        
     }
 }
 
@@ -941,6 +972,20 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
+
+-(void)editCurrentPage{
+    [self getUIWebViewPageNumber];
+    EditCurrentPageViewController *editCPVC = [[EditCurrentPageViewController alloc]init];
+    editCPVC.currentPageNumber = self.currentPageNumber;
+    editCPVC.summaryId = self.showSummaryIdStr;
+    editCPVC.navigationTitle = self.showSummaryNameStr;
+    
+    DetailsModel *dm = [[DetailsModel alloc]init];
+    dm = [self.detailsListMuArray objectAtIndex:[self getUIWebViewPageNumber]];
+    editCPVC.pptDetailsID = dm.detailsIdStr;
+    
+    [self.navigationController pushViewController:editCPVC animated:YES];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

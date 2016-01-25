@@ -1,28 +1,27 @@
 //
-//  EditPageViewController.m
+//  EditCurrentPageViewController.m
 //  PresentationCreator
 //
-//  Created by Lin Lecui on 15/12/7.
-//  Copyright © 2015年 songyang. All rights reserved.
+//  Created by Lin Lecui on 16/1/25.
+//  Copyright © 2016年 songyang. All rights reserved.
 //
 
-#import "EditPageViewController.h"
-#import <JavaScriptCore/JavaScriptCore.h>
-#import <AVFoundation/AVFoundation.h>
+#import "EditCurrentPageViewController.h"
 #import "KxMenu.h"
-#import "AddPageViewController.h"
-#import "PECropViewController.h"
+#import "DBDaoHelper.h"
 #import "AudioListViewController.h"
-#import "SelectTemplateForEditViewController.h"
+#import <AVFoundation/AVFoundation.h>
+#import "PECropViewController.h"
+#import "DetailsModel.h"
 
-@interface EditPageViewController ()<UIWebViewDelegate,UIScrollViewDelegate,UITextViewDelegate>
-@property (nonatomic, strong) NSMutableArray *detailsArray;//获取details表对象
-@property (nonatomic, strong) NSMutableArray *htmlCodeArray;//html代码数组
+@interface EditCurrentPageViewController ()<UIWebViewDelegate,UIGestureRecognizerDelegate,AVAudioRecorderDelegate>
+@property (nonatomic, strong) NSString *htmlCode;
+@property (nonatomic, strong) UIWebView *webView;
 
-@property (nonatomic, strong) UIScrollView *scrollView;
-@property (nonatomic, strong) UIPageControl *pageControl;
-@property (nonatomic) NSInteger totalPage;
-@property (nonatomic) NSInteger currentPage;
+
+
+//edit text
+@property (nonatomic, strong) UIControl *editTextViewControl;
 @property (nonatomic) NSString *oldText;
 @property (nonatomic) NSString *getText;
 @property (nonatomic, strong) NSString *txtIndex;
@@ -30,17 +29,27 @@
 @property (nonatomic, strong) UITextView *txtView;
 @property (nonatomic, strong) UIButton *okButton;
 @property (nonatomic, strong) UIButton *cancelButton;
-@property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) NSString *htmlSource;
-@property (nonatomic, strong) NSString *stringSections;
-@property (nonatomic, strong) NSString *finalHtmlCode;
-@property (nonatomic, strong) NSMutableArray *detailsListMuArray;
+@property (nonatomic, strong) UILabel *titleLabel;
+
+// 自定义键盘
+@property (nonatomic, strong) UITextView *myTextView;
+@property (nonatomic, strong) UIView *textBackgroundView;
+@property (nonatomic, strong) UIButton *addLineBtn;
+@property (nonatomic, strong) UIButton *deleteLineBtn;
+@property (nonatomic, strong) UIView *backgroundView;
+@property (nonatomic,strong)UITextView * mTextView;
+@property (nonatomic,strong)UIView *mBackView;
+@property (nonatomic, strong) NSString *oldTextHtml;
+@property (nonatomic, strong) NSString *textIndex;
+@property (nonatomic, strong) NSString *currentText;
 
 // image use
 @property (nonatomic, strong) NSString *imgIndex;
 @property (nonatomic ,strong) NSString *fullPath;
 
-@property (nonatomic, strong) UIControl *editTextViewControl;
+// audio use
+
 @property (nonatomic, strong) UIControl *aduioViewControl;
 @property (nonatomic) BOOL buttonFlag;
 @property (nonatomic, strong) UIButton *startButton;
@@ -57,221 +66,108 @@
 @property (nonatomic, strong) NSMutableArray *volumImages;
 @property (nonatomic, assign) double lowPassResults;
 
-// 自定义键盘
-@property (nonatomic, strong) UITextView *myTextView;
-@property (nonatomic, strong) UIView *textBackgroundView;
-@property (nonatomic, strong) UIButton *addLineBtn;
-@property (nonatomic, strong) UIButton *deleteLineBtn;
-@property (nonatomic, strong) UIView *backgroundView;
-@property (nonatomic,strong)UITextView * mTextView;
-@property (nonatomic,strong)UIView *mBackView;
-@property (nonatomic, strong) NSString *oldTextHtml;
-@property (nonatomic, strong) NSString *textIndex;
-@property (nonatomic, strong) NSString *currentText;
 
 @end
 
-@implementation EditPageViewController
+@implementation EditCurrentPageViewController
+-(void)viewWillAppear:(BOOL)animated{
+   
+   
 
-
--(void)viewWillAppear:(BOOL)animated
-{
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAudioNameFromList:) name:@"SelectedAudioName" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getTemplateNotification:) name:@"SelectedTemplate" object:nil];
-    [self loadDetailsToArray];
     
-    [self addObserverWithKeyboard];
+    
 }
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+   
+    NSLog(@"current page number:%@",self.currentPageNumber);
+    
+    
     _fullPath = [[NSString alloc]init];
     _audioPath = [[NSString alloc]init];
-   
-   
     
-    self.parentViewController.tabBarController.tabBar.hidden = YES;
-    //    self.navigationItem.hidesBackButton =YES;//隐藏系统自带导航栏按钮
-    self.navigationItem.title=self.showSummaryNameStr;
-    self.htmlCodeArray = [[NSMutableArray alloc]init];
-    
-    _detailsArray = [[NSMutableArray alloc]init];
-    [self loadDetailsToArray];
-    _currentPage = _detailsArray.count-1;
-    _totalPage = _detailsArray.count;
-    
-    [self addNavigation];
-    [self initPageControl];
-    [self initScrollView];
-   
     [self setAudioSession];
-    
     //音量图片数组
     _volumImages = [[NSMutableArray alloc]initWithObjects:@"RecordingSignal001.png",@"RecordingSignal002.png",
                     @"RecordingSignal003.png", @"RecordingSignal004.png",
                     @"RecordingSignal005.png",@"RecordingSignal006.png",
                     @"RecordingSignal007.png",@"RecordingSignal008.png",   nil];
+
     
-    self.view.backgroundColor = [UIColor whiteColor];
+    
+    [self addNavigation];
+    
+    self.htmlCode = [DBDaoHelper queryProductDetailsHtmlCodeWithSummaryId:self.summaryId PageNumber:self.currentPageNumber];
+    
+    
+    
+    [self addObserverWithKeyboard];
+    
+    [self addWebView];
+
 }
 
--(void)loadDetailsToArray{
+-(void)addNavigation{
+    self.navigationItem.title = self.navigationTitle;
     
-   _detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:_showSummaryIdStr]; 
-    NSLog(@"loadDetailsToArray count:::%ld",(long)_detailsArray.count);
-    
-}
-
-#pragma -------------- init scroll view ----------------
--(void)initScrollView{
-    // 设定 ScrollView 的   Frame，逐页滚动时，如果横向滚动，按宽度为一个单位滚动，纵向时，按高度为一个单位滚动
-    _scrollView = nil;
-    CGRect bound = [[UIScreen mainScreen]bounds];
-    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 80, bound.size.width, bound.size.height-4)];
-    
-    int boundWidth = bound.size.width - 30;
-    NSInteger uiViewHeight = bound.size.height -60 -35 ;
-    //    _scrollView.clipsToBounds = NO;
-    _scrollView.delegate = self;
-    _scrollView.pagingEnabled =  YES;
-    _scrollView.backgroundColor = [UIColor whiteColor];
-    // ScrollView 背景色，即 View 间的填充色
-    //向 ScrollView 中加入第一个 View，View 的宽度 200 加上两边的空隙 5 等于 ScrollView 的宽度
-    
-    for (int i = 0; i < _detailsArray.count; i++) {
-        int numX = 15 + (boundWidth + 30) * i;
-        UIWebView *webView = [[UIWebView  alloc] initWithFrame:CGRectMake(numX,8+5,boundWidth,uiViewHeight-10)];
-        NSString *path = [[NSBundle mainBundle] bundlePath];
-        NSURL *baseURL = [NSURL fileURLWithPath:path];
-        DetailsModel *detail = [[DetailsModel alloc]init];
-        detail = _detailsArray[i];
-        //        webView.tag = (long)detail.detailsIdStr;
-        [webView loadHTMLString:detail.htmlCodeStr baseURL:baseURL];
-        
-        webView.delegate = self;
-        
-        [self loadHtmlToWebView:webView];
-        
-        webView.backgroundColor = [UIColor whiteColor];
-        
-        UIButton *deleteBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        deleteBtn.titleLabel.font = [UIFont systemFontOfSize:11.0f];
-        deleteBtn.frame = CGRectMake(numX-15, 0, 25, 25);
-        [deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
-        [deleteBtn addTarget:self action:@selector(deletePage) forControlEvents:UIControlEventTouchUpInside];
-        
-        [_scrollView addSubview:webView];
-        [_scrollView addSubview:deleteBtn];
-        [_scrollView bringSubviewToFront:deleteBtn];
-        webView = nil;
-    }
-    
-    [self.view addSubview:_scrollView];
-    //这个属性很重要，它可以决定是横向还是纵向滚动，一般来说也是其中的 View 的总宽度，和总的高度
-    //这里同时考虑到每个 View 间的空隙，所以宽度是 200x3＋5＋10＋10＋5＝630
-    //高度上与 ScrollView 相同，只在横向扩展，所以只要在横向上滚动
-    _scrollView.contentSize = CGSizeMake(10 + (boundWidth  + 30 ) * _totalPage, 100);
-    
-    //用它指定 ScrollView 中内容的当前位置，即相对于 ScrollView 的左上顶点的偏移
-    _scrollView.contentOffset = CGPointMake((boundWidth + 30) * (_detailsArray.count-2),0);
-    //按页滚动，总是一次一个宽度，或一个高度单位的滚动
-    
-    _scrollView.showsHorizontalScrollIndicator = NO;
-}
-
--(void)deletePage{
-    NSString *title = NSLocalizedString(@"Please confirm", nil);
-    NSString *message = NSLocalizedString(@"Do you want to delete?", nil);
-    NSString *cancelTitle = NSLocalizedString(@"Delete", nil);
-    NSString *deleteTitle = NSLocalizedString(@"Cancel", nil);
-    
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        DetailsModel *dModel = [_detailsArray objectAtIndex:_currentPage];
-        [DBDaoHelper deleteDetailsWithsql:dModel.detailsIdStr];
-        [self loadDetailsToArray];
-        
-        UIWebView *currentWebView = _scrollView.subviews[_currentPage];
-        [currentWebView removeFromSuperview];
-        currentWebView = nil;
-        
-        _totalPage --;
-        _currentPage--;
-        
-        [self initScrollView];
-        
-        _pageControl.currentPage = _currentPage;
-        _pageControl.numberOfPages = _totalPage;
-    }];
-    UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:deleteTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        
-        
-    }];
-    [alertController addAction:cancelAction];
-    [alertController addAction:deleteAction];
-    [self presentViewController:alertController animated:YES completion:nil];
-}
-
-#pragma --------------------- uiscrollview -------------------
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
-    CGFloat offsetX = scrollView.contentOffset.x;
-    offsetX = offsetX +(scrollView.frame.size.width * 0.5);
-    int pageNumber = offsetX / scrollView.frame.size.width;
-    _currentPage = pageNumber;
-    _pageControl.currentPage = pageNumber;
-    NSLog(@"current page is---%ld",(long)pageNumber);
-}
-
-#pragma ------------------- init page control -------------------
-
--(void)initPageControl{
-    //    if(!_pageControl){
-    [_pageControl removeFromSuperview];
-    _pageControl = nil;
-    _pageControl = [[UIPageControl alloc]init];
-    _pageControl.center = CGPointMake(self.view.frame.size.width/2, 73);
-    _pageControl.numberOfPages = _totalPage;
-    _pageControl.currentPage = _totalPage-1;
-    _pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
-    _pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-    [self.view addSubview:_pageControl];
-    //    }
-    
-}
-
-#pragma ------------------- load navigation ------------------------
--(void)addNavigation
-{
     UIButton *backbtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    
     backbtn.frame = CGRectMake(0, 0, 30, 30);
     [backbtn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
     [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
     self.navigationItem.leftBarButtonItem = backItem;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
     
-    UIButton *pushButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    pushButton.frame=CGRectMake(0, 0, 30, 30);
-    [pushButton setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
-    [pushButton setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
-    pushButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
-    [pushButton addTarget:self action:@selector(showMenu:)forControlEvents:UIControlEventTouchDown];
-    UIBarButtonItem *pushItem = [[UIBarButtonItem alloc]initWithCustomView:pushButton];
-    self.navigationItem.rightBarButtonItem = pushItem;
+    UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    moreButton.frame=CGRectMake(0, 0, 30, 30);
+    [moreButton setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
+    [moreButton setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
+    moreButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+    [moreButton addTarget:self action:@selector(showMenu:)forControlEvents:UIControlEventTouchDown];
+    UIBarButtonItem *moreItem = [[UIBarButtonItem alloc]initWithCustomView:moreButton];
+    self.navigationItem.rightBarButtonItem = moreItem;
+}
+
+-(void)backClick
+{
+    self.tabBarController.selectedIndex = 0;//点击按钮回到第一个tabbar
+    [self.navigationController popViewControllerAnimated:YES];
     
 }
 
-#pragma edit text
 
-
--(void)loadHtmlToWebView:(UIWebView *)myWebView{
+-(void)addWebView
+{
+    UIView *aView = [[UIView alloc]init];
+    aView.frame = CGRectMake(0, 0, 0, 0);
+    [self.view addSubview:aView];
     
-    JSContext *context = [myWebView  valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 64, KScreenWidth, KScreenHeight-64)];
+    self.webView.delegate = self;
+    self.webView.backgroundColor = [UIColor whiteColor];
+    NSString *path = [[NSBundle mainBundle] bundlePath];
+    NSURL *baseURL = [NSURL fileURLWithPath:path];
+    [self.webView loadHTMLString:self.htmlCode baseURL:baseURL];
+    [self.view addSubview: self.webView];
+    
+    [self loadHtmlToWebView];
+    
+    
+}
+
+
+-(void)loadHtmlToWebView{
+    
+    
+    JSContext *context = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     
     context[@"clickedText"] = ^() {
+        
+        //        [self setWebViewPosition:self.currentPageNumber];
+        
         NSLog(@"Begin text");
         NSArray *args = [JSContext currentArguments];
         
@@ -283,11 +179,11 @@
         NSString *editFlag =[[NSString alloc]initWithFormat:@"%@",args[2]];
         NSLog(@"editFlag:%@", editFlag);
         _oldTextHtml = htmlVal;
-
-//        dispatch_async(dispatch_get_main_queue(), ^{
-            [self editTextComponent:htmlVal htmlIndex:htmlIndex editFlag:editFlag];
-            
-//        });
+        
+        //        dispatch_async(dispatch_get_main_queue(), ^{
+        [self editTextComponent:htmlVal htmlIndex:htmlIndex editFlag:editFlag];
+        
+        //        });
         
         NSLog(@"-------End Text-------");
         
@@ -295,16 +191,16 @@
     //点击图片js方法调用native
     context[@"clickedImage"] = ^() {
         NSLog(@"Begin image");
+        
         NSArray *args = [JSContext currentArguments];
         _imgIndex = [[NSString alloc]initWithFormat:@"%@",args[0]];
-        [self editImageComponent:_fullPath :_imgIndex];
-        //加载本地图片到webview,把图片的索引传给方法
         [self backgroundClick];
         
         NSLog(@"-------End Image-------");
     };
     
 }
+
 
 #pragma ------------------- edit text function ------------------------
 
@@ -338,7 +234,6 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         self.mTextView =[[UITextView alloc]initWithFrame:CGRectMake(1, 5, KScreenWidth-75, 90)];
         self.mTextView.backgroundColor =[UIColor whiteColor];
-        self.mTextView.delegate = self;
         [self.mTextView becomeFirstResponder];
         NSString *textStr = [htmlVal stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         self.mTextView.text = textStr;
@@ -359,7 +254,6 @@
     mTalkBtn.layer.borderColor = [UIColor grayColor].CGColor;
     [self.mBackView addSubview:mTalkBtn];
     
-    
     _addLineBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     _addLineBtn.frame = CGRectMake(KScreenWidth-60, 38, 50, 28);
     [_addLineBtn setTitle:@"New" forState:UIControlStateNormal];
@@ -371,7 +265,6 @@
     _addLineBtn.layer.cornerRadius = 5;
     _addLineBtn.layer.borderColor = [UIColor grayColor].CGColor;
     [self.mBackView addSubview:_addLineBtn];
-    
     
     _deleteLineBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     _deleteLineBtn.frame = CGRectMake(KScreenWidth-60, 70, 50, 28);
@@ -411,10 +304,10 @@
     str = [str stringByAppendingString:_textIndex];
     str = [str stringByAppendingString:@"');"];
     NSLog(@"add new line javascript:%@",str);
-    UIWebView *currentWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
-    currentWebView.delegate = self;
     
-    [currentWebView stringByEvaluatingJavaScriptFromString:str];
+    [self.webView stringByEvaluatingJavaScriptFromString:str];
+    //get html code from webview and update ppt summary table
+    
     
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"You added new line sucessfully, do you want to stay here or exit?" preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Stay" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -424,7 +317,9 @@
         [_editTextViewControl removeFromSuperview];
         _editTextViewControl = nil;
         self.navigationController.navigationBarHidden = NO;
-        [self getHtmlCodeClick];//获取webview中section里的heml代码
+        
+        
+        
     }];
     [alertController addAction:cancelAction];
     [alertController addAction:okAction];
@@ -439,14 +334,13 @@
         str = [str stringByAppendingString:_textIndex];
         str = [str stringByAppendingString:@"');"];
         
-        UIWebView *currentWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
-        currentWebView.delegate = self;
-        [currentWebView stringByEvaluatingJavaScriptFromString:str];
+        [self.webView stringByEvaluatingJavaScriptFromString:str];
         [_editTextViewControl removeFromSuperview];
         _editTextViewControl = nil;
         self.navigationController.navigationBarHidden = NO;
-        [self getHtmlCodeClick];//获取webview中section里的heml代码
-        //
+        
+        //get html code from webview and update ppt summary table
+        
     }];
     UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
@@ -476,13 +370,13 @@
         str = [str stringByAppendingString:_mTextView.text];
         str = [str stringByAppendingString:@"';"];
         
-        UIWebView *currentWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
-        currentWebView.delegate = self;
-        
-        [currentWebView stringByEvaluatingJavaScriptFromString:str];
+        [self.webView stringByEvaluatingJavaScriptFromString:str];
         [_editTextViewControl removeFromSuperview];
         _editTextViewControl = nil;
-        [self getHtmlCodeClick];//获取webview中section里的heml代码
+        
+        //get html code from webview and update ppt summary table
+       
+        
     }else{
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"Content is not null." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         
@@ -505,166 +399,11 @@
 }
 
 
-#pragma -------------------  show right top menu -----------------------
-- (void)showMenu:(UIButton *)sender
-{
-    NSArray *menuItems =
-    @[
-      [KxMenuItem menuItem:@"Save"
-                     image:nil
-                    target:self
-                    action:@selector(saveClick)],
-      
-      [KxMenuItem menuItem:@"Add Page"
-                     image:nil
-                    target:self
-                    action:@selector(addPageClick)],
-      
-      [KxMenuItem menuItem:@"Audio List"
-                     image:nil
-                    target:self
-                    action:@selector(openAudioList)],
-      
-      [KxMenuItem menuItem:@"Recording"
-                     image:nil
-                    target:self
-                    action:@selector(talkClick)],
-      ];
-    
-    //    KxMenuItem *first = menuItems[0];
-    //    first.foreColor = [UIColor colorWithRed:47/255.0f green:112/255.0f blue:225/255.0f alpha:1.0];
-    //    first.alignment = NSTextAlignmentCenter;
-    
-    [KxMenu showMenuInView:self.view
-                  fromRect:CGRectMake(KScreenWidth - 100, 0, KScreenWidth, 60)
-                 menuItems:menuItems];
-}
 
--(void)backClick
-{
-    [self loadDetailsDataToArray];
-    [self generationFinalHtmlCode];
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
--(void)talkClick
-{
-    //    if (_audioButton.hidden == YES) {
-    //        _audioButton.hidden = NO;
-    //    }else{
-    //        _audioButton.hidden = YES;
-    //    }
-    [self addAudioBtn];
-}
-
--(void)addPageClick
-{
-    //模态跳转
-//    AddPageViewController *loginVC = [[AddPageViewController alloc]init];
-//    loginVC.showSummaryIdStr = self.showSummaryIdStr;
-//    
-//    UINavigationController * navigation = [[UINavigationController alloc]initWithRootViewController:loginVC];
-//    
-//    [self presentViewController:navigation animated:YES completion:nil];
-    
-    NSLog(@"add page////");
-    SelectTemplateForEditViewController *selectVC = [[SelectTemplateForEditViewController alloc]init];
-    selectVC.showSummaryIdStr = self.showSummaryIdStr;
-    
-    UINavigationController *navigation = [[UINavigationController alloc]initWithRootViewController:selectVC];
-    
-    [self presentViewController:navigation animated:YES completion:nil];
-
-    
-}
-
-#pragma -保存生成的html代码写入到summary表中
--(void)saveClick
-{
-    [self loadDetailsDataToArray];
-    [self generationFinalHtmlCode];
-    NSString *title = NSLocalizedString(@"Successfully", nil);
-    //    NSString *message = NSLocalizedString(@"Upload successfully.", nil);
-    NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
-    
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        [alertController removeFromParentViewController];
-        
-    }];
-    
-    [alertController addAction:otherAction];
-    
-    
-    [self presentViewController:alertController animated:YES completion:nil];
-    
-    
-}
-
-//查询summaryhtmlcode 加载到webview 进行总的预览
--(void)loadDetailsDataToArray{
-    NSString *sections = [[NSString alloc] init];
-    _detailsListMuArray = [DBDaoHelper selectDetailsDataBySummaryId:self.showSummaryIdStr];//播放的details表的summaryid
-    for (int i =0; i<_detailsListMuArray.count; i++) {
-        DetailsModel *dm = [_detailsListMuArray objectAtIndex:i];
-        
-        NSString *tmp = [self processStringWithSection:dm.htmlCodeStr :i+1];
-        sections = [sections stringByAppendingString:tmp];
-    }
-    _stringSections = sections;
-    
-}
-//处理section 拼接字符串
--(NSString *)processStringWithSection:(NSString *)htmlCode :(NSInteger) currentRowIndex{
-    
-    NSRange rangeStartSection = [htmlCode rangeOfString:@"<section"];
-    NSInteger startLocation = rangeStartSection.location;
-    
-    
-    //-substringFromIndex: 以指定位置开始（包括指定位置的字符），并包括之后的全部字符
-    NSString *stringStart = [htmlCode substringFromIndex:startLocation];
-    
-    
-    NSRange rangeEndSection = [stringStart rangeOfString:@"</section>"];
-    NSInteger endLocation = rangeEndSection.location;
-    
-    //-substringToIndex: 从字符串的开头一直截取到指定的位置，但不包括该位置的字符 +10表示包括</section>
-    NSString *stringEnd = [stringStart substringToIndex:endLocation+10];
-    
-    NSMutableString *finalString = [[NSMutableString alloc] initWithString:stringEnd];
-    
-    NSString *className = @"<section class='swiper-slide swiper-slide" ;
-    
-    className =  [className stringByAppendingString:[NSString stringWithFormat:@"%ld",(long)currentRowIndex]];
-    className = [className stringByAppendingFormat:@"'"];
-    
-    [finalString replaceCharactersInRange:NSMakeRange(0,9) withString:className];
-    
-    return  finalString;
-}
-//生成最终的html代码保存到summary表中
--(void)generationFinalHtmlCode{
-    NSString *htmlC = final_html_befor_section;
-    htmlC = [htmlC stringByAppendingString:_stringSections];
-    htmlC = [htmlC stringByAppendingString:final_html_after_section];
-    
-    BOOL sts = [DBDaoHelper updateSummaryContentById:self.showSummaryIdStr HtmlCode:htmlC];
-    _finalHtmlCode = htmlC;
-    
-    if (sts) {
-        NSString *statusPro = [DBDaoHelper queryProductStatusBySummaryId:_showSummaryIdStr];
-        if ([statusPro isEqualToString:@"Published"]) {
-            [DBDaoHelper updateSummaryStatsDateTimeBySummaryId:_showSummaryIdStr SummaryStatus:@"Updated"];
-        }
-    }
-}
-
-#pragma edit image function ----------------
-
+#pragma edit image
 //更改图片
 -(void)editImageComponent:(NSString *)imgName : (NSString *)index{
-
+    
     //拼接js字符串，用于替换图片
     NSString *str = @"var field = document.getElementsByClassName('img_element')[";
     str = [str stringByAppendingString:index];
@@ -672,39 +411,18 @@
     str = [str stringByAppendingString:@" field.src='"];
     str = [str stringByAppendingString:imgName];
     str = [str stringByAppendingString:@"';"];
-
-//    UIWebView *imgWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
-//    imgWebView.delegate = self;
-
-    UIWebView *currentWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
-    currentWebView.delegate = self;
-    [currentWebView stringByEvaluatingJavaScriptFromString:str];//js字符串通过这个方法传递到webview中的html并执行此js
-    [self getHtmlCodeClick];
+    
+    //js字符串通过这个方法传递到webview中的html并执行此js
+    [self.webView stringByEvaluatingJavaScriptFromString:str];
+    
+    
 }
 
-//获取webview中section里的html代码
-- (void)getHtmlCodeClick {
-    //native  call js 代码
-    UIWebView *aWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
-    aWebView.delegate = self;
-
-    NSString *jsToGetHtmlSource =  @"document.getElementsByTagName('html')[0].innerHTML";
-    //    NSString *htmlSource = @"<section class='swiper-slide swiper-slide2'>";//slide2需要拼接获取正确的索引值
-    _htmlSource = @"<!DOCTYPE html><html>";
-    _htmlSource = [_htmlSource stringByAppendingString: [aWebView stringByEvaluatingJavaScriptFromString:jsToGetHtmlSource]];
-    _htmlSource = [_htmlSource stringByAppendingString:@"</html>"];
-    //根据summaryid 和templateid查询数据库更换html_code
-    //在details表中 根据detailsid 修改html代码
-
-    DetailsModel *dModel = [[DetailsModel alloc]init];
-    dModel = [_detailsArray objectAtIndex:_currentPage];
-    [DBDaoHelper updateDetailsIdWith:dModel.detailsIdStr htmlCode:_htmlSource];
-
-}
 
 //选择图片
 -(void)backgroundClick
 {
+    
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                              delegate:self
                                                     cancelButtonTitle:nil
@@ -713,9 +431,9 @@
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         [actionSheet addButtonWithTitle:@"Camera"];
     }
-
+    
     [actionSheet addButtonWithTitle:@"Cancel"];
-
+    
     [actionSheet showInView:self.view];
 }
 
@@ -724,9 +442,9 @@
     UIImagePickerController *controller = [[UIImagePickerController alloc] init];
     controller.delegate = self;
     controller.sourceType = UIImagePickerControllerSourceTypeCamera;
-
+    
     [self presentViewController:controller animated:YES completion:^{}];
-
+    
 }
 
 - (void)openPhotoAlbum
@@ -734,7 +452,7 @@
     UIImagePickerController *controller = [[UIImagePickerController alloc] init];
     controller.delegate = self;
     controller.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-
+    
     [self presentViewController:controller animated:YES completion:^{}];
 }
 
@@ -759,13 +477,13 @@
         PECropViewController *controller = [[PECropViewController alloc] init];
         controller.delegate = self;
         controller.image = image;
-
-
+        
+        
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-
-
+        
+        
         navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-
+        
         [self presentViewController:navigationController animated:YES completion:NULL];
     }];
 }
@@ -777,10 +495,9 @@
     [controller dismissViewControllerAnimated:YES completion:NULL];
     _fullPath = imageFullName;
     //将detailsid summaryid filetype filepath插入数据库
-    DetailsModel *dModel = [[DetailsModel alloc]init];
-    dModel = [_detailsArray objectAtIndex:_currentPage];
-
-    [DBDaoHelper insertFilePathToDetails_idWith:dModel.detailsIdStr summary_id:_showSummaryIdStr file_type:@"image" file_path:_fullPath ];
+   
+    
+    [DBDaoHelper insertFilePathToDetails_idWith:self.pptDetailsID summary_id:self.summaryId file_type:@"image" file_path:_fullPath ];
     [self editImageComponent : imageFullName : _imgIndex];
 }
 
@@ -790,6 +507,10 @@
 }
 
 #pragma mark --------------------------- addAudio ----------------------
+-(void)talkClick
+{
+    [self addAudioBtn];
+}
 //点击录音按钮，弹出录音画面
 -(void)addAudioBtn{
     
@@ -833,12 +554,10 @@
     //模态跳转
     AudioListViewController *audioListVC = [[AudioListViewController alloc]init];
     //loginVC.showSummaryIdStr = self.showSummaryIdStr;
-    DetailsModel *dom = [[DetailsModel alloc]init];
-    dom = [_detailsArray objectAtIndex:_currentPage];
     
     UINavigationController *navigation = [[UINavigationController alloc]initWithRootViewController:audioListVC];
     audioListVC.audName = _audioPath;
-    audioListVC.detailsId = dom.detailsIdStr;
+    audioListVC.detailsId = self.pptDetailsID;
     
     [self presentViewController:navigation animated:YES completion:nil];
     
@@ -870,7 +589,6 @@
     
     
 }
-
 #pragma ------------------- start record ---------------------
 -(void)startRecord{
     NSError *error = nil;
@@ -923,19 +641,13 @@
 }
 // 把录好的音频，通过native 代码调用js文件，替换当前的
 -(void)editAudioComponent{
-    NSString *str = @"var imgAudio = document.getElementsByClassName('audioCtrl')[0]; imgAudio.className='';imgAudio.className='audioCtrl'; var field = document.getElementsByTagName('audio')[0];";
-    str = [str stringByAppendingString:@" field.src='"];
+    NSString *str = @"var imgAudio = document.getElementsByClassName('audioCtrl')[0];imgAudio.className='';imgAudio.className='audioCtrl'; var field = document.getElementsByTagName('audio')[0]; field.src='";
     str = [str stringByAppendingString:_audioPath];
     str = [str stringByAppendingString:@"'; "];
     
+    [self.webView stringByEvaluatingJavaScriptFromString:str];
     
-    UIWebView *audioWebView = [[_scrollView subviews] objectAtIndex:_currentPage*2];
     
-    audioWebView.delegate = self;
-    
-    [audioWebView stringByEvaluatingJavaScriptFromString:str];
-    
-    [self getHtmlCodeClick];
 }
 
 #pragma mark - 私有方法 - 录音相关方法 -----------------------------
@@ -957,8 +669,6 @@
  */
 -(NSURL *)getSavePath{
     
-    //    NSString *audioName = [NSString stringWithFormat:@"%d.wav",arc4random() % 1000000];
-    //    NSString *audioName1 = @"myAudio.wav";
     _audioPath = [[NSString alloc] init];
     NSString *urlStr=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     
@@ -1103,12 +813,9 @@
 -(void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
     _audioPlayer = nil;
     if (![self.audioPlayer isPlaying]) {
-        [self.audioPlayer play];
+        //[self.audioPlayer play];
         //将detailsid summaryid filetype filepath插入数据库
-        DetailsModel *dmm = [[DetailsModel alloc]init];
-        dmm = [_detailsArray objectAtIndex:_currentPage];
-        [DBDaoHelper insertFilePathToDetails_idWith:dmm.detailsIdStr summary_id:_showSummaryIdStr file_type:@"audio" file_path:_audioPath];
-        dmm =nil;
+        [DBDaoHelper insertFilePathToDetails_idWith:self.pptDetailsID summary_id:self.summaryId file_type:@"audio" file_path:_audioPath];
     }
     NSLog(@"录音完成!");
 }
@@ -1132,23 +839,37 @@
     
 }
 
--(void)getTemplateNotification:(NSNotification *)sender{
-    if ([sender.name isEqual:@"SelectedTemplate"])
-    {
-        [_pageControl removeFromSuperview];
-        _pageControl = nil;
-        [_scrollView removeFromSuperview];
-        _scrollView = nil;
-        [self loadDetailsToArray];
-        _currentPage = _detailsArray.count;
-        _totalPage = _detailsArray.count;
-        [self initPageControl];
-        [self initScrollView];
 
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
-        
-    }
+#pragma show menu list function
+- (void)showMenu:(UIButton *)sender
+{
+    
+    NSArray *menuItems = [[NSArray alloc]init];
+    
+           menuItems = @[
+                      
+                      [KxMenuItem menuItem:@"Recording"
+                                    image:nil
+                                    target:self
+                                    action:@selector(talkClick)],
+                      
+                      [KxMenuItem menuItem:@"Audio list"
+                                     image:nil
+                                    target:self
+                                    action:@selector(openAudioList)],
+                      
+                      [KxMenuItem menuItem:@"Save"
+                                    image:nil
+                                    target:self
+                                    action:@selector(saveEditAction)],
+                      ];
+    
+    [KxMenu showMenuInView:self.view
+                  fromRect:CGRectMake(KScreenWidth - 100, 0, KScreenWidth, 60)
+                 menuItems:menuItems];
 }
+
+
 
 #pragma mark- 自定义键盘
 #pragma mark - 给键盘添加观察者
@@ -1158,11 +879,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
 }
-#pragma mark - 键盘的通知响应事件
--(void)dealloc
-{
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
-}
+
 //系统键盘将要出现
 - (void)keyboardWillShow:(NSNotification *)notification
 {
@@ -1198,6 +915,34 @@
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     [self.view endEditing:YES];
+}
+
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+
+-(void)saveEditAction{
+    BOOL updateFlag = [DBDaoHelper updateSummaryDetailsBySummaryId:self.summaryId PageNumber:self.currentPageNumber HtmlCode:[self getHtmlFromUIWebView]];
+    if (updateFlag) {
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"Save successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        
+        [alertView show ];
+    }
+}
+
+#pragma get html code from webview
+-(NSString *)getHtmlFromUIWebView{
+    //native  call js 代码
+    NSString *jsToGetHtmlSource =  @"document.getElementsByTagName('html')[0].innerHTML";
+    NSString *htmlSource = @"<!DOCTYPE html><html>";
+    htmlSource = [htmlSource stringByAppendingString: [self.webView stringByEvaluatingJavaScriptFromString:jsToGetHtmlSource]];
+    htmlSource = [htmlSource stringByAppendingString:@"</html>"];
+    NSString *finalHtmlCode = [htmlSource stringByReplacingOccurrencesOfString:@"\"" withString:@"'"];
+    
+    return finalHtmlCode;
 }
 
 - (void)didReceiveMemoryWarning {

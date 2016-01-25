@@ -76,8 +76,10 @@
 -(void)finishEdit{
     // 发送通知
     if(_audioId.length != 0){
+        [self.audioPlayer stop];
         [DBDaoHelper updateDetailByFileId:_audioId DetailsId:_detailsId];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedAudioName" object:_selectedAudioName];
+        
         [self dismissViewControllerAnimated:YES completion:^{}];
     }
 }
