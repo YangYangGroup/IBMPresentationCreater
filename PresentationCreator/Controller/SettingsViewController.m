@@ -4,7 +4,7 @@
 //
 //  Created by Lin Lecui on 16/1/14.
 //  Copyright © 2016年 songyang. All rights reserved.
-//
+//   
 
 #import "SettingsViewController.h"
 #import "SynchronizeTableViewCell.h"
