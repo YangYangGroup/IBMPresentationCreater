@@ -21,7 +21,7 @@
 //插入html代码
 +(BOOL )insertIntoTemplateDetailsHtml:(NSString *)templateHtml TemplateId:(NSString *)templateId;
 //向summary表中插入我的名字，返回最大的主键值
-+(NSString *)insertSummaryWithName:(NSString *)name;
++(NSString *)insertSummaryWithName:(NSString *)name Icon:(NSString *)icon;
 //查询table数组内容
 +(NSMutableArray *)selectTableArray;
 //查询创作页面数组内容

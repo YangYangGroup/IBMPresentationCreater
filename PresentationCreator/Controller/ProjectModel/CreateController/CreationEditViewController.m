@@ -178,7 +178,7 @@
     if ([temp length]!=0) {
         self.summaryNameStr = _titleTextView.text;
         self.navigationItem.title=self.summaryNameStr;
-        self.maxSummaryIdStr = [DBDaoHelper insertSummaryWithName:_titleTextView.text];
+      //  self.maxSummaryIdStr = [DBDaoHelper insertSummaryWithName:_titleTextView.text];
         [_titleViewControl removeFromSuperview];
         _titleViewControl = nil;
         self.navigationController.navigationBarHidden =NO;

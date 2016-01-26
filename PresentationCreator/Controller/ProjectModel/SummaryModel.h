@@ -15,4 +15,5 @@
 @property (nonatomic, strong) NSString *product_url;
 @property (nonatomic, strong) NSString *dateTime;
 @property (nonatomic, strong) NSString *status;
+@property (nonatomic, strong) NSString *icon;
 @end

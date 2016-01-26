@@ -1043,6 +1043,7 @@
 				TargetAttributes = {
 					162A37781BBA80DA0069D9BB = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 4B7E85ADCA;
 					};
 					162A37911BBA80DB0069D9BB = {
 						CreatedOnToolsVersion = 7.0;
@@ -1403,13 +1404,13 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = PresentationCreator/PrefixHeader.pch;
 				INFOPLIST_FILE = PresentationCreator/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/PresentationCreator/Lib/SDKExport",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = Iibm.com.songyang.PresentationCreator;
+				PRODUCT_BUNDLE_IDENTIFIER = Iibm.com.test.PresentationCreator;
 				PRODUCT_NAME = BlueStar;
 				PROVISIONING_PROFILE = "";
 			};
@@ -1424,13 +1425,13 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = PresentationCreator/PrefixHeader.pch;
 				INFOPLIST_FILE = PresentationCreator/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/PresentationCreator/Lib/SDKExport",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = Iibm.com.songyang.PresentationCreator;
+				PRODUCT_BUNDLE_IDENTIFIER = Iibm.com.test.PresentationCreator;
 				PRODUCT_NAME = BlueStar;
 				PROVISIONING_PROFILE = "";
 			};

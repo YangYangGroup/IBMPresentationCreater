@@ -210,15 +210,18 @@
     NSString *temp = [_titleTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     //看剩下的字符串的长度是否为零
     if ([temp length]!=0) {
+        TemplateModel *tModel = [[TemplateModel alloc]init];
+        tModel = [self.templateArray objectAtIndex:self.selectTemplateIndex];
+        
+        
         self.summaryNameStr = _titleTextView.text;
         self.navigationItem.title=self.summaryNameStr;
-        self.maxSummaryIdStr = [DBDaoHelper insertSummaryWithName:_titleTextView.text];
+        self.maxSummaryIdStr = [DBDaoHelper insertSummaryWithName:_titleTextView.text Icon:tModel.templateThumbNail];
         [_titleViewControl removeFromSuperview];
         _titleViewControl = nil;
         self.navigationController.navigationBarHidden =NO;
         
-        TemplateModel *tModel = [[TemplateModel alloc]init];
-        tModel = [self.templateArray objectAtIndex:self.selectTemplateIndex];
+      
         NSMutableArray *tdArray = [DBDaoHelper queryTemplateDetailsWithTemplateId:tModel.templateId];
         
         
