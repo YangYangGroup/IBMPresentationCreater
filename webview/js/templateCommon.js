@@ -64,6 +64,7 @@ var mySwiper = new Swiper(
                           onTransitionEnd: function (swiper) {
                           swiperAnimate(swiper);
                           document.getElementById("numOfPage").value = swiper.activeIndex;
+                          
                           },
                           watchSlidesProgress: true,
                           onProgress: function (swiper) {
@@ -136,6 +137,7 @@ var initSwiper = function(pageNumber){
                               onTransitionEnd: function (swiper) {
                               swiperAnimate(swiper);
                               document.getElementById("numOfPage").value = swiper.activeIndex;
+                              
                               },
                               watchSlidesProgress: true,
                               onProgress: function (swiper) {

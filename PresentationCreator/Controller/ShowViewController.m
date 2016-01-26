@@ -180,11 +180,52 @@
     [_webView loadHTMLString:_finalHtmlCode baseURL:baseURL];
     [self.view addSubview: _webView];
     
- 
+    
+//    
+//    self.numberlabel = [[UILabel alloc]initWithFrame:CGRectMake(KScreenWidth-25, 64, 25, 17)];
+//    self.numberlabel.backgroundColor = [UIColor colorWithRed:220/255.0f green:220/255.0f blue:220/255.0f alpha:0.5];
+//    NSString *totalPage = [NSString stringWithFormat:@"%ld",self.detailsListMuArray.count];
+//    NSString *pageNum = @"1/";
+//    pageNum = [pageNum stringByAppendingString:totalPage];
+//    self.numberlabel.text = pageNum;
+//    self.numberlabel.textAlignment = NSTextAlignmentCenter;
+//    self.numberlabel.font = [UIFont fontWithName:@"Arial" size:11];
+//    
+//    [self.view addSubview:self.numberlabel];
 }
+
+
+-(void)loadHtmlToWebView{
+    
+    JSContext *context = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    
+    context[@"getPageNumber"] = ^() {
+        
+        NSLog(@"Begin text");
+        NSArray *args = [JSContext currentArguments];
+        NSString *totalPage = [NSString stringWithFormat:@"%ld",self.detailsListMuArray.count];
+        
+        NSString *num = [[NSString alloc]initWithFormat:@"%@",args[0]];
+        int number = [num intValue];
+        number ++;
+        
+        NSString *tempNum = [NSString stringWithFormat:@"%ld",(long)number];
+       
+        NSString *cPageNumber = tempNum;
+        cPageNumber = [cPageNumber stringByAppendingString:@"/"];
+        cPageNumber = [cPageNumber stringByAppendingString:totalPage];
+//        self.numberlabel.text = cPageNumber;
+        
+        NSLog(@"-------End Text-------");
+        
+    };
+    
+}
+
 -(void)uploadClick
 {
-    self.returnFileArray = [DBDaoHelper selectFromFileToSummary_idWith:self.showSummaryIdStr];
+    self.returnFileArray =
+                [DBDaoHelper selectFromFileToSummary_idWith:self.showSummaryIdStr];
     
     [LoadingHelper showLoadingWithView:self.view];
     NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
@@ -212,11 +253,9 @@
     //    NSLog(@"%@",str1);
     NSString *uploadUrl = @"http://9.115.24.148/PPT/service/UploadServlet";
     
-    
     AFHTTPRequestOperationManager *requestManager = [AFHTTPRequestOperationManager manager];
     requestManager.responseSerializer = [AFHTTPResponseSerializer serializer];
     requestManager.requestSerializer.timeoutInterval=15.f;//请求超时45S
-    
     
     NSMutableURLRequest *request = [requestManager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:uploadUrl parameters:dic constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         for (int i = 0; i < _returnFileArray.count; i++){
@@ -246,7 +285,6 @@
                 NSString *stringStart = [model.filePathStr substringFromIndex:startLocation+10];
                 
                 NSString *fileNameStr = [NSString stringWithFormat:@"%@",stringStart];
-                
                 
                 NSData *data = [NSData dataWithContentsOfFile:model.filePathStr];
                 [formData appendPartWithFileData:data name:@"Documents" fileName:fileNameStr mimeType:@"audio/wav"];
@@ -831,6 +869,7 @@
         NSString *path = [[NSBundle mainBundle] bundlePath];
         NSURL *baseURL = [NSURL fileURLWithPath:path];
         [self.webView loadHTMLString:_finalHtmlCode baseURL:baseURL];
+    
         //[self.webView reload];
 //        [self setWebViewPosition:self.currentPageNumber];
     
