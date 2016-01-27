@@ -16,14 +16,14 @@
 //创建所有的数据库表
 +(BOOL)createAllTable{
     FMDatabase *db =[DBHelper openDatabase];
-    BOOL result1 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_TEMPLATE_DETAILS'('template_details_id'INTEGER PRIMARY KEY AUTOINCREMENT,'template_id'INTEGER,'template_html'varchar)"];
+    BOOL result1 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_TEMPLATE_DETAILS'('template_details_id'varchar PRIMARY KEY,'template_id'INTEGER,'template_html'varchar)"];
     //summary_name tableview创建ppt的名称 content_html最终生成的总的用于演示的html代码
     BOOL result2 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_SUMMARY'('summary_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_name'varchar,'icon'varchar,'content_html'varchar,'product_url'varchar,'product_status'varchar,'created_ts'datetime)"];
     //details_id主键 summary_id 外键关联到PPT_PRODUCT_SUMMARY表的主键 template_id关联到PPT_PRODUCT_template表的主键
     BOOL result3 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_DETAILS'('details_id'INTEGER PRIMARY KEY AUTOINCREMENT,'page_number'integer,'file_id'INTEGER,'summary_id'integer,'template_id'integer,'template_details_id'integer,'html_code'varchar)"];
     
     BOOL result4 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_FILES'('file_id'INTEGER PRIMARY KEY AUTOINCREMENT,'details_id'integer,'summary_id'integer,'file_path'varchar,'file_type'varchar)"];
-    BOOL result5 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_TEMPLATE'('template_id'INTEGER PRIMARY KEY AUTOINCREMENT,'template_name'varchar,'template_thumbnail'varchar,'update_flag'varchar,'created_ts'datetime)"];
+    BOOL result5 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_TEMPLATE'('template_id'varchar PRIMARY KEY,'template_name'varchar,'template_thumbnail'varchar,'update_flag'varchar,'created_ts'datetime,'template_html'varchar)"];
     
     [db close];
     if (result1&&result2&&result3&&result4&&result5) {
@@ -48,18 +48,18 @@
     return nil;
 }
 //插入template details 的 html 代码
-+(BOOL )insertIntoTemplateDetailsHtml:(NSString *)templateHtml TemplateId:(NSString *)templateId
++(BOOL )insertIntoTemplateDetailsWithDetailsId:(NSString *)detailsId TemplateId:(NSString *)templateId HtmlCode:(NSString *)htmlCode
 {
     FMDatabase *db = [DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_TEMPLATE_DETAILS'('template_html','template_id') values(?,?)",templateHtml,templateId];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_TEMPLATE_DETAILS'('template_details_id','template_id','template_html') values(?,?,?)", detailsId, templateId, htmlCode];
     [db close];
     return result;
 }
 //插入template 的代码
-+(NSString *)insertIntoTemplateWithTemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)image UpdateFlag:(NSString *)updateFlag
++(NSString *)insertIntoTemplateWithTemplateId:(NSString *)templateId TemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)image UpdateFlag:(NSString *)updateFlag HtmlCode:(NSString *)htmlCode
 {
     FMDatabase *db = [DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_TEMPLATE'('template_name','template_thumbnail','update_flag','created_ts') values(?,?,?,datetime('now','localtime'))",templateName,image,updateFlag];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_TEMPLATE'('template_id','template_name','template_thumbnail','update_flag','created_ts') values(?,?,?,datetime('now','localtime'),?)",templateId,templateName,image,updateFlag,htmlCode];
     if (result) {
         FMResultSet *result1 = [db executeQuery:@"SELECT  MAX(TEMPLATE_ID) FROM PPT_PRODUCT_TEMPLATE"];
         
@@ -345,7 +345,7 @@
 +(NSMutableArray *)queryAllSummaryNameByOldName :(NSString *)oldName{
     FMDatabase *db = [DBHelper openDatabase];
     
-    NSString *sql = [NSString stringWithFormat:@"select summary_id,summary_name from PPT_PRODUCT_SUMMARY where summary_name like '%"];
+    NSString *sql = [NSString stringWithFormat:@"select * from PPT_PRODUCT_SUMMARY where summary_name like '%"];
     sql = [sql stringByAppendingString:oldName];
     sql = [sql stringByAppendingString:@"_copy%'"];
    
@@ -359,6 +359,11 @@
         SummaryModel *model = [[SummaryModel alloc]init];
         model.summaryName = [result stringForColumn:@"summary_name"];
         model.summaryId = [result stringForColumn:@"summary_id"];
+        model.contentHtml = [result stringForColumn:@"contentHtml"];
+        model.icon = [result stringForColumn:@"icon"];
+        model.product_url = [result stringForColumn:@"product_url"];
+        model.status = [result stringForColumn:@"status"];
+        
         [array addObject:model];
     }
     [db close];
@@ -374,9 +379,9 @@
     return result;
 }
 //copy summary data，返回最大的主键值
-+(NSString *)copySummaryData:(NSString *)newName ContentHtml:(NSString *)contentHtml Status:(NSString *)status{
++(NSString *)copySummaryData:(NSString *)newName ProductUrl:(NSString *)productUrl ContentHtml:(NSString *)contentHtml Status:(NSString *)status Icon:(NSString *)icon{
     FMDatabase *db =[DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_SUMMARY'('summary_name','content_html','product_status','created_ts') values(?,?,?,datetime('now','localtime'))",newName, contentHtml, status];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_SUMMARY'('summary_name','product_url','content_html','product_status','icon','created_ts') values(?,?,?,?,?,datetime('now','localtime'))",newName, productUrl,contentHtml, status, icon];
     if (result) {
         FMResultSet *result1 = [db executeQuery:@"SELECT  MAX(SUMMARY_ID) FROM PPT_PRODUCT_SUMMARY"];
         while (result1.next)
@@ -445,7 +450,7 @@
 {
     FMDatabase *db =[DBHelper openDatabase];
     //执行查询语句
-    FMResultSet *result = [db executeQuery:@"select summary_id, summary_name,content_html,  product_url, product_status, created_ts from PPT_PRODUCT_SUMMARY where summary_id = ?",summaryID];
+    FMResultSet *result = [db executeQuery:@"select summary_id, summary_name,content_html,  product_url, product_status, created_ts, icon from PPT_PRODUCT_SUMMARY where summary_id = ?",summaryID];
     SummaryModel *model = [[SummaryModel alloc]init];
     while (result.next)
     {
@@ -457,6 +462,7 @@
         model.product_url   = [result stringForColumn:@"product_url"];
         model.status        = [result stringForColumn:@"product_status"];
         model.dateTime      = [result stringForColumn:@"created_ts"];
+        model.icon          = [result stringForColumn:@"icon"];
     }
     [db close];
     return model;
@@ -666,5 +672,17 @@
     
     [db close];
     return resultUpdate;
+}
+// check template table data is null
++(int)checkTemplateDataIsNull{
+    FMDatabase *db =[DBHelper openDatabase];
+    FMResultSet *result = [db executeQuery:@"SELECT count(*) FROM PPT_PRODUCT_TEMPLATE"];
+    int count = 0;
+    while (result.next)
+    {
+        count = [result intForColumnIndex:0];
+    }
+    [db close];
+    return count;
 }
 @end

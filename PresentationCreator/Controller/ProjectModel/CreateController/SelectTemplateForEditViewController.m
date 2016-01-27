@@ -11,7 +11,7 @@
 #import "ShowTemplateDetailsViewController.h"
 #import "TemplateModel.h"
 
-@interface SelectTemplateForEditViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITextViewDelegate>
+@interface SelectTemplateForEditViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITextViewDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray *templateArray;
 @property (nonatomic) NSInteger selectTemplateIndex;
@@ -44,10 +44,12 @@
     [backbtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc]initWithCustomView:backbtn];
     self.navigationItem.leftBarButtonItem = backItem;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
 }
 
 -(void)backClick{
      [self dismissViewControllerAnimated:YES completion:^{}];
+  
 }
 
 #pragma mark - CollectionView

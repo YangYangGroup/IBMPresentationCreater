@@ -33,19 +33,19 @@
     [DBDaoHelper createAllTable];
     NSString *firstStr = [DBDaoHelper selectTable];
     if (firstStr == NULL) {
-        NSString *templateId = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_1" TemplateThumbnail:@"IMG_1.png" UpdateFlag:@"0"];
-        [DBDaoHelper insertIntoTemplateDetailsHtml:template_1 TemplateId:templateId];
-        [DBDaoHelper insertIntoTemplateDetailsHtml:template_2 TemplateId:templateId];
-        [DBDaoHelper insertIntoTemplateDetailsHtml:template_3 TemplateId:templateId];
-        [DBDaoHelper insertIntoTemplateDetailsHtml:template_4 TemplateId:templateId];
-        [DBDaoHelper insertIntoTemplateDetailsHtml:template_5 TemplateId:templateId];
+        NSString *templateId = [DBDaoHelper insertIntoTemplateWithTemplateId:@"1001" TemplateName:@"IBM_TEM_1" TemplateThumbnail:@"IMG_1.png" UpdateFlag:@"0" HtmlCode:@""];
+        [DBDaoHelper insertIntoTemplateDetailsWithDetailsId:@"2001" TemplateId:templateId HtmlCode:template_1];
+        [DBDaoHelper insertIntoTemplateDetailsWithDetailsId:@"2002" TemplateId:templateId HtmlCode:template_2];
+        [DBDaoHelper insertIntoTemplateDetailsWithDetailsId:@"2003" TemplateId:templateId HtmlCode:template_3];
+        [DBDaoHelper insertIntoTemplateDetailsWithDetailsId:@"2004" TemplateId:templateId HtmlCode:template_4];
+        [DBDaoHelper insertIntoTemplateDetailsWithDetailsId:@"2005" TemplateId:templateId HtmlCode:template_5];
         
-         NSString *templateId2 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_2" TemplateThumbnail:@"IMG_6.png" UpdateFlag:@"0"];
-        [DBDaoHelper insertIntoTemplateDetailsHtml:template_6 TemplateId:templateId2];
-        [DBDaoHelper insertIntoTemplateDetailsHtml:template_7 TemplateId:templateId2];
-        [DBDaoHelper insertIntoTemplateDetailsHtml:template_8 TemplateId:templateId2];
-        [DBDaoHelper insertIntoTemplateDetailsHtml:template_9 TemplateId:templateId2];
-        
+        NSString *templateId2 = [DBDaoHelper insertIntoTemplateWithTemplateId:@"1002" TemplateName:@"IBM_TEM_2" TemplateThumbnail:@"IMG_6.png" UpdateFlag:@"0" HtmlCode:@""];
+        [DBDaoHelper insertIntoTemplateDetailsWithDetailsId:@"2006" TemplateId:templateId2 HtmlCode:template_6];
+        [DBDaoHelper insertIntoTemplateDetailsWithDetailsId:@"2007" TemplateId:templateId2 HtmlCode:template_7];
+        [DBDaoHelper insertIntoTemplateDetailsWithDetailsId:@"2008" TemplateId:templateId2 HtmlCode:template_8];
+        [DBDaoHelper insertIntoTemplateDetailsWithDetailsId:@"2009" TemplateId:templateId2 HtmlCode:template_9];
+//
 //        NSString *templateId3 = [DBDaoHelper insertIntoTemplateWithTemplateName:@"IBM_TEM_1" TemplateThumbnail:@"IMG_1.png" UpdateFlag:@"0"];
 //        [DBDaoHelper insertIntoTemplateDetailsHtml:template_1 TemplateId:templateId3];
 //        [DBDaoHelper insertIntoTemplateDetailsHtml:template_2 TemplateId:templateId3];

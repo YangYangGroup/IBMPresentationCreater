@@ -511,8 +511,10 @@
             newName = [newName stringByAppendingString:[NSString stringWithFormat:@"%d", tmp]];
         }
         
+        SummaryModel *sModel = [DBDaoHelper qeuryOneSummaryDataById:self.showSummaryIdStr];
         //newName should be save.
-        NSString *smID = [DBDaoHelper copySummaryData:newName ContentHtml:_finalHtmlCode Status:_sumyModel.status];
+        NSString *smID = [DBDaoHelper copySummaryData:newName ProductUrl:sModel.product_url ContentHtml:_finalHtmlCode Status:sModel.status Icon:sModel.icon];
+        
         NSMutableArray *detailsArray = [DBDaoHelper selectDetailsDataBySummaryId:_showSummaryIdStr];
         BOOL copyStatus = false;
         for (int i = 0; i<detailsArray.count; i ++) {

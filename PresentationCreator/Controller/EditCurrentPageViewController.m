@@ -929,6 +929,13 @@
     if (updateFlag) {
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"Save successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         
+       
+        NSString *statusPro = [DBDaoHelper queryProductStatusBySummaryId:self.summaryId];
+        if ([statusPro isEqualToString:@"Published"]) {
+            [DBDaoHelper updateSummaryStatsDateTimeBySummaryId:self.summaryId SummaryStatus:@"Updated"];
+        }
+        
+        
         [alertView show ];
     }
 }

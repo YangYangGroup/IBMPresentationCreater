@@ -19,7 +19,7 @@
 +(BOOL)createAllTable;
 +(NSString *)selectTable;
 //插入html代码
-+(BOOL )insertIntoTemplateDetailsHtml:(NSString *)templateHtml TemplateId:(NSString *)templateId;
++(BOOL )insertIntoTemplateDetailsWithDetailsId:(NSString *)detailsId TemplateId:(NSString *)templateId HtmlCode:(NSString *)htmlCode;
 //向summary表中插入我的名字，返回最大的主键值
 +(NSString *)insertSummaryWithName:(NSString *)name Icon:(NSString *)icon;
 //查询table数组内容
@@ -30,7 +30,7 @@
 +(BOOL)insertHtmlToDetailsSummaryIdWith:(NSString *)summaryId TemplateId:(NSString *)templateId TemplateDetailsId:(NSString *)templateDetailsId HtmlCode:(NSString *)htmlCode PageNumber:(NSString *)pageNumber;
 
 //插入template 的代码
-+(NSString *)insertIntoTemplateWithTemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)image UpdateFlag:(NSString *)updateFlag;
++(NSString *)insertIntoTemplateWithTemplateId:(NSString *)templateId TemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)image UpdateFlag:(NSString *)updateFlag HtmlCode:(NSString *)htmlCode;
 
 // 根据summary id 查询 PPT_PRODUCT_DETAILS 表中对应的结果集
 +(NSMutableArray *)selectDetailsDataBySummaryId:(NSString *)summaryId;
@@ -67,7 +67,7 @@
 //copy data to details table
 +(BOOL)copyDetailsData:(NSString *)summaryId TemplateId:(NSString *)templateId HtmlCode:(NSString *)htmlCode PageNumber:(NSString *)pageNumber fileId:(NSString *)fileId;
 //copy summary data，返回最大的主键值
-+(NSString *)copySummaryData:(NSString *)newName ContentHtml:(NSString *)contentHtml Status:(NSString *)status;
++(NSString *)copySummaryData:(NSString *)newName ProductUrl:(NSString *)productUrl ContentHtml:(NSString *)contentHtml Status:(NSString *)status Icon:(NSString *)icon;
 //查询summary表中所有数据，放入数组中
 +(NSMutableArray *)qeuryAllSummaryData;
 // 根据summary id 查询 summary表中summary name
@@ -108,4 +108,7 @@
 +(NSString *)queryProductDetailsHtmlCodeWithSummaryId:(NSString *)summaryId PageNumber:(NSString *)pageNuber;
 // update summary details
 +(BOOL)updateSummaryDetailsBySummaryId:(NSString *)summaryId PageNumber:(NSString *)pageNumber HtmlCode:(NSString *)htmlCode;
+
+// check template table data is null
++(int)checkTemplateDataIsNull;
 @end

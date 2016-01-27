@@ -19,13 +19,19 @@
 @property (nonatomic, strong) NSString *availableFlag;
 @property (nonatomic, strong) NSMutableArray *returnTemplateArr;
 @property (nonatomic, strong) NSMutableArray *nextPostArr;
+@property (nonatomic, assign) int isFirstTime;
+
+
 @end
 
 @implementation SettingsViewController
 -(void)viewWillAppear:(BOOL)animated{
-    self.availableFlag = @"F";
+    self.isFirstTime = [DBDaoHelper checkTemplateDataIsNull];
     [self.settingsTableView reloadData];
     [self firstSynchronizationTemplate];
+    
+    
+    
 //    [self SecondSynchronizationTemplate];
 }
 - (void)viewDidLoad {
@@ -42,32 +48,33 @@
 }
 -(void)firstSynchronizationTemplate
 {
-    _nextPostArr = [[NSMutableArray alloc]init];
-    _returnTemplateArr = [DBDaoHelper selectTemplateIdAndUpdateFlag];
-    NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
-    NSMutableArray *postArr = [[NSMutableArray alloc]init];
-//    for (int i = 0; i < _returnTemplateArr.count; i++){
-//        TemplateModel *model = [_returnTemplateArr objectAtIndex:i];
-//        [dic setObject:model.templateId forKey:@"templateId"];
-//        [dic setObject:model.updateFlag forKey:@"updateFlag"];
-//        [postArr addObject:dic];
-//    }
-//    NSLog(@"%@",postArr);
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     //申明返回的结果是json类型
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     //申明请求的数据是json类型
     manager.requestSerializer=[AFJSONRequestSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
-    //传入的参数
-    NSMutableDictionary *dic2 = [[NSMutableDictionary alloc]init];
-    [dic setObject:@"8196f261-66f7-4742-a690-fa70bb2d8a8b" forKey:@"templateId"];
-    [dic setObject:@"4" forKey:@"updateFlag"];
     
-    [dic2 setObject:@"a6f3fa99-621c-4f09-bdb9-cef9831d948a" forKey:@"templateId"];
-    [dic2 setObject:@"4" forKey:@"updateFlag"];
-    [postArr addObject:dic];
-    [postArr addObject:dic2];
+    _nextPostArr = [[NSMutableArray alloc]init];
+    NSMutableArray *postArr = [[NSMutableArray alloc]init];
+   
+    
+    if(self.isFirstTime == 0){
+        NSMutableDictionary *dictNoData = [[NSMutableDictionary alloc]init];
+        [dictNoData setObject:@"" forKey:@"templateId"];
+        [dictNoData setObject:@"" forKey:@"updateFlag"];
+        [postArr addObject:dictNoData];
+    }else{
+         NSMutableDictionary *dictAllTemplateIdAndFlag = [[NSMutableDictionary alloc]init];
+        _returnTemplateArr = [DBDaoHelper selectTemplateIdAndUpdateFlag];
+        
+        for (TemplateModel *tm in _returnTemplateArr) {
+            [dictAllTemplateIdAndFlag setObject:tm.templateId forKey:@"templateId"];
+            [dictAllTemplateIdAndFlag setObject:tm.updateFlag forKey:@"updateFlag"];
+        }
+        [postArr addObject:dictAllTemplateIdAndFlag];
+    }
+   
     NSLog(@"%@",[postArr JSONRepresentation]);
     //你的接口地址
     NSString *url=@"http://9.115.24.148/PPT/service/templateCheck";
@@ -75,28 +82,23 @@
     [manager POST:url parameters:postArr success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSArray *resultJsonArray = [NSJSONSerialization JSONObjectWithData:operation.responseData options:NSJSONReadingMutableLeaves error:nil];
         
-        NSLog(@"JSON: %@", resultJsonArray);
         NSDictionary *resultJsonDic = [resultJsonArray objectAtIndex:0];
-        NSLog(@"JSON: %@", resultJsonDic);
-        NSMutableArray *arr = [resultJsonDic objectForKey:@"templateList"];
+        NSLog(@"return flag:%@",resultJsonDic);
+         NSMutableArray *arr = [resultJsonDic objectForKey:@"templateList"];
+        NSLog(@"return flag:%ld",(long)arr.count);
         if ([[resultJsonDic objectForKey:@"flag"]isEqualToString:@"1"]) {
-            for (int i = 0; i < arr.count; i++){
-                NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
-                dic = [arr objectAtIndex:i];
-                
-                NSMutableDictionary *postDic = [[NSMutableDictionary alloc]init];
-                [postDic setObject:[dic objectForKey:@"templateId"] forKey:@"templateId"];
-                [_nextPostArr addObject:postDic];
-                [self SecondSynchronizationTemplate];
-            }
-            NSLog(@"%@",_nextPostArr);
+            self.availableFlag = @"T";
+            
+        }else{
+            self.availableFlag = @"F";
         }
-        
+      //  [self SecondSynchronizationTemplate];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
     }];
+    
 }
--(void)SecondSynchronizationTemplate
+-(BOOL)SecondSynchronizationTemplate
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     //申明返回的结果是json类型
@@ -119,18 +121,23 @@
         NSDictionary *resultJsonDic = [resultJsonArray objectAtIndex:0];
         NSLog(@"JSON: %@", resultJsonDic);
         NSMutableArray *arr = [resultJsonDic objectForKey:@"templateList"];
-        NSLog(@"%@",arr);
+        NSLog(@"template list length:%ld",(long)arr.count);
         for (int i = 0; i < arr.count; i++)
         {
             NSMutableDictionary *dic = [arr objectAtIndex:i];
             NSLog(@"%@",dic);
             //图片路径
             NSLog(@"%@",[dic objectForKey:@"icon"]);
+            
+            
+            [LoadingHelper hiddonLoadingWithView:self.view];
+            
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
     }];
 
+    return YES;
 }
 #pragma init UITableView
 -(void)initUITableView{
@@ -180,7 +187,7 @@
             cell.updateAvailableLabel.hidden = YES;
             cell.updateAvailableLabel.alpha = 0.8;
         }else{
-            cell.updateAvailableLabel.hidden = NO;
+            cell.updateAvailableLabel.hidden = YES;
         }
         return cell;
     }
@@ -212,9 +219,16 @@
     if(indexPath.section == 0){
         SynchronizeTableViewCell *cell = [self.settingsTableView cellForRowAtIndexPath:indexPath];
         cell.updateAvailableLabel.hidden = YES;
-        [LoadingHelper showLoadingWithView:self.view];
+        
 //        [NSThread sleepForTimeInterval:3.0];
-        [LoadingHelper hiddonLoadingWithView:self.view];
+        
+        if ([self.availableFlag isEqualToString:@"T"]) {
+            [LoadingHelper showLoadingWithView:self.view];
+            if([self SecondSynchronizationTemplate]){
+                
+            }
+           
+        }
     }
 }
 

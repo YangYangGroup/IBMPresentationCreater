@@ -38,6 +38,7 @@
         self.updateAvailableLabel.layer.cornerRadius = 5;
 //        self.updateAvailableLabel.layer.borderWidth = 1;
         self.updateAvailableLabel.layer.masksToBounds = YES;
+        self.updateAvailableLabel.hidden = YES;
         [bgView addSubview:self.updateAvailableLabel];
         
         [self addSubview:bgView];
