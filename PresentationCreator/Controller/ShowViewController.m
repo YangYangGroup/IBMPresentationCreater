@@ -245,14 +245,18 @@
         //        if ([model.filetypeStr isEqual:@"image"]) {
         
         [postArray addObject:model.filePathStr];
+        NSLog(@"%@",model.filePathStr);
+        NSLog(@"%@",postArray);
         //        }
     }
     NSString *str1 = [postArray JSONRepresentation];
     [dic setObject:str1 forKey:@"filelist"];
+    NSLog(@"%@",[dic objectForKey:@"filelist"]);
     
     //    NSLog(@"%@",str1);
     NSString *uploadUrl = @"http://9.115.24.148/PPT/service/UploadServlet";
-    
+    NSLog(@"%@",dic);
+    NSLog(@"%@",[dic JSONRepresentation]);
     AFHTTPRequestOperationManager *requestManager = [AFHTTPRequestOperationManager manager];
     requestManager.responseSerializer = [AFHTTPResponseSerializer serializer];
     requestManager.requestSerializer.timeoutInterval=15.f;//请求超时45S

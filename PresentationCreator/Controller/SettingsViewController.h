@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface SettingsViewController : UIViewController
-
+@property (nonatomic, assign) int isFirstTime;
 @end

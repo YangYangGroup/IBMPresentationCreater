@@ -18,6 +18,9 @@
 
 @implementation ShowTemplateDetailsViewController
 
+-(void)viewWillAppear:(BOOL)animated{
+    [self initCollectionView];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -27,7 +30,7 @@
     NSLog(@"selected template id--%@",self.templateId);
     
     [self addNavigation];
-    [self initCollectionView];
+    
 }
 
 -(void)addNavigation

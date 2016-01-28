@@ -90,7 +90,12 @@
     
     TemplateModel *tm = [[TemplateModel alloc]init];
     tm = [self.templateArray objectAtIndex:indexPath.row];
-    cell.imgView.image = [UIImage imageNamed:tm.templateThumbNail];
+    
+    NSURL *url = [NSURL URLWithString:tm.templateThumbNail];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    UIImage *image = [UIImage imageWithData:data];
+    
+    cell.imgView.image = image;
     cell.titleLable.text = tm.templateName;
     
     return cell;

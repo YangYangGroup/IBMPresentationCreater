@@ -16,7 +16,7 @@
 //创建所有的数据库表
 +(BOOL)createAllTable{
     FMDatabase *db =[DBHelper openDatabase];
-    BOOL result1 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_TEMPLATE_DETAILS'('template_details_id'varchar PRIMARY KEY,'template_id'INTEGER,'template_html'varchar)"];
+    BOOL result1 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_TEMPLATE_DETAILS'('template_details_id'varchar PRIMARY KEY,'template_id'INTEGER,'template_html'varchar,'update_flag'varchar)"];
     //summary_name tableview创建ppt的名称 content_html最终生成的总的用于演示的html代码
     BOOL result2 = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'PPT_PRODUCT_SUMMARY'('summary_id'INTEGER PRIMARY KEY AUTOINCREMENT,'summary_name'varchar,'icon'varchar,'content_html'varchar,'product_url'varchar,'product_status'varchar,'created_ts'datetime)"];
     //details_id主键 summary_id 外键关联到PPT_PRODUCT_SUMMARY表的主键 template_id关联到PPT_PRODUCT_template表的主键
@@ -48,10 +48,10 @@
     return nil;
 }
 //插入template details 的 html 代码
-+(BOOL )insertIntoTemplateDetailsWithDetailsId:(NSString *)detailsId TemplateId:(NSString *)templateId HtmlCode:(NSString *)htmlCode
++(BOOL )insertIntoTemplateDetailsWithDetailsId:(NSString *)detailsId TemplateId:(NSString *)templateId HtmlCode:(NSString *)htmlCode UpdateFlag:(NSString *)updateFlag
 {
     FMDatabase *db = [DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_TEMPLATE_DETAILS'('template_details_id','template_id','template_html') values(?,?,?)", detailsId, templateId, htmlCode];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_TEMPLATE_DETAILS'('template_details_id','template_id','template_html','update_flag') values(?,?,?,?)", detailsId, templateId, htmlCode, updateFlag];
     [db close];
     return result;
 }
@@ -59,7 +59,7 @@
 +(NSString *)insertIntoTemplateWithTemplateId:(NSString *)templateId TemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)image UpdateFlag:(NSString *)updateFlag HtmlCode:(NSString *)htmlCode
 {
     FMDatabase *db = [DBHelper openDatabase];
-    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_TEMPLATE'('template_id','template_name','template_thumbnail','update_flag','created_ts') values(?,?,?,datetime('now','localtime'),?)",templateId,templateName,image,updateFlag,htmlCode];
+    BOOL result = [db executeUpdate:@"insert into 'PPT_PRODUCT_TEMPLATE'('template_id','template_name','template_thumbnail','update_flag','template_html','created_ts') values(?,?,?,?,?,datetime('now','localtime'))",templateId,templateName,image,updateFlag,htmlCode];
     if (result) {
         FMResultSet *result1 = [db executeQuery:@"SELECT  MAX(TEMPLATE_ID) FROM PPT_PRODUCT_TEMPLATE"];
         
@@ -647,6 +647,17 @@
         model.updateFlag = [result stringForColumn:@"update_flag"];
         [array addObject:model];
     }
+    
+    FMResultSet *result1 = [db executeQuery:@"select * from PPT_PRODUCT_TEMPLATE_DETAILS"];
+    while (result1.next)
+    {
+        //根据列名取出分类信息存到对象中以对象返回
+        TemplateModel *model = [[TemplateModel alloc]init];
+        model.templateId = [result1 stringForColumn:@"template_details_id"];
+        model.updateFlag = [result1 stringForColumn:@"update_flag"];
+        [array addObject:model];
+    }
+    
     [db close];
     return array;
 }
@@ -677,6 +688,54 @@
 +(int)checkTemplateDataIsNull{
     FMDatabase *db =[DBHelper openDatabase];
     FMResultSet *result = [db executeQuery:@"SELECT count(*) FROM PPT_PRODUCT_TEMPLATE"];
+    int count = 0;
+    while (result.next)
+    {
+        count = [result intForColumnIndex:0];
+    }
+    [db close];
+    return count;
+}
+// update template by template id
++(BOOL)updateTemplateWithTemplateId:(NSString *)templateId TemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)templateThumbnail UpdateFlag:(NSString *)updateFlag TemplateHtml:(NSString *)templateHtml{
+    
+    FMDatabase *db = [DBHelper openDatabase];
+    BOOL resultUpdate = [db executeUpdate:@"UPDATE PPT_PRODUCT_TEMPLATE SET template_name = ?, template_thumbnail = ?, update_flag = ?, template_html = ?   WHERE template_id =?", templateName, templateThumbnail, updateFlag, templateHtml, templateId];
+    
+    [db close];
+    return resultUpdate;
+
+}
+
+//update template details by details id
++(BOOL)updateTemplateDetailsWithDetailsId:(NSString *)detailsId TemplateId:(NSString *)templateId TemplateHtml:(NSString *)templateHtml UpdateFlag:(NSString *)updateFlag{
+  
+    FMDatabase *db = [DBHelper openDatabase];
+    BOOL resultUpdate = [db executeUpdate:@"UPDATE PPT_PRODUCT_TEMPLATE_DETAILS SET template_id = ?, template_html = ?, update_flag = ?  WHERE template_details_id =?", templateId, templateHtml, updateFlag, detailsId];
+    
+    [db close];
+    return resultUpdate;
+
+}
+
+// check template data is exits in DB
++(int)checkTemplateIsExitsWithTemplateId:(NSString *)templateId{
+    FMDatabase *db =[DBHelper openDatabase];
+    FMResultSet *result = [db executeQuery:@"SELECT count(*) FROM PPT_PRODUCT_TEMPLATE where template_id = ?",templateId];
+    int count = 0;
+    while (result.next)
+    {
+        count = [result intForColumnIndex:0];
+    }
+    [db close];
+    return count;
+}
+
+
+// check template details data is exits in DB
++(int)checkTemplateDetailsIsExitsWithTemplateDetailsId:(NSString *)templateDetailsId{
+    FMDatabase *db =[DBHelper openDatabase];
+    FMResultSet *result = [db executeQuery:@"SELECT count(*) FROM PPT_PRODUCT_TEMPLATE_DETAILS where template_details_id = ?",templateDetailsId];
     int count = 0;
     while (result.next)
     {

@@ -927,15 +927,12 @@
 -(void)saveEditAction{
     BOOL updateFlag = [DBDaoHelper updateSummaryDetailsBySummaryId:self.summaryId PageNumber:self.currentPageNumber HtmlCode:[self getHtmlFromUIWebView]];
     if (updateFlag) {
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"Save successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        
-       
         NSString *statusPro = [DBDaoHelper queryProductStatusBySummaryId:self.summaryId];
         if ([statusPro isEqualToString:@"Published"]) {
             [DBDaoHelper updateSummaryStatsDateTimeBySummaryId:self.summaryId SummaryStatus:@"Updated"];
         }
         
-        
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"Save successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alertView show ];
     }
 }

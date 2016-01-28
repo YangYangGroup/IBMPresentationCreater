@@ -16,20 +16,20 @@
 
 @interface SettingsViewController ()<UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) UITableView *settingsTableView;
-@property (nonatomic, strong) NSString *availableFlag;
 @property (nonatomic, strong) NSMutableArray *returnTemplateArr;
 @property (nonatomic, strong) NSMutableArray *nextPostArr;
-@property (nonatomic, assign) int isFirstTime;
-
+@property (nonatomic, strong) NSMutableArray *templateList;
+@property (nonatomic, strong) NSString *isAccessSuccessfully;
 
 @end
 
 @implementation SettingsViewController
 -(void)viewWillAppear:(BOOL)animated{
-    self.isFirstTime = [DBDaoHelper checkTemplateDataIsNull];
-    [self.settingsTableView reloadData];
-    [self firstSynchronizationTemplate];
     
+    self.isFirstTime = [DBDaoHelper checkTemplateDataIsNull];
+    self.isAccessSuccessfully = @"F";
+    [self firstSynchronizationTemplate];
+    [self.settingsTableView reloadData];
     
     
 //    [self SecondSynchronizationTemplate];
@@ -46,8 +46,14 @@
 {
     self.navigationItem.title=@"Settings";
 }
+
+-(void)checkServiceOption{
+    
+}
+
 -(void)firstSynchronizationTemplate
 {
+   
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     //申明返回的结果是json类型
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
@@ -65,14 +71,15 @@
         [dictNoData setObject:@"" forKey:@"updateFlag"];
         [postArr addObject:dictNoData];
     }else{
-         NSMutableDictionary *dictAllTemplateIdAndFlag = [[NSMutableDictionary alloc]init];
+        
         _returnTemplateArr = [DBDaoHelper selectTemplateIdAndUpdateFlag];
         
         for (TemplateModel *tm in _returnTemplateArr) {
+            NSMutableDictionary *dictAllTemplateIdAndFlag = [[NSMutableDictionary alloc]init];
             [dictAllTemplateIdAndFlag setObject:tm.templateId forKey:@"templateId"];
             [dictAllTemplateIdAndFlag setObject:tm.updateFlag forKey:@"updateFlag"];
+            [postArr addObject:dictAllTemplateIdAndFlag];
         }
-        [postArr addObject:dictAllTemplateIdAndFlag];
     }
    
     NSLog(@"%@",[postArr JSONRepresentation]);
@@ -83,62 +90,70 @@
         NSArray *resultJsonArray = [NSJSONSerialization JSONObjectWithData:operation.responseData options:NSJSONReadingMutableLeaves error:nil];
         
         NSDictionary *resultJsonDic = [resultJsonArray objectAtIndex:0];
-        NSLog(@"return flag:%@",resultJsonDic);
-         NSMutableArray *arr = [resultJsonDic objectForKey:@"templateList"];
-        NSLog(@"return flag:%ld",(long)arr.count);
+        NSLog(@"self.templateList%@",resultJsonDic);
+        
+        self.templateList = [resultJsonDic objectForKey:@"templateList"];
+        
         if ([[resultJsonDic objectForKey:@"flag"]isEqualToString:@"1"]) {
-            self.availableFlag = @"T";
-            
+            self.isAccessSuccessfully = @"T";
         }else{
-            self.availableFlag = @"F";
+            self.isAccessSuccessfully = @"F";
         }
+        
+        NSLog(@"return flag:%ld",(long)self.templateList.count);
+        
+        [self.settingsTableView reloadData];
+        
       //  [self SecondSynchronizationTemplate];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
     }];
     
+   
 }
--(BOOL)SecondSynchronizationTemplate
-{
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    //申明返回的结果是json类型
-    manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    //申明请求的数据是json类型
-    manager.requestSerializer=[AFJSONRequestSerializer serializer];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
-//    NSMutableArray *postArr = [[NSMutableArray alloc]init];
-//    NSMutableDictionary *dic2 = [[NSMutableDictionary alloc]init];
+//
+//-(BOOL)SecondSynchronizationTemplate
+//{
+//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//    //申明返回的结果是json类型
+//    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+//    //申明请求的数据是json类型
+//    manager.requestSerializer=[AFJSONRequestSerializer serializer];
+//    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+////    NSMutableArray *postArr = [[NSMutableArray alloc]init];
+////    NSMutableDictionary *dic2 = [[NSMutableDictionary alloc]init];
+////    
+////    [dic2 setObject:@"8196f261-66f7-4742-a690-fa70bb2d8a8b" forKey:@"templateId"];
+////    [postArr addObject:dic2];
+////    NSLog(@"%@",[postArr JSONRepresentation]);
 //    
-//    [dic2 setObject:@"8196f261-66f7-4742-a690-fa70bb2d8a8b" forKey:@"templateId"];
-//    [postArr addObject:dic2];
-//    NSLog(@"%@",[postArr JSONRepresentation]);
-    
-    //你的接口地址
-    NSString *url=@"http://9.115.24.148/PPT/service/templateUpdate";
-    [manager POST:url parameters:_nextPostArr success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSArray *resultJsonArray = [NSJSONSerialization JSONObjectWithData:operation.responseData options:NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"%@",resultJsonArray);
-        NSDictionary *resultJsonDic = [resultJsonArray objectAtIndex:0];
-        NSLog(@"JSON: %@", resultJsonDic);
-        NSMutableArray *arr = [resultJsonDic objectForKey:@"templateList"];
-        NSLog(@"template list length:%ld",(long)arr.count);
-        for (int i = 0; i < arr.count; i++)
-        {
-            NSMutableDictionary *dic = [arr objectAtIndex:i];
-            NSLog(@"%@",dic);
-            //图片路径
-            NSLog(@"%@",[dic objectForKey:@"icon"]);
-            
-            
-            [LoadingHelper hiddonLoadingWithView:self.view];
-            
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
-    }];
+//    //你的接口地址
+//    NSString *url=@"http://9.115.24.148/PPT/service/templateUpdate";
+//    [manager POST:url parameters:_nextPostArr success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        NSArray *resultJsonArray = [NSJSONSerialization JSONObjectWithData:operation.responseData options:NSJSONReadingMutableLeaves error:nil];
+//        NSLog(@"%@",resultJsonArray);
+//        NSDictionary *resultJsonDic = [resultJsonArray objectAtIndex:0];
+//        NSLog(@"JSON: %@", resultJsonDic);
+//        NSMutableArray *arr = [resultJsonDic objectForKey:@"templateList"];
+//        NSLog(@"template list length:%ld",(long)arr.count);
+//        for (int i = 0; i < arr.count; i++)
+//        {
+//            NSMutableDictionary *dic = [arr objectAtIndex:i];
+//            NSLog(@"%@",dic);
+//            //图片路径
+//            NSLog(@"%@",[dic objectForKey:@"icon"]);
+//            
+//            
+//            [LoadingHelper hiddonLoadingWithView:self.view];
+//            
+//        }
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        NSLog(@"Error: %@", error);
+//    }];
+//
+//    return YES;
+//}
 
-    return YES;
-}
 #pragma init UITableView
 -(void)initUITableView{
     self.settingsTableView = nil;
@@ -183,8 +198,8 @@
 {
     if (indexPath.section == 0) {
         SynchronizeTableViewCell *cell = [[SynchronizeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-        if ([self.availableFlag isEqualToString:@"T"]) {
-            cell.updateAvailableLabel.hidden = YES;
+        if (self.isFirstTime == 0) {
+            cell.updateAvailableLabel.hidden = NO;
             cell.updateAvailableLabel.alpha = 0.8;
         }else{
             cell.updateAvailableLabel.hidden = YES;
@@ -222,12 +237,88 @@
         
 //        [NSThread sleepForTimeInterval:3.0];
         
-        if ([self.availableFlag isEqualToString:@"T"]) {
+        if(self.isFirstTime == 0 && [self.isAccessSuccessfully isEqualToString:@"T"]){
             [LoadingHelper showLoadingWithView:self.view];
-            if([self SecondSynchronizationTemplate]){
-                
+
+            for (NSMutableDictionary *dict in self.templateList) {
+                if ([[dict objectForKey:@"whetherPrimary"] isEqualToString:@"1"]) {
+                    [DBDaoHelper insertIntoTemplateWithTemplateId:[
+                                 dict objectForKey:@"templateId"]
+                                 TemplateName:[dict objectForKey:@"templateName"]
+                                 TemplateThumbnail:[dict objectForKey:@"icon"]
+                                 UpdateFlag:[dict objectForKey:@"templateType"]
+                                 HtmlCode:[dict objectForKey:@"templateContent"]];
+                }
+                if ([[dict objectForKey:@"whetherPrimary"] isEqualToString:@"0"]) {
+                    [DBDaoHelper insertIntoTemplateDetailsWithDetailsId:[
+                                 dict objectForKey:@"templateId"]
+                                 TemplateId:[dict objectForKey:@"primaryTemplateId"]
+                                 HtmlCode:[dict objectForKey:@"templateContent"]
+                                 UpdateFlag:[dict objectForKey:@"templateType"]];
+                }
             }
+            
+            [LoadingHelper hiddonLoadingWithView:self.view];
+        }
+        if (self.isFirstTime == 0 && [self.isAccessSuccessfully isEqualToString:@"F"]) {
+            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"There is no template to synchronize." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            
+            [alertView show ];
            
+        }
+        
+        if(self.isFirstTime != 0 && [self.isAccessSuccessfully isEqualToString:@"T"]){
+            [LoadingHelper showLoadingWithView:self.view];
+            
+            for (NSMutableDictionary *dict in self.templateList) {
+                if ([[dict objectForKey:@"whetherPrimary"] isEqualToString:@"1"]) {
+                    if ([DBDaoHelper checkTemplateIsExitsWithTemplateId:[dict objectForKey:@"templateId"]] == 0) {
+                        [DBDaoHelper insertIntoTemplateWithTemplateId:
+                         [dict objectForKey:@"templateId"] TemplateName:
+                         [dict objectForKey:@"templateName"] TemplateThumbnail:
+                         [dict objectForKey:@"icon"] UpdateFlag:
+                         [dict objectForKey:@"templateType"] HtmlCode:
+                         [dict objectForKey:@"templateContent"]];
+                    }else{
+                        [DBDaoHelper updateTemplateWithTemplateId:
+                         [dict objectForKey:@"templateId"] TemplateName:
+                         [dict objectForKey:@"templateName"] TemplateThumbnail:
+                         [dict objectForKey:@"icon"] UpdateFlag:
+                         [dict objectForKey:@"templateType"] TemplateHtml:
+                         [dict objectForKey:@"templateContent"]];
+                    }
+                    
+                }
+                if ([[dict objectForKey:@"whetherPrimary"] isEqualToString:@"0"]) {
+                    
+                    if ([DBDaoHelper checkTemplateDetailsIsExitsWithTemplateDetailsId:[
+                        dict objectForKey:@"templateId"]] == 0) {
+                        [DBDaoHelper insertIntoTemplateDetailsWithDetailsId:
+                         [dict objectForKey:@"templateId"] TemplateId:
+                         [dict objectForKey:@"primaryTemplateId"] HtmlCode:
+                         [dict objectForKey:@"templateContent"] UpdateFlag:
+                         [dict objectForKey:@"templateType"]];
+                    }else{
+                        [DBDaoHelper updateTemplateDetailsWithDetailsId:
+                         [dict objectForKey:@"templateId"] TemplateId:
+                         [dict objectForKey:@"primaryTemplateId"] TemplateHtml:
+                         [dict objectForKey:@"templateContent"] UpdateFlag:
+                         [dict objectForKey:@"templateType"]];
+                    }
+                }
+            }
+            
+            [LoadingHelper hiddonLoadingWithView:self.view];
+        }
+        if (self.isFirstTime != 0 && [self.isAccessSuccessfully isEqualToString:@"F"]) {
+            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@""
+                                    message:@"There is no template to synchronize."
+                                    delegate:self
+                                    cancelButtonTitle:@"OK"
+                                    otherButtonTitles:nil, nil];
+            
+            [alertView show ];
+            
         }
     }
 }

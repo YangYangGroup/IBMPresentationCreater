@@ -19,7 +19,7 @@
 +(BOOL)createAllTable;
 +(NSString *)selectTable;
 //插入html代码
-+(BOOL )insertIntoTemplateDetailsWithDetailsId:(NSString *)detailsId TemplateId:(NSString *)templateId HtmlCode:(NSString *)htmlCode;
++(BOOL )insertIntoTemplateDetailsWithDetailsId:(NSString *)detailsId TemplateId:(NSString *)templateId HtmlCode:(NSString *)htmlCode UpdateFlag:(NSString *)updateFlag;
 //向summary表中插入我的名字，返回最大的主键值
 +(NSString *)insertSummaryWithName:(NSString *)name Icon:(NSString *)icon;
 //查询table数组内容
@@ -111,4 +111,16 @@
 
 // check template table data is null
 +(int)checkTemplateDataIsNull;
+
+// update template by template id
++(BOOL)updateTemplateWithTemplateId:(NSString *)templateId TemplateName:(NSString *)templateName TemplateThumbnail:(NSString *)templateThumbnail UpdateFlag:(NSString *)updateFlag TemplateHtml:(NSString *)templateHtml;
+
+//update template details by details id
++(BOOL)updateTemplateDetailsWithDetailsId:(NSString *)detailsId TemplateId:(NSString *)templateId TemplateHtml:(NSString *)templateHtml UpdateFlag:(NSString *)updateFlag;
+
+// check template data is exits in DB
++(int)checkTemplateIsExitsWithTemplateId:(NSString *)templateId;
+
+// check template details data is exits in DB
++(int)checkTemplateDetailsIsExitsWithTemplateDetailsId:(NSString *)templateDetailsId;
 @end

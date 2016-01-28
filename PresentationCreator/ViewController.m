@@ -91,7 +91,12 @@
     NSString *statusStr = @"";
     NSString *timeStr = @"";
     SummaryModel *model = [_summaryArray objectAtIndex:indexPath.row];
-    cell.imgView.image = [UIImage imageNamed:model.icon];
+    
+    NSURL *url = [NSURL URLWithString:model.icon];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    UIImage *image = [UIImage imageWithData:data];
+    
+    cell.imgView.image = image;
     cell.nameLabel.text = model.summaryName;
     
     statusStr = [statusStr stringByAppendingString:model.status];
