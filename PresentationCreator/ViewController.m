@@ -93,7 +93,7 @@
     NSString *timeStr = @"";
     SummaryModel *model = [_summaryArray objectAtIndex:indexPath.row];
     
-    //download image use SDWebImage
+    //download image use SDWebImage 
     SDWebImageOptions options = SDWebImageRetryFailed | SDWebImageLowPriority;
     NSURL *url = [NSURL URLWithString:model.icon];
     UIImage *placeholderImage = [UIImage imageNamed:@"Synchronize-1"];
