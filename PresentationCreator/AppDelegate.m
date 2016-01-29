@@ -13,6 +13,7 @@
 #import "CreationEditViewController.h"
 #import "SelectTemplateViewController.h"
 #import "SettingsViewController.h"
+#import "SDWebImageManager.h"
 
 @interface AppDelegate ()<UITabBarControllerDelegate,UITabBarDelegate>
 {
@@ -151,4 +152,14 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+-(void)applicationDidReceiveMemoryWarning:(UIApplication *)application{
+    SDWebImageManager *mgr = [SDWebImageManager sharedManager];
+    
+    // cancal all download
+    [mgr cancelAll];
+    
+    // clear cache
+    [mgr.imageCache clearMemory];
+//    mgr.imageCache.maxCacheAge = 100 * 24 * 60 * 60;
+}
 @end
