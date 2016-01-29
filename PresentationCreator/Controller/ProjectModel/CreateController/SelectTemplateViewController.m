@@ -12,6 +12,7 @@
 #import "ShowViewController.h"
 #import "TemplateModel.h"
 #import "ShowTemplateDetailsViewController.h"
+#import "UIImageView+WebCache.h"
 
 @interface SelectTemplateViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITextViewDelegate>
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -78,11 +79,13 @@
     
     TemplateModel *tm = [[TemplateModel alloc]init];
     tm = [self.templateArray objectAtIndex:indexPath.row];
+
+    //download image use SDWebImage
+    SDWebImageOptions options = SDWebImageRetryFailed | SDWebImageLowPriority;
     NSURL *url = [NSURL URLWithString:tm.templateThumbNail];
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    UIImage *image = [UIImage imageWithData:data];
+    UIImage *placeholderImage = [UIImage imageNamed:@"Synchronize-1"];
+    [cell.imgView sd_setImageWithURL:url placeholderImage:placeholderImage options:options];
     
-    cell.imgView.image = image;
     cell.titleLable.text = tm.templateName;
     
     return cell;

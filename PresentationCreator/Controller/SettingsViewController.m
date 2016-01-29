@@ -241,7 +241,9 @@
             [LoadingHelper showLoadingWithView:self.view];
 
             for (NSMutableDictionary *dict in self.templateList) {
-                if ([[dict objectForKey:@"whetherPrimary"] isEqualToString:@"1"]) {
+                if (
+                    [[dict objectForKey:@"whetherPrimary"] isEqualToString:@"1"]) {
+                    
                     [DBDaoHelper insertIntoTemplateWithTemplateId:[
                                  dict objectForKey:@"templateId"]
                                  TemplateName:[dict objectForKey:@"templateName"]
@@ -322,6 +324,7 @@
         }
     }
 }
+
 
 /*
 #pragma mark - Navigation

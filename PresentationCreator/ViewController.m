@@ -12,6 +12,7 @@
 #import "ProjectModel.h"
 #import "DBDaoHelper.h"
 #import "Global.h"
+#import "UIImageView+WebCache.h"
 #import "SummaryModel.h"
 
 @interface ViewController ()
@@ -92,11 +93,12 @@
     NSString *timeStr = @"";
     SummaryModel *model = [_summaryArray objectAtIndex:indexPath.row];
     
+    //download image use SDWebImage
+    SDWebImageOptions options = SDWebImageRetryFailed | SDWebImageLowPriority;
     NSURL *url = [NSURL URLWithString:model.icon];
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    UIImage *image = [UIImage imageWithData:data];
+    UIImage *placeholderImage = [UIImage imageNamed:@"Synchronize-1"];
+    [cell.imgView sd_setImageWithURL:url placeholderImage:placeholderImage options:options];
     
-    cell.imgView.image = image;
     cell.nameLabel.text = model.summaryName;
     
     statusStr = [statusStr stringByAppendingString:model.status];

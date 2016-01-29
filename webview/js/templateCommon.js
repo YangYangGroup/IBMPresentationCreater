@@ -1,4 +1,4 @@
-scaleW = document.documentElement.clientWidth / 320;
+scaleW = document.getElementsByClassName("swiper-container")[0].offsetWidth / 320;
 scaleH = document.documentElement.clientHeight / 480;
 var resizes = document.querySelectorAll('.resize');
 for (var j = 0; j < resizes.length; j++) {
