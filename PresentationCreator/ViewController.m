@@ -96,7 +96,7 @@
     //download image use SDWebImage
     SDWebImageOptions options = SDWebImageRetryFailed | SDWebImageLowPriority;
     NSURL *url = [NSURL URLWithString:model.icon];
-    UIImage *placeholderImage = [UIImage imageNamed:@"Synchronize-1"];
+    UIImage *placeholderImage = [UIImage imageNamed:@"placeholder"];
     [cell.imgView sd_setImageWithURL:url placeholderImage:placeholderImage options:options];
     
     cell.nameLabel.text = model.summaryName;

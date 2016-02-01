@@ -33,11 +33,13 @@
     self.navigationItem.title = @"Select Template";
 //    self.parentViewController.tabBarController.tabBar.hidden = YES;
     self.parentViewController.tabBarController.tabBar.hidden = NO;
+     self.templateArray = [DBDaoHelper queryAllTemplate];
+    [self.collectionView reloadData];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.templateArray = [DBDaoHelper queryAllTemplate];
+   
     [self addCollectionView];
 }
 
@@ -83,7 +85,7 @@
     //download image use SDWebImage
     SDWebImageOptions options = SDWebImageRetryFailed | SDWebImageLowPriority;
     NSURL *url = [NSURL URLWithString:tm.templateThumbNail];
-    UIImage *placeholderImage = [UIImage imageNamed:@"Synchronize-1"];
+    UIImage *placeholderImage = [UIImage imageNamed:@"placeholder"];
     [cell.imgView sd_setImageWithURL:url placeholderImage:placeholderImage options:options];
     
     cell.titleLable.text = tm.templateName;
